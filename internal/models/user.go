@@ -8,7 +8,7 @@ type User struct {
 	Email              string    `json:"email" gorm:"type:text;not null;unique"`
 	Phone              string    `json:"phone" gorm:"type:text;not null;unique"`
 	Password           []byte    `json:"password" gorm:"type:bytea;not null"`
-	MfaSecret          *string   `json:"mfaSecret" gorm:"type:text"`
+	MfaSecret          []byte    `json:"mfaSecret" gorm:"type:bytea"`
 	MfaEnabled         bool      `json:"mfaEnabled" gorm:"type:boolean;default:false"`
 	MfaVerified        bool      `json:"mfaVerified" gorm:"type:boolean;default:false"`
 	Roles              []Role    `json:"roles" gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
