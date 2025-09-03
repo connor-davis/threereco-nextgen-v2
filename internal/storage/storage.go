@@ -12,8 +12,8 @@ type Storage struct {
 	Postgres *gorm.DB
 }
 
-func New() *Storage {
-	return &Storage{}
+func New() Storage {
+	return Storage{}
 }
 
 func (s *Storage) ConnectPostgres() {
@@ -53,7 +53,6 @@ func (s *Storage) MigratePostgres() {
 	if err := s.Postgres.AutoMigrate(
 		&models.User{},
 		&models.Organization{},
-		&models.Collector{},
 		&models.Role{},
 		&models.Address{},
 		&models.BankDetails{},

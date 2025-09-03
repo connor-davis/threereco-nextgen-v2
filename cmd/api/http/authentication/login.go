@@ -96,7 +96,7 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			user, err := r.Services.Users.GetByEmail(payload.Email)
+			user, err := r.Services.Users().FindByEmail(payload.Email)
 
 			if err != nil {
 				log.Errorf("🔥 Error retrieving user: %s", err.Error())
@@ -138,7 +138,7 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			currentSession.Set("user_id", user.Id.String())
+			// currentSession.Set("user_id", user.Id.String())
 			currentSession.SetExpiry(1 * time.Hour)
 
 			if err := currentSession.Save(); err != nil {
@@ -150,19 +150,19 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			if err := r.Storage.Postgres.
-				Set("one:ignore_audit_log", true).
-				Model(&user).
-				Updates(map[string]any{
-					"mfa_verified": false,
-				}).Error; err != nil {
-				log.Errorf("🔥 Error updating MFA status for user: %s", err.Error())
+			// if err := r.Storage.Postgres.
+			// 	Set("one:ignore_audit_log", true).
+			// 	Model(&user).
+			// 	Updates(map[string]any{
+			// 		"mfa_verified": false,
+			// 	}).Error; err != nil {
+			// 	log.Errorf("🔥 Error updating MFA status for user: %s", err.Error())
 
-				return c.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-					"error":   constants.InternalServerError,
-					"message": constants.InternalServerErrorDetails,
-				})
-			}
+			// 	return c.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+			// 		"error":   constants.InternalServerError,
+			// 		"message": constants.InternalServerErrorDetails,
+			// 	})
+			// }
 
 			return c.SendStatus(fiber.StatusOK)
 		},

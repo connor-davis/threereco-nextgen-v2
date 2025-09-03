@@ -85,7 +85,7 @@ func (r *AuthenticationRouter) MfaEnableRoute() routing.Route {
 
 			if currentUser.MfaSecret == nil {
 				secret, err := totp.Generate(totp.GenerateOpts{
-					Issuer:      "Thusa MFA",
+					Issuer:      "3REco MFA",
 					AccountName: currentUser.Email,
 					Period:      30,
 					Digits:      otp.DigitsSix,
@@ -100,9 +100,7 @@ func (r *AuthenticationRouter) MfaEnableRoute() routing.Route {
 				currentUser.MfaSecret = []byte(secret.Secret())
 
 				if err := r.Storage.Postgres.Set("one:ignore_audit_log", true).
-					Where(&models.User{
-						Id: currentUser.Id,
-					}).
+					Where("id = ?", currentUser.Id).
 					Updates(&models.User{
 						MfaSecret: currentUser.MfaSecret,
 					}).Error; err != nil {
@@ -123,7 +121,7 @@ func (r *AuthenticationRouter) MfaEnableRoute() routing.Route {
 			}
 
 			secret, err := totp.Generate(totp.GenerateOpts{
-				Issuer:      "Thusa MFA",
+				Issuer:      "3REco MFA",
 				AccountName: currentUser.Email,
 				Period:      30,
 				Digits:      otp.DigitsSix,

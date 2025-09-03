@@ -10,9 +10,9 @@ import (
 // including storage access, session management, and service interactions.
 // It provides a convenient way to inject these dependencies into middleware handlers.
 type Middleware struct {
-	Storage  *storage.Storage
-	Sessions *session.Store
-	Services *services.Services
+	Storage  storage.Storage
+	Sessions session.Store
+	Services services.Services
 }
 
 // NewMiddleware creates and returns a new Middleware instance, initializing it with the provided
@@ -28,8 +28,8 @@ type Middleware struct {
 // Returns:
 //
 //	A pointer to a newly constructed Middleware instance.
-func NewMiddleware(storage *storage.Storage, sessions *session.Store, services *services.Services) *Middleware {
-	return &Middleware{
+func NewMiddleware(storage storage.Storage, sessions session.Store, services services.Services) Middleware {
+	return Middleware{
 		Storage:  storage,
 		Sessions: sessions,
 		Services: services,

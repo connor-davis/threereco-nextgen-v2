@@ -19,10 +19,10 @@ import (
 // HttpRouter encapsulates the dependencies and configuration required to set up HTTP routing.
 // It includes references to storage, session management, service layer, middleware, and route definitions.
 type HttpRouter struct {
-	Storage    *storage.Storage
-	Sessions   *session.Store
-	Services   *services.Services
-	Middleware *middleware.Middleware
+	Storage    storage.Storage
+	Sessions   session.Store
+	Services   services.Services
+	Middleware middleware.Middleware
 	Routes     []routing.Route
 }
 
@@ -37,8 +37,8 @@ type HttpRouter struct {
 //   - services: Pointer to the application's service layer.
 //
 // Returns:
-//   - *HttpRouter: A pointer to the initialized HttpRouter.
-func NewHttpRouter(storage *storage.Storage, sessions *session.Store, services *services.Services, middleware *middleware.Middleware) *HttpRouter {
+//   - HttpRouter: A pointer to the initialized HttpRouter.
+func NewHttpRouter(storage storage.Storage, sessions session.Store, services services.Services, middleware middleware.Middleware) HttpRouter {
 	authenticationRouter := authentication.NewAuthenticationRouter(storage, sessions, services, middleware)
 	authenticationRoutes := authenticationRouter.InitializeRoutes()
 
@@ -46,7 +46,7 @@ func NewHttpRouter(storage *storage.Storage, sessions *session.Store, services *
 
 	routes = append(routes, authenticationRoutes...)
 
-	return &HttpRouter{
+	return HttpRouter{
 		Storage:    storage,
 		Sessions:   sessions,
 		Services:   services,
@@ -195,6 +195,22 @@ func (h *HttpRouter) InitializeOpenAPI() *openapi3.T {
 				"MfaVerifyPayload": schemas.MfaVerifyPayloadSchema,
 				"LoginPayload":     schemas.LoginPayloadSchema,
 				"SignUpPayload":    schemas.SignUpPayloadSchema,
+				"User":             schemas.UserSchema,
+				"Users":            schemas.UsersSchema,
+				"Role":             schemas.RoleSchema,
+				"Roles":            schemas.RolesSchema,
+				"Organization":     schemas.OrganizationSchema,
+				"Organizations":    schemas.OrganizationsSchema,
+				"Material":         schemas.MaterialSchema,
+				"Materials":        schemas.MaterialsSchema,
+				"Address":          schemas.AddressSchema,
+				"Addresses":        schemas.AddressesSchema,
+				"BankDetail":       schemas.BankDetailSchema,
+				"BankDetails":      schemas.BankDetailsSchema,
+				"Collection":       schemas.CollectionSchema,
+				"Collections":      schemas.CollectionsSchema,
+				"Transaction":      schemas.TransactionSchema,
+				"Transactions":     schemas.TransactionsSchema,
 			},
 		},
 	}

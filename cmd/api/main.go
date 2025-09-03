@@ -31,9 +31,15 @@ func main() {
 	storage.SeedPostgres()
 
 	sessions := sessions.NewSessions()
+
+	if sessions == nil {
+		log.Error("❌ Failed to create session store")
+		return
+	}
+
 	services := services.NewServices(storage)
 
-	middleware := middleware.NewMiddleware(storage, sessions, services)
+	middleware := middleware.NewMiddleware(storage, *sessions, services)
 
 	app := fiber.New(fiber.Config{
 		AppName:      "3rEco API",
@@ -54,7 +60,7 @@ func main() {
 		TimeZone:   "Africa/Johannesburg",
 	}))
 
-	httpRouter := http.NewHttpRouter(storage, sessions, services, middleware)
+	httpRouter := http.NewHttpRouter(storage, *sessions, services, middleware)
 
 	openapiSpecification := httpRouter.InitializeOpenAPI()
 
@@ -78,7 +84,7 @@ func main() {
 		return c.Status(fiber.StatusOK).JSON(openapiSpecification)
 	})
 
-	api.Get("/api-doc", middleware.Authorized(), func(c *fiber.Ctx) error {
+	api.Get("/api-doc", func(c *fiber.Ctx) error {
 		html, err := scalar.ApiReferenceHTML(&scalar.Options{
 			SpecURL: func() string {
 				if string(env.MODE) == "production" {

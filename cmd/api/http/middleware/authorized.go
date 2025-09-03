@@ -51,7 +51,7 @@ func (m *Middleware) Authorized() fiber.Handler {
 
 		log.Infof("🔐 Authorized User with ID: %s", currentUserIdUUID)
 
-		currentUser, err := m.Services.Users.GetById(currentUserIdUUID)
+		currentUser, err := m.Services.Users().Find(currentUserIdUUID)
 
 		if err != nil {
 			log.Errorf("🔥 Error retrieving user: %s", err.Error())

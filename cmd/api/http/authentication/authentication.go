@@ -11,10 +11,10 @@ import (
 // AuthenticationRouter encapsulates dependencies required for handling authentication-related HTTP routes.
 // It provides access to storage, session management, service layer, and middleware components.
 type AuthenticationRouter struct {
-	Storage    *storage.Storage
-	Sessions   *session.Store
-	Services   *services.Services
-	Middleware *middleware.Middleware
+	Storage    storage.Storage
+	Sessions   session.Store
+	Services   services.Services
+	Middleware middleware.Middleware
 }
 
 // NewAuthenticationRouter creates and returns a new instance of AuthenticationRouter,
@@ -29,9 +29,9 @@ type AuthenticationRouter struct {
 //   - middleware: Pointer to the middleware manager for HTTP request handling.
 //
 // Returns:
-//   - *AuthenticationRouter: A pointer to the newly constructed AuthenticationRouter.
-func NewAuthenticationRouter(storage *storage.Storage, sessions *session.Store, services *services.Services, middleware *middleware.Middleware) *AuthenticationRouter {
-	return &AuthenticationRouter{
+//   - AuthenticationRouter: A pointer to the newly constructed AuthenticationRouter.
+func NewAuthenticationRouter(storage storage.Storage, sessions session.Store, services services.Services, middleware middleware.Middleware) AuthenticationRouter {
+	return AuthenticationRouter{
 		Storage:    storage,
 		Sessions:   sessions,
 		Services:   services,
@@ -47,8 +47,6 @@ func (r *AuthenticationRouter) InitializeRoutes() []routing.Route {
 	checkRoute := r.CheckRoute()
 	logoutRoute := r.LogoutRoute()
 	loginRoute := r.LoginRoute()
-	permissionsRoute := r.PermissionsRoute()
-	organizationsRoute := r.OrganizationsRoute()
 
 	// MFA routes
 	mfaEnableRoute := r.MfaEnableRoute()
@@ -58,8 +56,6 @@ func (r *AuthenticationRouter) InitializeRoutes() []routing.Route {
 		checkRoute,
 		logoutRoute,
 		loginRoute,
-		permissionsRoute,
-		organizationsRoute,
 		mfaEnableRoute,
 		mfaVerifyRoute,
 	}
