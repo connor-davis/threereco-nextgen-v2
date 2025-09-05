@@ -20,3 +20,18 @@ var OrganizationSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var OrganizationsSchema = openapi3.NewArraySchema().WithItems(OrganizationSchema.Value).NewRef()
+
+var CreateOrganizationSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateOrganizationProperties).
+	WithProperty("users", openapi3.NewArraySchema().WithItems(UserSchema.Value)).
+	WithProperty("roles", openapi3.NewArraySchema().WithItems(RoleSchema.Value)).
+	WithRequired([]string{
+		"name",
+	}).
+	NewRef()
+
+var UpdateOrganizationSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateOrganizationProperties).
+	WithProperty("users", openapi3.NewArraySchema().WithItems(UserSchema.Value)).
+	WithProperty("roles", openapi3.NewArraySchema().WithItems(RoleSchema.Value)).
+	NewRef()

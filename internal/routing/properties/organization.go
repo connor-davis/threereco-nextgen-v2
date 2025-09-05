@@ -8,3 +8,11 @@ var OrganizationProperties = map[string]*openapi3.Schema{
 	"createdAt": openapi3.NewDateTimeSchema(),
 	"updatedAt": openapi3.NewDateTimeSchema(),
 }
+
+var CreateOrganizationProperties = map[string]*openapi3.Schema{
+	"name": openapi3.NewStringSchema(),
+}
+
+var UpdateOrganizationProperties = map[string]*openapi3.Schema{
+	"name": openapi3.NewStringSchema().WithNullable(),
+}

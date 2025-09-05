@@ -12,3 +12,15 @@ type Organization struct {
 	BankDetailsId uuid.UUID    `json:"-" gorm:"type:uuid"`
 	BankDetails   *BankDetails `json:"bankDetails" gorm:"foreignKey:BankDetailsId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
+
+type CreateOrganizationPayload struct {
+	Name  string `json:"name"`
+	Roles []Role `json:"roles"`
+	Users []User `json:"users"`
+}
+
+type UpdateOrganizationPayload struct {
+	Name  *string `json:"name"`
+	Roles []Role  `json:"roles"`
+	Users []User  `json:"users"`
+}

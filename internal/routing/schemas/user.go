@@ -32,6 +32,7 @@ var UsersSchema = openapi3.NewArraySchema().WithItems(UserSchema.Value).NewRef()
 
 var CreateUserSchema = openapi3.NewSchema().
 	WithProperties(properties.CreateUserProperties).
+	WithProperty("roles", openapi3.NewArraySchema().WithItems(RoleSchema.Value)).
 	WithRequired([]string{
 		"name",
 		"email",
@@ -42,4 +43,6 @@ var CreateUserSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var UpdateUserSchema = openapi3.NewSchema().
-	WithProperties(properties.UpdateUserProperties).NewRef()
+	WithProperties(properties.UpdateUserProperties).
+	WithProperty("roles", openapi3.NewArraySchema().WithItems(RoleSchema.Value)).
+	NewRef()
