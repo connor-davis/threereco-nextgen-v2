@@ -1,7 +1,8 @@
-package materials
+package users
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
+	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
@@ -12,28 +13,27 @@ import (
 )
 
 type ListQueryParams struct {
-	Page   int    `query:"page"`
-	Limit  int    `query:"limit"`
-	Search string `query:"search"`
+	Page   int             `query:"page"`
+	Limit  int             `query:"limit"`
+	Search string          `query:"search"`
+	Type   models.UserType `query:"type"`
 }
 
-func (r *MaterialsRouter) ListRoute() routing.Route {
+func (r *UsersRouter) ListRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful materials retrieval.").
+			WithDescription("Successful users retrieval.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.MaterialsSchema.Value).
+					WithSchema(schemas.UserSchema.Value).
 					WithExample("example", []map[string]any{{
-						"id":           uuid.New(),
-						"name":         "Material Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-						"createdAt":    "2023-10-01T12:00:00Z",
-						"updatedAt":    "2023-10-01T12:00:00Z",
+						"id":    uuid.New(),
+						"name":  "User Name",
+						"email": "user@example.com",
+						"phone": "+1234567890",
 					}}),
 			}),
 	})
@@ -99,24 +99,30 @@ func (r *MaterialsRouter) ListRoute() routing.Route {
 			Value: openapi3.NewQueryParameter("search").
 				WithRequired(true).
 				WithSchema(openapi3.NewStringSchema()).
-				WithDescription("Search term for filtering materials."),
+				WithDescription("Search term for filtering users."),
+		},
+		{
+			Value: openapi3.NewQueryParameter("type").
+				WithRequired(true).
+				WithSchema(openapi3.NewStringSchema()).
+				WithDescription("Type of user to filter by."),
 		},
 	}
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "List Materials",
-			Description: "List all materials in the system.",
-			Tags:        []string{"Materials"},
+			Summary:     "List Users",
+			Description: "List all users in the system.",
+			Tags:        []string{"Users"},
 			Responses:   responses,
 			Parameters:  paramters,
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/materials",
+		Path:   "/users",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"materials.view"}),
+			r.Middleware.Authorized([]string{"users.view"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			var query ListQueryParams
@@ -133,9 +139,10 @@ func (r *MaterialsRouter) ListRoute() routing.Route {
 					clause.Like{Column: "name", Value: "%" + query.Search + "%"},
 					clause.Like{Column: "gw_code", Value: "%" + query.Search + "%"},
 				),
+				clause.Eq{Column: "type", Value: query.Type},
 			}
 
-			totalMaterials, err := r.Services.Materials().Count(searchClauses...)
+			totalUsers, err := r.Services.Users().Count(searchClauses...)
 
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
@@ -160,9 +167,9 @@ func (r *MaterialsRouter) ListRoute() routing.Route {
 
 			paginationClauses = append(paginationClauses, searchClauses...)
 
-			totalPages := (totalMaterials + int64(query.Limit) - 1) / int64(query.Limit)
+			totalPages := (totalUsers + int64(query.Limit) - 1) / int64(query.Limit)
 
-			materials, err := r.Services.Materials().List(paginationClauses...)
+			users, err := r.Services.Users().List(paginationClauses...)
 
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
@@ -179,9 +186,9 @@ func (r *MaterialsRouter) ListRoute() routing.Route {
 			}
 
 			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"items": materials,
+				"items": users,
 				"pageDetails": map[string]any{
-					"count":        totalMaterials,
+					"count":        totalUsers,
 					"nextPage":     query.Page + 1,
 					"previousPage": query.Page - 1,
 					"currentPage":  query.Page,

@@ -1,4 +1,4 @@
-package materials
+package users
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -8,33 +8,30 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
-type ListQueryParams struct {
-	Page   int    `query:"page"`
-	Limit  int    `query:"limit"`
-	Search string `query:"search"`
+type FindParams struct {
+	Id uuid.UUID `json:"id"`
 }
 
-func (r *MaterialsRouter) ListRoute() routing.Route {
+func (r *UsersRouter) FindRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful materials retrieval.").
+			WithDescription("Successful user retrieval.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.MaterialsSchema.Value).
-					WithExample("example", []map[string]any{{
+					WithSchema(schemas.UserSchema.Value).
+					WithExample("example", map[string]any{
 						"id":           uuid.New(),
-						"name":         "Material Name",
+						"name":         "User Name",
 						"gwCode":       "GW-123",
 						"carbonFactor": 0.5,
 						"createdAt":    "2023-10-01T12:00:00Z",
 						"updatedAt":    "2023-10-01T12:00:00Z",
-					}}),
+					}),
 			}),
 	})
 
@@ -80,89 +77,40 @@ func (r *MaterialsRouter) ListRoute() routing.Route {
 			}),
 	})
 
-	paramters := []*openapi3.ParameterRef{
+	parameters := []*openapi3.ParameterRef{
 		{
-			Value: openapi3.NewQueryParameter("page").
+			Value: openapi3.NewPathParameter("id").
 				WithRequired(true).
-				WithSchema(openapi3.NewInt64Schema().
-					WithDefault(1).WithMin(1)).
-				WithDescription("Page number for pagination. Defaults to 1."),
-		},
-		{
-			Value: openapi3.NewQueryParameter("limit").
-				WithRequired(true).
-				WithSchema(openapi3.NewInt64Schema().
-					WithDefault(10).WithMin(10)).
-				WithDescription("Number of items per page. Defaults to 10."),
-		},
-		{
-			Value: openapi3.NewQueryParameter("search").
-				WithRequired(true).
-				WithSchema(openapi3.NewStringSchema()).
-				WithDescription("Search term for filtering materials."),
+				WithSchema(openapi3.NewUUIDSchema()),
 		},
 	}
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "List Materials",
-			Description: "List all materials in the system.",
-			Tags:        []string{"Materials"},
+			Summary:     "Find User",
+			Description: "Find an existing user in the system.",
+			Tags:        []string{"Users"},
 			Responses:   responses,
-			Parameters:  paramters,
+			Parameters:  parameters,
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/materials",
+		Path:   "/users/{id}",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"materials.view"}),
+			r.Middleware.Authorized([]string{"users.view"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var query ListQueryParams
+			var params FindParams
 
-			if err := c.QueryParser(&query); err != nil {
+			if err := c.ParamsParser(&params); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 					"error":   constants.BadRequestError,
 					"message": constants.BadRequestErrorDetails,
 				})
 			}
 
-			searchClauses := []clause.Expression{
-				clause.Or(
-					clause.Like{Column: "name", Value: "%" + query.Search + "%"},
-					clause.Like{Column: "gw_code", Value: "%" + query.Search + "%"},
-				),
-			}
-
-			totalMaterials, err := r.Services.Materials().Count(searchClauses...)
-
-			if err != nil {
-				if err == gorm.ErrRecordNotFound {
-					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-						"error":   constants.NotFoundError,
-						"message": constants.NotFoundErrorDetails,
-					})
-				}
-
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error":   constants.InternalServerError,
-					"message": constants.InternalServerErrorDetails,
-				})
-			}
-
-			paginationClauses := []clause.Expression{
-				clause.Limit{
-					Limit:  &query.Limit,
-					Offset: (query.Page - 1) * query.Limit,
-				},
-			}
-
-			paginationClauses = append(paginationClauses, searchClauses...)
-
-			totalPages := (totalMaterials + int64(query.Limit) - 1) / int64(query.Limit)
-
-			materials, err := r.Services.Materials().List(paginationClauses...)
+			user, err := r.Services.Users().Find(params.Id)
 
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
@@ -179,14 +127,7 @@ func (r *MaterialsRouter) ListRoute() routing.Route {
 			}
 
 			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"items": materials,
-				"pageDetails": map[string]any{
-					"count":        totalMaterials,
-					"nextPage":     query.Page + 1,
-					"previousPage": query.Page - 1,
-					"currentPage":  query.Page,
-					"pages":        totalPages,
-				},
+				"item": user,
 			})
 		},
 	}

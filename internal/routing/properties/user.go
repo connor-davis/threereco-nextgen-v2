@@ -16,3 +16,21 @@ var UserProperties = map[string]*openapi3.Schema{
 	"createdAt":          openapi3.NewDateTimeSchema(),
 	"updatedAt":          openapi3.NewDateTimeSchema(),
 }
+
+var CreateUserProperties = map[string]*openapi3.Schema{
+	"name":     openapi3.NewStringSchema(),
+	"email":    openapi3.NewStringSchema(),
+	"phone":    openapi3.NewStringSchema(),
+	"password": openapi3.NewStringSchema(),
+	"roles":    openapi3.NewArraySchema().WithItems(openapi3.NewUUIDSchema()),
+	"type":     openapi3.NewStringSchema().WithEnum("standard", "collector", "business", "system"),
+}
+
+var UpdateUserProperties = map[string]*openapi3.Schema{
+	"name":     openapi3.NewStringSchema().WithNullable(),
+	"email":    openapi3.NewStringSchema().WithNullable(),
+	"phone":    openapi3.NewStringSchema().WithNullable(),
+	"password": openapi3.NewStringSchema().WithNullable(),
+	"roles":    openapi3.NewArraySchema().WithItems(openapi3.NewUUIDSchema()).WithNullable(),
+	"type":     openapi3.NewStringSchema().WithEnum("standard", "collector", "business", "system").WithNullable(),
+}

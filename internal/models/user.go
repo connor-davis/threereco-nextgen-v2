@@ -30,3 +30,25 @@ type User struct {
 	BankDetailsId      uuid.UUID    `json:"-" gorm:"type:uuid"`
 	BankDetails        *BankDetails `json:"bankDetails" gorm:"foreignKey:BankDetailsId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
+
+type CreateUserPayload struct {
+	Name        string       `json:"name"`
+	Email       string       `json:"email"`
+	Phone       string       `json:"phone"`
+	Password    string       `json:"password"`
+	Roles       []uuid.UUID  `json:"roles"`
+	Type        UserType     `json:"type"`
+	Address     *Address     `json:"address"`
+	BankDetails *BankDetails `json:"bankDetails"`
+}
+
+type UpdateUserPayload struct {
+	Name        *string      `json:"name"`
+	Email       *string      `json:"email"`
+	Phone       *string      `json:"phone"`
+	Password    *string      `json:"password"`
+	Roles       *[]uuid.UUID `json:"roles"`
+	Type        *UserType    `json:"type"`
+	Address     *Address     `json:"address"`
+	BankDetails *BankDetails `json:"bankDetails"`
+}
