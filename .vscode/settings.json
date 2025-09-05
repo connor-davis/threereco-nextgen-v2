@@ -4,5 +4,18 @@
     "source.fixAll": "always",
     "source.organizeImports": "always"
   },
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "3REco NextGen",
+      "group": "Localhost",
+      "database": "three_nextgen",
+      "username": "postgres"
+    }
+  ]
 }

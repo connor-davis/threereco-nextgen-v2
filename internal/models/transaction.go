@@ -17,4 +17,5 @@ type TransactionMaterial struct {
 	MaterialId    uuid.UUID `json:"-" gorm:"type:uuid;not null"`
 	Material      Material  `json:"material" gorm:"foreignKey:MaterialId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Weight        float64   `json:"weight" gorm:"type:decimal(10,2);not null"`
+	Value         float64   `json:"value" gorm:"type:decimal(10,2);not null"`
 }
