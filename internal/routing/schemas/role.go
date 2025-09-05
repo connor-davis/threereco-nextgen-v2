@@ -17,3 +17,13 @@ var RoleSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var RolesSchema = openapi3.NewArraySchema().WithItems(RoleSchema.Value).NewRef()
+
+var CreateRoleSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateRoleProperties).
+	WithRequired([]string{
+		"name",
+		"permissions",
+	}).NewRef()
+
+var UpdateRoleSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateRoleProperties).NewRef()

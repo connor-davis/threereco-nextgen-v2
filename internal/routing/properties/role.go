@@ -10,3 +10,15 @@ var RoleProperties = map[string]*openapi3.Schema{
 	"createdAt":   openapi3.NewDateTimeSchema(),
 	"updatedAt":   openapi3.NewDateTimeSchema(),
 }
+
+var CreateRoleProperties = map[string]*openapi3.Schema{
+	"name":        openapi3.NewStringSchema(),
+	"description": openapi3.NewStringSchema().WithNullable(),
+	"permissions": openapi3.NewArraySchema().WithItems(openapi3.NewStringSchema()),
+}
+
+var UpdateRoleProperties = map[string]*openapi3.Schema{
+	"name":        openapi3.NewStringSchema().WithNullable(),
+	"description": openapi3.NewStringSchema().WithNullable(),
+	"permissions": openapi3.NewArraySchema().WithItems(openapi3.NewStringSchema()).WithNullable(),
+}

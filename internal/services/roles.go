@@ -4,15 +4,16 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/storage"
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 )
 
 type rolesService interface {
-	Create(role models.Role) error
-	Update(roleId uuid.UUID, role models.Role) error
+	Create(payload models.CreateRolePayload) error
+	Update(roleId uuid.UUID, payload models.UpdateRolePayload) error
 	Delete(roleId uuid.UUID) error
 	Find(roleId uuid.UUID) (*models.Role, error)
-	List() ([]models.Role, error)
-	Count() (int64, error)
+	List(clauses ...clause.Expression) ([]models.Role, error)
+	Count(clauses ...clause.Expression) (int64, error)
 }
 
 type roles struct {
@@ -25,16 +26,43 @@ func newRolesService(storage storage.Storage) rolesService {
 	}
 }
 
-func (s *roles) Create(role models.Role) error {
-	if err := s.storage.Postgres.Create(&role).Error; err != nil {
+func (s *roles) Create(payload models.CreateRolePayload) error {
+	if err := s.storage.Postgres.
+		Model(&models.Role{}).
+		Create(&payload).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (s *roles) Update(roleId uuid.UUID, role models.Role) error {
-	if err := s.storage.Postgres.Where("id = ?", roleId).Updates(&role).Error; err != nil {
+func (s *roles) Update(roleId uuid.UUID, payload models.UpdateRolePayload) error {
+	var role models.Role
+
+	if err := s.storage.Postgres.
+		Where("id = ?", roleId).
+		First(&role).Error; err != nil {
+		return err
+	}
+
+	if payload.Name != nil {
+		role.Name = *payload.Name
+	}
+
+	role.Description = payload.Description
+
+	if payload.Permissions != nil {
+		role.Permissions = payload.Permissions
+	}
+
+	if err := s.storage.Postgres.
+		Model(&models.Role{}).
+		Where("id = ?", roleId).
+		Updates(&map[string]any{
+			"name":        role.Name,
+			"description": role.Description,
+			"permissions": role.Permissions,
+		}).Error; err != nil {
 		return err
 	}
 
@@ -42,7 +70,9 @@ func (s *roles) Update(roleId uuid.UUID, role models.Role) error {
 }
 
 func (s *roles) Delete(roleId uuid.UUID) error {
-	if err := s.storage.Postgres.Where("id = ?", roleId).Delete(&models.Role{}).Error; err != nil {
+	if err := s.storage.Postgres.
+		Where("id = ?", roleId).
+		Delete(&models.Role{}).Error; err != nil {
 		return err
 	}
 
@@ -52,27 +82,34 @@ func (s *roles) Delete(roleId uuid.UUID) error {
 func (s *roles) Find(roleId uuid.UUID) (*models.Role, error) {
 	var role *models.Role
 
-	if err := s.storage.Postgres.Where("id = ?", roleId).First(&role).Error; err != nil {
+	if err := s.storage.Postgres.
+		Where("id = ?", roleId).
+		First(&role).Error; err != nil {
 		return nil, err
 	}
 
 	return role, nil
 }
 
-func (s *roles) List() ([]models.Role, error) {
+func (s *roles) List(clauses ...clause.Expression) ([]models.Role, error) {
 	var roles []models.Role
 
-	if err := s.storage.Postgres.Find(&roles).Error; err != nil {
+	if err := s.storage.Postgres.
+		Clauses(clauses...).
+		Find(&roles).Error; err != nil {
 		return nil, err
 	}
 
 	return roles, nil
 }
 
-func (s *roles) Count() (int64, error) {
+func (s *roles) Count(clauses ...clause.Expression) (int64, error) {
 	var count int64
 
-	if err := s.storage.Postgres.Model(&models.Role{}).Count(&count).Error; err != nil {
+	if err := s.storage.Postgres.
+		Model(&models.Role{}).
+		Clauses(clauses...).
+		Count(&count).Error; err != nil {
 		return 0, err
 	}
 

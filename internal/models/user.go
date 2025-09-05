@@ -32,23 +32,19 @@ type User struct {
 }
 
 type CreateUserPayload struct {
-	Name        string       `json:"name"`
-	Email       string       `json:"email"`
-	Phone       string       `json:"phone"`
-	Password    string       `json:"password"`
-	Roles       []uuid.UUID  `json:"roles"`
-	Type        UserType     `json:"type"`
-	Address     *Address     `json:"address"`
-	BankDetails *BankDetails `json:"bankDetails"`
+	Name     string   `json:"name"`
+	Email    string   `json:"email"`
+	Phone    string   `json:"phone"`
+	Password string   `json:"password"`
+	Roles    []Role   `json:"roles"`
+	Type     UserType `json:"type"`
 }
 
 type UpdateUserPayload struct {
-	Name        *string      `json:"name"`
-	Email       *string      `json:"email"`
-	Phone       *string      `json:"phone"`
-	Password    *string      `json:"password"`
-	Roles       *[]uuid.UUID `json:"roles"`
-	Type        *UserType    `json:"type"`
-	Address     *Address     `json:"address"`
-	BankDetails *BankDetails `json:"bankDetails"`
+	Name     *string   `json:"name"`
+	Email    *string   `json:"email"`
+	Phone    *string   `json:"phone"`
+	Password *string   `json:"password"`
+	Roles    []Role    `json:"roles"`
+	Type     *UserType `json:"type"`
 }

@@ -8,13 +8,13 @@ type Material struct {
 }
 
 type CreateMaterialPayload struct {
-	Name         string  `json:"name"`
-	GWCode       string  `json:"gwCode"`
-	CarbonFactor float64 `json:"carbonFactor"`
+	Name         string `json:"name"`
+	GWCode       string `json:"gwCode"`
+	CarbonFactor string `json:"carbonFactor"`
 }
 
 type UpdateMaterialPayload struct {
-	Name         *string  `json:"name"`
-	GWCode       *string  `json:"gwCode"`
-	CarbonFactor *float64 `json:"carbonFactor"`
+	Name         *string `json:"name"`
+	GWCode       *string `json:"gwCode"`
+	CarbonFactor *string `json:"carbonFactor"`
 }

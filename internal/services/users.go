@@ -4,6 +4,7 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/storage"
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm/clause"
 )
 
@@ -29,21 +30,79 @@ func newUsersService(storage storage.Storage) usersService {
 }
 
 func (s *users) Create(payload models.CreateUserPayload) error {
+	var user models.User
+
+	user.Name = payload.Name
+	user.Email = payload.Email
+	user.Phone = payload.Phone
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return err
+	}
+
+	user.Password = hashedPassword
+	user.Type = payload.Type
+
 	if err := s.storage.Postgres.
 		Model(&models.User{}).
-		Create(&payload).Error; err != nil {
+		Create(&user).Error; err != nil {
 		return err
+	}
+
+	if payload.Roles != nil {
+		if err := s.storage.Postgres.
+			Model(&user).Association("Roles").Append(payload.Roles); err != nil {
+			return err
+		}
 	}
 
 	return nil
 }
 
 func (s *users) Update(userId uuid.UUID, payload models.UpdateUserPayload) error {
+	var user models.User
+
+	if err := s.storage.Postgres.
+		Where("id = ?", userId).
+		First(&user).Error; err != nil {
+		return err
+	}
+
+	if payload.Name != nil {
+		user.Name = *payload.Name
+	}
+
+	if payload.Email != nil {
+		user.Email = *payload.Email
+	}
+
+	if payload.Phone != nil {
+		user.Phone = *payload.Phone
+	}
+
+	if payload.Type != nil {
+		user.Type = *payload.Type
+	}
+
 	if err := s.storage.Postgres.
 		Model(&models.User{}).
 		Where("id = ?", userId).
-		Updates(&payload).Error; err != nil {
+		Updates(&map[string]any{
+			"name":  user.Name,
+			"email": user.Email,
+			"phone": user.Phone,
+			"type":  user.Type,
+		}).Error; err != nil {
 		return err
+	}
+
+	if payload.Roles != nil {
+		if err := s.storage.Postgres.
+			Model(&user).Association("Roles").Replace(payload.Roles); err != nil {
+			return err
+		}
 	}
 
 	return nil

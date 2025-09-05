@@ -37,10 +37,34 @@ func (s *materials) Create(payload models.CreateMaterialPayload) error {
 }
 
 func (s *materials) Update(materialId uuid.UUID, payload models.UpdateMaterialPayload) error {
+	var material models.Material
+
+	if err := s.storage.Postgres.
+		Where("id = ?", materialId).
+		First(&material).Error; err != nil {
+		return err
+	}
+
+	if payload.Name != nil {
+		material.Name = *payload.Name
+	}
+
+	if payload.GWCode != nil {
+		material.GWCode = *payload.GWCode
+	}
+
+	if payload.CarbonFactor != nil {
+		material.CarbonFactor = *payload.CarbonFactor
+	}
+
 	if err := s.storage.Postgres.
 		Model(&models.Material{}).
 		Where("id = ?", materialId).
-		Updates(&payload).Error; err != nil {
+		Updates(&map[string]any{
+			"name":          material.Name,
+			"gw_code":       material.GWCode,
+			"carbon_factor": material.CarbonFactor,
+		}).Error; err != nil {
 		return err
 	}
 
