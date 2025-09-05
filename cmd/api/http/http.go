@@ -5,6 +5,7 @@ import (
 	"regexp"
 
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/authentication"
+	"github.com/connor-davis/threereco-nextgen/cmd/api/http/materials"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/middleware"
 	"github.com/connor-davis/threereco-nextgen/env"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
@@ -42,9 +43,13 @@ func NewHttpRouter(storage storage.Storage, sessions session.Store, services ser
 	authenticationRouter := authentication.NewAuthenticationRouter(storage, sessions, services, middleware)
 	authenticationRoutes := authenticationRouter.InitializeRoutes()
 
+	materialsRouter := materials.NewMaterialsRouter(storage, sessions, services, middleware)
+	materialsRoutes := materialsRouter.InitializeRoutes()
+
 	routes := []routing.Route{}
 
 	routes = append(routes, authenticationRoutes...)
+	routes = append(routes, materialsRoutes...)
 
 	return HttpRouter{
 		Storage:    storage,
@@ -162,6 +167,8 @@ func (h *HttpRouter) InitializeOpenAPI() *openapi3.T {
 				existingPathItem.Post = pathItem.Post
 			case routing.PutMethod:
 				existingPathItem.Put = pathItem.Put
+			case routing.PatchMethod:
+				existingPathItem.Patch = pathItem.Patch
 			case routing.DeleteMethod:
 				existingPathItem.Delete = pathItem.Delete
 			}

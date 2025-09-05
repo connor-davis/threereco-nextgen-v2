@@ -71,7 +71,7 @@ func (r *AuthenticationRouter) MfaEnableRoute() routing.Route {
 		Method: routing.GetMethod,
 		Path:   "/authentication/mfa/enable",
 		Middlewares: []fiber.Handler{
-			r.Middleware.Authorized(),
+			r.Middleware.Authenticated(),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			currentUser := c.Locals("user").(*models.User)

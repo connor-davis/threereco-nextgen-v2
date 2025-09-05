@@ -56,7 +56,7 @@ func (r *AuthenticationRouter) LogoutRoute() routing.Route {
 		Method: routing.PostMethod,
 		Path:   "/authentication/logout",
 		Middlewares: []fiber.Handler{
-			r.Middleware.Authorized(),
+			r.Middleware.Authenticated(),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			session, err := r.Sessions.Get(c)

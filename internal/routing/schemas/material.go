@@ -18,3 +18,14 @@ var MaterialSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var MaterialsSchema = openapi3.NewArraySchema().WithItems(MaterialSchema.Value).NewRef()
+
+var CreateMaterialSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateMaterialProperties).
+	WithRequired([]string{
+		"name",
+		"gwCode",
+		"carbonFactor",
+	}).NewRef()
+
+var UpdateMaterialSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateMaterialProperties).NewRef()

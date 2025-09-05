@@ -6,3 +6,15 @@ type Material struct {
 	GWCode       string `json:"gwCode" gorm:"type:text;not null"`
 	CarbonFactor string `json:"carbonFactor" gorm:"type:float;not null"`
 }
+
+type CreateMaterialPayload struct {
+	Name         string  `json:"name"`
+	GWCode       string  `json:"gwCode"`
+	CarbonFactor float64 `json:"carbonFactor"`
+}
+
+type UpdateMaterialPayload struct {
+	Name         *string  `json:"name"`
+	GWCode       *string  `json:"gwCode"`
+	CarbonFactor *float64 `json:"carbonFactor"`
+}

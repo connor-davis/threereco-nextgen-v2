@@ -78,7 +78,7 @@ func (r *AuthenticationRouter) MfaVerifyRoute() routing.Route {
 		Method: routing.PostMethod,
 		Path:   "/authentication/mfa/verify",
 		Middlewares: []fiber.Handler{
-			r.Middleware.Authorized(),
+			r.Middleware.Authenticated(),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			currentUser := c.Locals("user").(*models.User)

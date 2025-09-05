@@ -11,3 +11,15 @@ var MaterialProperties = map[string]*openapi3.Schema{
 	"createdAt":    openapi3.NewDateTimeSchema(),
 	"updatedAt":    openapi3.NewDateTimeSchema(),
 }
+
+var CreateMaterialProperties = map[string]*openapi3.Schema{
+	"name":         openapi3.NewStringSchema(),
+	"gwCode":       openapi3.NewStringSchema(),
+	"carbonFactor": openapi3.NewFloat64Schema(),
+}
+
+var UpdateMaterialProperties = map[string]*openapi3.Schema{
+	"name":         openapi3.NewStringSchema(),
+	"gwCode":       openapi3.NewStringSchema(),
+	"carbonFactor": openapi3.NewFloat64Schema(),
+}

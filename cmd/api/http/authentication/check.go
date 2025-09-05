@@ -75,7 +75,7 @@ func (r *AuthenticationRouter) CheckRoute() routing.Route {
 		Method: routing.GetMethod,
 		Path:   "/authentication/check",
 		Middlewares: []fiber.Handler{
-			r.Middleware.Authorized(),
+			r.Middleware.Authenticated(),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			user, ok := c.Locals("user").(*models.User)
