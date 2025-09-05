@@ -18,6 +18,18 @@ var CollectionMaterialSchema = openapi3.NewSchema().
 
 var CollectionMaterialsArraySchema = openapi3.NewArraySchema().WithItems(CollectionMaterialSchema.Value).NewRef()
 
+var CreateCollectionMaterialSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateCollectionMaterialProperties).
+	WithRequired([]string{
+		"materialId",
+		"weight",
+		"value",
+	}).NewRef()
+
+var UpdateCollectionMaterialSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateCollectionMaterialProperties).
+	NewRef()
+
 var CollectionSchema = openapi3.NewSchema().
 	WithProperties(properties.CollectionProperties).
 	WithProperty("collector", UserSchema.Value).
@@ -33,3 +45,14 @@ var CollectionSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var CollectionsSchema = openapi3.NewArraySchema().WithItems(CollectionSchema.Value).NewRef()
+
+var CreateCollectionSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateCollectionProperties).
+	WithRequired([]string{
+		"collectorId",
+		"organizationId",
+	}).NewRef()
+
+var UpdateCollectionSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateCollectionProperties).
+	NewRef()
