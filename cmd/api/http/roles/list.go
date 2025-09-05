@@ -131,7 +131,6 @@ func (r *RolesRouter) ListRoute() routing.Route {
 			searchClauses := []clause.Expression{
 				clause.Or(
 					clause.Like{Column: "name", Value: "%" + query.Search + "%"},
-					clause.Like{Column: "gw_code", Value: "%" + query.Search + "%"},
 				),
 			}
 

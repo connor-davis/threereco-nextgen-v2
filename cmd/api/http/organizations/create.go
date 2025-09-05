@@ -1,37 +1,25 @@
-package roles
+package organizations
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
+	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
-type FindParams struct {
-	Id uuid.UUID `json:"id"`
-}
-
-func (r *RolesRouter) FindRoute() routing.Route {
+func (r *OrganizationsRouter) CreateRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful role retrieval.").
+			WithDescription("Successful organization creation.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.RoleSchema.Value).
-					WithExample("example", map[string]any{
-						"id":          uuid.New(),
-						"name":        "Role Name",
-						"description": "Role Description",
-						"permissions": []string{"permission1", "permission2"},
-						"createdAt":   "2023-10-01T12:00:00Z",
-						"updatedAt":   "2023-10-01T12:00:00Z",
-					}),
+				"text/plain": openapi3.NewMediaType().
+					WithSchema(openapi3.NewStringSchema()).
+					WithExample("example", "OK"),
 			}),
 	})
 
@@ -77,58 +65,54 @@ func (r *RolesRouter) FindRoute() routing.Route {
 			}),
 	})
 
-	parameters := []*openapi3.ParameterRef{
-		{
-			Value: openapi3.NewPathParameter("id").
-				WithRequired(true).
-				WithSchema(openapi3.NewUUIDSchema()),
-		},
+	body := &openapi3.RequestBodyRef{
+		Value: openapi3.NewRequestBody().
+			WithRequired(true).
+			WithDescription("Payload to create a new organization.").
+			WithContent(openapi3.Content{
+				"application/json": openapi3.NewMediaType().
+					WithSchema(schemas.CreateOrganizationSchema.Value).
+					WithExample("example", map[string]any{
+						"name":         "Organization Name",
+						"gwCode":       "GW-123",
+						"carbonFactor": 0.5,
+					}),
+			}),
 	}
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Find Role",
-			Description: "Find an existing role in the system.",
-			Tags:        []string{"Roles"},
+			Summary:     "Create Organization",
+			Description: "Create a new organization in the system.",
+			Tags:        []string{"Organizations"},
 			Responses:   responses,
-			Parameters:  parameters,
-			RequestBody: nil,
+			Parameters:  nil,
+			RequestBody: body,
 		},
-		Method: routing.GetMethod,
-		Path:   "/roles/{id}",
+		Method: routing.PostMethod,
+		Path:   "/organizations",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"roles.view"}),
+			r.Middleware.Authorized([]string{"organizations.create"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params FindParams
+			var payload models.CreateOrganizationPayload
 
-			if err := c.ParamsParser(&params); err != nil {
+			if err := c.BodyParser(&payload); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 					"error":   constants.BadRequestError,
 					"message": constants.BadRequestErrorDetails,
 				})
 			}
 
-			role, err := r.Services.Roles().Find(params.Id)
-
-			if err != nil {
-				if err == gorm.ErrRecordNotFound {
-					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-						"error":   constants.NotFoundError,
-						"message": constants.NotFoundErrorDetails,
-					})
-				}
-
+			if err := r.Services.Organizations().Create(payload); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error":   constants.InternalServerError,
 					"message": constants.InternalServerErrorDetails,
 				})
 			}
 
-			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"item": role,
-			})
+			return c.SendStatus(fiber.StatusOK)
 		},
 	}
 }

@@ -1,4 +1,4 @@
-package roles
+package organizations
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -10,28 +10,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type FindParams struct {
+type DeleteParams struct {
 	Id uuid.UUID `json:"id"`
 }
 
-func (r *RolesRouter) FindRoute() routing.Route {
+func (r *OrganizationsRouter) DeleteRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful role retrieval.").
+			WithDescription("Successful organization deletion.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.RoleSchema.Value).
-					WithExample("example", map[string]any{
-						"id":          uuid.New(),
-						"name":        "Role Name",
-						"description": "Role Description",
-						"permissions": []string{"permission1", "permission2"},
-						"createdAt":   "2023-10-01T12:00:00Z",
-						"updatedAt":   "2023-10-01T12:00:00Z",
-					}),
+				"text/plain": openapi3.NewMediaType().
+					WithSchema(openapi3.NewStringSchema()).
+					WithExample("example", "OK"),
 			}),
 	})
 
@@ -87,21 +80,21 @@ func (r *RolesRouter) FindRoute() routing.Route {
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Find Role",
-			Description: "Find an existing role in the system.",
-			Tags:        []string{"Roles"},
+			Summary:     "Delete Organization",
+			Description: "Delete an existing organization from the system.",
+			Tags:        []string{"Organizations"},
 			Responses:   responses,
 			Parameters:  parameters,
 			RequestBody: nil,
 		},
-		Method: routing.GetMethod,
-		Path:   "/roles/{id}",
+		Method: routing.DeleteMethod,
+		Path:   "/organizations/{id}",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"roles.view"}),
+			r.Middleware.Authorized([]string{"organizations.delete"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params FindParams
+			var params DeleteParams
 
 			if err := c.ParamsParser(&params); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -110,9 +103,7 @@ func (r *RolesRouter) FindRoute() routing.Route {
 				})
 			}
 
-			role, err := r.Services.Roles().Find(params.Id)
-
-			if err != nil {
+			if err := r.Services.Organizations().Delete(params.Id); err != nil {
 				if err == gorm.ErrRecordNotFound {
 					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 						"error":   constants.NotFoundError,
@@ -126,9 +117,7 @@ func (r *RolesRouter) FindRoute() routing.Route {
 				})
 			}
 
-			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"item": role,
-			})
+			return c.SendStatus(fiber.StatusOK)
 		},
 	}
 }

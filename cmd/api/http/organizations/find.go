@@ -1,4 +1,4 @@
-package roles
+package organizations
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -14,23 +14,21 @@ type FindParams struct {
 	Id uuid.UUID `json:"id"`
 }
 
-func (r *RolesRouter) FindRoute() routing.Route {
+func (r *OrganizationsRouter) FindRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful role retrieval.").
+			WithDescription("Successful organization retrieval.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.RoleSchema.Value).
+					WithSchema(schemas.OrganizationSchema.Value).
 					WithExample("example", map[string]any{
-						"id":          uuid.New(),
-						"name":        "Role Name",
-						"description": "Role Description",
-						"permissions": []string{"permission1", "permission2"},
-						"createdAt":   "2023-10-01T12:00:00Z",
-						"updatedAt":   "2023-10-01T12:00:00Z",
+						"id":        uuid.New(),
+						"name":      "Organization Name",
+						"createdAt": "2023-10-01T12:00:00Z",
+						"updatedAt": "2023-10-01T12:00:00Z",
 					}),
 			}),
 	})
@@ -87,18 +85,18 @@ func (r *RolesRouter) FindRoute() routing.Route {
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Find Role",
-			Description: "Find an existing role in the system.",
-			Tags:        []string{"Roles"},
+			Summary:     "Find Organization",
+			Description: "Find an existing organization in the system.",
+			Tags:        []string{"Organizations"},
 			Responses:   responses,
 			Parameters:  parameters,
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/roles/{id}",
+		Path:   "/organizations/{id}",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"roles.view"}),
+			r.Middleware.Authorized([]string{"organizations.view"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			var params FindParams
@@ -110,7 +108,7 @@ func (r *RolesRouter) FindRoute() routing.Route {
 				})
 			}
 
-			role, err := r.Services.Roles().Find(params.Id)
+			organization, err := r.Services.Organizations().Find(params.Id)
 
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
@@ -127,7 +125,7 @@ func (r *RolesRouter) FindRoute() routing.Route {
 			}
 
 			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"item": role,
+				"item": organization,
 			})
 		},
 	}

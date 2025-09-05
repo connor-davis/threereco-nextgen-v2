@@ -25,12 +25,13 @@ func (r *UsersRouter) FindRoute() routing.Route {
 				"application/json": openapi3.NewMediaType().
 					WithSchema(schemas.UserSchema.Value).
 					WithExample("example", map[string]any{
-						"id":           uuid.New(),
-						"name":         "User Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-						"createdAt":    "2023-10-01T12:00:00Z",
-						"updatedAt":    "2023-10-01T12:00:00Z",
+						"id":        uuid.New(),
+						"name":      "User Name",
+						"email":     "user@example.com",
+						"phone":     "+1234567890",
+						"type":      "admin",
+						"createdAt": "2023-10-01T12:00:00Z",
+						"updatedAt": "2023-10-01T12:00:00Z",
 					}),
 			}),
 	})

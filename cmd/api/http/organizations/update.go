@@ -1,7 +1,8 @@
-package roles
+package organizations
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
+	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
@@ -10,28 +11,21 @@ import (
 	"gorm.io/gorm"
 )
 
-type FindParams struct {
+type UpdateParams struct {
 	Id uuid.UUID `json:"id"`
 }
 
-func (r *RolesRouter) FindRoute() routing.Route {
+func (r *OrganizationsRouter) UpdateRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful role retrieval.").
+			WithDescription("Successful organization update.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.RoleSchema.Value).
-					WithExample("example", map[string]any{
-						"id":          uuid.New(),
-						"name":        "Role Name",
-						"description": "Role Description",
-						"permissions": []string{"permission1", "permission2"},
-						"createdAt":   "2023-10-01T12:00:00Z",
-						"updatedAt":   "2023-10-01T12:00:00Z",
-					}),
+				"text/plain": openapi3.NewMediaType().
+					WithSchema(openapi3.NewStringSchema()).
+					WithExample("example", "OK"),
 			}),
 	})
 
@@ -85,23 +79,38 @@ func (r *RolesRouter) FindRoute() routing.Route {
 		},
 	}
 
+	body := &openapi3.RequestBodyRef{
+		Value: openapi3.NewRequestBody().
+			WithRequired(true).
+			WithDescription("Payload to update an existing organization.").
+			WithContent(openapi3.Content{
+				"application/json": openapi3.NewMediaType().
+					WithSchema(schemas.UpdateOrganizationSchema.Value).
+					WithExample("example", map[string]any{
+						"name":         "Organization Name",
+						"gwCode":       "GW-123",
+						"carbonFactor": 0.5,
+					}),
+			}),
+	}
+
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Find Role",
-			Description: "Find an existing role in the system.",
-			Tags:        []string{"Roles"},
+			Summary:     "Update Organization",
+			Description: "Update an existing organization in the system.",
+			Tags:        []string{"Organizations"},
 			Responses:   responses,
 			Parameters:  parameters,
-			RequestBody: nil,
+			RequestBody: body,
 		},
-		Method: routing.GetMethod,
-		Path:   "/roles/{id}",
+		Method: routing.PatchMethod,
+		Path:   "/organizations/{id}",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"roles.view"}),
+			r.Middleware.Authorized([]string{"organizations.update"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params FindParams
+			var params UpdateParams
 
 			if err := c.ParamsParser(&params); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -110,9 +119,16 @@ func (r *RolesRouter) FindRoute() routing.Route {
 				})
 			}
 
-			role, err := r.Services.Roles().Find(params.Id)
+			var payload models.UpdateOrganizationPayload
 
-			if err != nil {
+			if err := c.BodyParser(&payload); err != nil {
+				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+					"error":   constants.BadRequestError,
+					"message": constants.BadRequestErrorDetails,
+				})
+			}
+
+			if err := r.Services.Organizations().Update(params.Id, payload); err != nil {
 				if err == gorm.ErrRecordNotFound {
 					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 						"error":   constants.NotFoundError,
@@ -126,9 +142,7 @@ func (r *RolesRouter) FindRoute() routing.Route {
 				})
 			}
 
-			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"item": role,
-			})
+			return c.SendStatus(fiber.StatusOK)
 		},
 	}
 }

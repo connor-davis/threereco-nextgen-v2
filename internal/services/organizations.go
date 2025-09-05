@@ -12,8 +12,8 @@ type organizationsService interface {
 	Update(organizationId uuid.UUID, payload models.UpdateOrganizationPayload) error
 	Delete(organizationId uuid.UUID) error
 	Find(organizationId uuid.UUID) (*models.Organization, error)
-	List(clauses clause.Expression) ([]models.Organization, error)
-	Count(clauses clause.Expression) (int64, error)
+	List(clauses ...clause.Expression) ([]models.Organization, error)
+	Count(clauses ...clause.Expression) (int64, error)
 }
 
 type organizations struct {
@@ -111,11 +111,11 @@ func (s *organizations) Find(organizationId uuid.UUID) (*models.Organization, er
 	return organization, nil
 }
 
-func (s *organizations) List(clauses clause.Expression) ([]models.Organization, error) {
+func (s *organizations) List(clauses ...clause.Expression) ([]models.Organization, error) {
 	var organizations []models.Organization
 
 	if err := s.storage.Postgres.
-		Clauses(clauses).
+		Clauses(clauses...).
 		Find(&organizations).Error; err != nil {
 		return nil, err
 	}
@@ -123,12 +123,12 @@ func (s *organizations) List(clauses clause.Expression) ([]models.Organization, 
 	return organizations, nil
 }
 
-func (s *organizations) Count(clauses clause.Expression) (int64, error) {
+func (s *organizations) Count(clauses ...clause.Expression) (int64, error) {
 	var count int64
 
 	if err := s.storage.Postgres.
 		Model(&models.Organization{}).
-		Clauses(clauses).
+		Clauses(clauses...).
 		Count(&count).Error; err != nil {
 		return 0, err
 	}

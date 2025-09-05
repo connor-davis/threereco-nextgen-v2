@@ -1,4 +1,4 @@
-package roles
+package organizations
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -8,30 +8,31 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
-type FindParams struct {
-	Id uuid.UUID `json:"id"`
+type ListQueryParams struct {
+	Page   int    `query:"page"`
+	Limit  int    `query:"limit"`
+	Search string `query:"search"`
 }
 
-func (r *RolesRouter) FindRoute() routing.Route {
+func (r *OrganizationsRouter) ListRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful role retrieval.").
+			WithDescription("Successful organizations retrieval.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.RoleSchema.Value).
-					WithExample("example", map[string]any{
-						"id":          uuid.New(),
-						"name":        "Role Name",
-						"description": "Role Description",
-						"permissions": []string{"permission1", "permission2"},
-						"createdAt":   "2023-10-01T12:00:00Z",
-						"updatedAt":   "2023-10-01T12:00:00Z",
-					}),
+					WithSchema(schemas.OrganizationsSchema.Value).
+					WithExample("example", []map[string]any{{
+						"id":        uuid.New(),
+						"name":      "Organization Name",
+						"createdAt": "2023-10-01T12:00:00Z",
+						"updatedAt": "2023-10-01T12:00:00Z",
+					}}),
 			}),
 	})
 
@@ -77,40 +78,88 @@ func (r *RolesRouter) FindRoute() routing.Route {
 			}),
 	})
 
-	parameters := []*openapi3.ParameterRef{
+	paramters := []*openapi3.ParameterRef{
 		{
-			Value: openapi3.NewPathParameter("id").
+			Value: openapi3.NewQueryParameter("page").
 				WithRequired(true).
-				WithSchema(openapi3.NewUUIDSchema()),
+				WithSchema(openapi3.NewInt64Schema().
+					WithDefault(1).WithMin(1)).
+				WithDescription("Page number for pagination. Defaults to 1."),
+		},
+		{
+			Value: openapi3.NewQueryParameter("limit").
+				WithRequired(true).
+				WithSchema(openapi3.NewInt64Schema().
+					WithDefault(10).WithMin(10)).
+				WithDescription("Number of items per page. Defaults to 10."),
+		},
+		{
+			Value: openapi3.NewQueryParameter("search").
+				WithRequired(true).
+				WithSchema(openapi3.NewStringSchema()).
+				WithDescription("Search term for filtering organizations."),
 		},
 	}
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Find Role",
-			Description: "Find an existing role in the system.",
-			Tags:        []string{"Roles"},
+			Summary:     "List Organizations",
+			Description: "List all organizations in the system.",
+			Tags:        []string{"Organizations"},
 			Responses:   responses,
-			Parameters:  parameters,
+			Parameters:  paramters,
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/roles/{id}",
+		Path:   "/organizations",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"roles.view"}),
+			r.Middleware.Authorized([]string{"organizations.view"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params FindParams
+			var query ListQueryParams
 
-			if err := c.ParamsParser(&params); err != nil {
+			if err := c.QueryParser(&query); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 					"error":   constants.BadRequestError,
 					"message": constants.BadRequestErrorDetails,
 				})
 			}
 
-			role, err := r.Services.Roles().Find(params.Id)
+			searchClauses := []clause.Expression{
+				clause.Or(
+					clause.Like{Column: "name", Value: "%" + query.Search + "%"},
+				),
+			}
+
+			totalOrganizations, err := r.Services.Organizations().Count(searchClauses...)
+
+			if err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+						"error":   constants.NotFoundError,
+						"message": constants.NotFoundErrorDetails,
+					})
+				}
+
+				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"error":   constants.InternalServerError,
+					"message": constants.InternalServerErrorDetails,
+				})
+			}
+
+			paginationClauses := []clause.Expression{
+				clause.Limit{
+					Limit:  &query.Limit,
+					Offset: (query.Page - 1) * query.Limit,
+				},
+			}
+
+			paginationClauses = append(paginationClauses, searchClauses...)
+
+			totalPages := (totalOrganizations + int64(query.Limit) - 1) / int64(query.Limit)
+
+			organizations, err := r.Services.Organizations().List(paginationClauses...)
 
 			if err != nil {
 				if err == gorm.ErrRecordNotFound {
@@ -127,7 +176,14 @@ func (r *RolesRouter) FindRoute() routing.Route {
 			}
 
 			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"item": role,
+				"items": organizations,
+				"pageDetails": map[string]any{
+					"count":        totalOrganizations,
+					"nextPage":     query.Page + 1,
+					"previousPage": query.Page - 1,
+					"currentPage":  query.Page,
+					"pages":        totalPages,
+				},
 			})
 		},
 	}
