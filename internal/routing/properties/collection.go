@@ -9,13 +9,13 @@ var CollectionProperties = map[string]*openapi3.Schema{
 }
 
 var CreateCollectionProperties = map[string]*openapi3.Schema{
-	"collectorId":    openapi3.NewUUIDSchema(),
-	"organizationId": openapi3.NewUUIDSchema(),
+	"sellerId": openapi3.NewUUIDSchema(),
+	"buyerId":  openapi3.NewUUIDSchema(),
 }
 
 var UpdateCollectionProperties = map[string]*openapi3.Schema{
-	"collectorId":    openapi3.NewUUIDSchema().WithNullable(),
-	"organizationId": openapi3.NewUUIDSchema().WithNullable(),
+	"sellerId": openapi3.NewUUIDSchema().WithNullable(),
+	"buyerId":  openapi3.NewUUIDSchema().WithNullable(),
 }
 
 var CollectionMaterialProperties = map[string]*openapi3.Schema{
