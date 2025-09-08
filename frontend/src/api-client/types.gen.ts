@@ -223,8 +223,8 @@ export type Collections = Array<{
 }>;
 
 export type CreateCollection = {
-  collectorId: string;
-  organizationId: string;
+  buyerId?: string;
+  sellerId?: string;
 };
 
 export type CreateMaterial = {
@@ -1115,8 +1115,8 @@ export type Transactions = Array<{
 }>;
 
 export type UpdateCollection = {
-  collectorId?: string | null;
-  organizationId?: string | null;
+  buyerId?: string | null;
+  sellerId?: string | null;
 };
 
 export type UpdateMaterial = {
@@ -2176,8 +2176,8 @@ export type PostApiCollectionsData = {
    * Payload to create a new collection.
    */
   body: {
-    collectorId: string;
-    organizationId: string;
+    buyerId?: string;
+    sellerId?: string;
   };
   path?: never;
   query?: never;
@@ -2408,8 +2408,8 @@ export type PatchApiCollectionsByIdData = {
    * Payload to update an existing collection.
    */
   body: {
-    collectorId?: string | null;
-    organizationId?: string | null;
+    buyerId?: string | null;
+    sellerId?: string | null;
   };
   path: {
     id: string;

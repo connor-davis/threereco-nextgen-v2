@@ -274,8 +274,8 @@ export const zCollections = z.array(
 );
 
 export const zCreateCollection = z.object({
-  collectorId: z.uuid(),
-  organizationId: z.uuid(),
+  buyerId: z.optional(z.uuid()),
+  sellerId: z.optional(z.uuid()),
 });
 
 export const zCreateMaterial = z.object({
@@ -1363,8 +1363,8 @@ export const zTransactions = z.array(
 );
 
 export const zUpdateCollection = z.object({
-  collectorId: z.optional(z.union([z.uuid(), z.null()])),
-  organizationId: z.optional(z.union([z.uuid(), z.null()])),
+  buyerId: z.optional(z.union([z.uuid(), z.null()])),
+  sellerId: z.optional(z.union([z.uuid(), z.null()])),
 });
 
 export const zUpdateMaterial = z.object({
@@ -2404,8 +2404,8 @@ export const zGetApiCollectionsResponse = z.array(
 
 export const zPostApiCollectionsData = z.object({
   body: z.object({
-    collectorId: z.uuid(),
-    organizationId: z.uuid(),
+    buyerId: z.optional(z.uuid()),
+    sellerId: z.optional(z.uuid()),
   }),
   path: z.optional(z.never()),
   query: z.optional(z.never()),
@@ -2547,8 +2547,8 @@ export const zGetApiCollectionsByIdResponse = z.object({
 
 export const zPatchApiCollectionsByIdData = z.object({
   body: z.object({
-    collectorId: z.optional(z.union([z.uuid(), z.null()])),
-    organizationId: z.optional(z.union([z.uuid(), z.null()])),
+    buyerId: z.optional(z.union([z.uuid(), z.null()])),
+    sellerId: z.optional(z.union([z.uuid(), z.null()])),
   }),
   path: z.object({
     id: z.uuid(),
