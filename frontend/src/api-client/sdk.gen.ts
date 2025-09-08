@@ -206,7 +206,7 @@ export const deleteApiAddressesById = <ThrowOnError extends boolean = false>(
     DeleteApiAddressesByIdErrors,
     ThrowOnError
   >({
-    url: '/api/addresses/{id}',
+    url: '/api/addresses/:id',
     ...options,
   });
 };
@@ -223,7 +223,7 @@ export const getApiAddressesById = <ThrowOnError extends boolean = false>(
     GetApiAddressesByIdErrors,
     ThrowOnError
   >({
-    url: '/api/addresses/{id}',
+    url: '/api/addresses/:id',
     ...options,
   });
 };
@@ -240,7 +240,7 @@ export const patchApiAddressesById = <ThrowOnError extends boolean = false>(
     PatchApiAddressesByIdErrors,
     ThrowOnError
   >({
-    url: '/api/addresses/{id}',
+    url: '/api/addresses/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -400,7 +400,7 @@ export const deleteApiBankDetailsById = <ThrowOnError extends boolean = false>(
     DeleteApiBankDetailsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/bank-details/{id}',
+    url: '/api/bank-details/:id',
     ...options,
   });
 };
@@ -417,7 +417,7 @@ export const getApiBankDetailsById = <ThrowOnError extends boolean = false>(
     GetApiBankDetailsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/bank-details/{id}',
+    url: '/api/bank-details/:id',
     ...options,
   });
 };
@@ -434,7 +434,7 @@ export const patchApiBankDetailsById = <ThrowOnError extends boolean = false>(
     PatchApiBankDetailsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/bank-details/{id}',
+    url: '/api/bank-details/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -493,7 +493,7 @@ export const deleteApiCollectionsById = <ThrowOnError extends boolean = false>(
     DeleteApiCollectionsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/collections/{id}',
+    url: '/api/collections/:id',
     ...options,
   });
 };
@@ -510,7 +510,7 @@ export const getApiCollectionsById = <ThrowOnError extends boolean = false>(
     GetApiCollectionsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/collections/{id}',
+    url: '/api/collections/:id',
     ...options,
   });
 };
@@ -527,7 +527,7 @@ export const patchApiCollectionsById = <ThrowOnError extends boolean = false>(
     PatchApiCollectionsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/collections/{id}',
+    url: '/api/collections/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -586,7 +586,7 @@ export const deleteApiMaterialsById = <ThrowOnError extends boolean = false>(
     DeleteApiMaterialsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/materials/{id}',
+    url: '/api/materials/:id',
     ...options,
   });
 };
@@ -603,7 +603,7 @@ export const getApiMaterialsById = <ThrowOnError extends boolean = false>(
     GetApiMaterialsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/materials/{id}',
+    url: '/api/materials/:id',
     ...options,
   });
 };
@@ -620,7 +620,7 @@ export const patchApiMaterialsById = <ThrowOnError extends boolean = false>(
     PatchApiMaterialsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/materials/{id}',
+    url: '/api/materials/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -681,7 +681,7 @@ export const deleteApiOrganizationsById = <
     DeleteApiOrganizationsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/organizations/{id}',
+    url: '/api/organizations/:id',
     ...options,
   });
 };
@@ -698,7 +698,7 @@ export const getApiOrganizationsById = <ThrowOnError extends boolean = false>(
     GetApiOrganizationsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/organizations/{id}',
+    url: '/api/organizations/:id',
     ...options,
   });
 };
@@ -715,7 +715,7 @@ export const patchApiOrganizationsById = <ThrowOnError extends boolean = false>(
     PatchApiOrganizationsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/organizations/{id}',
+    url: '/api/organizations/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -774,7 +774,7 @@ export const deleteApiRolesById = <ThrowOnError extends boolean = false>(
     DeleteApiRolesByIdErrors,
     ThrowOnError
   >({
-    url: '/api/roles/{id}',
+    url: '/api/roles/:id',
     ...options,
   });
 };
@@ -791,7 +791,7 @@ export const getApiRolesById = <ThrowOnError extends boolean = false>(
     GetApiRolesByIdErrors,
     ThrowOnError
   >({
-    url: '/api/roles/{id}',
+    url: '/api/roles/:id',
     ...options,
   });
 };
@@ -808,7 +808,7 @@ export const patchApiRolesById = <ThrowOnError extends boolean = false>(
     PatchApiRolesByIdErrors,
     ThrowOnError
   >({
-    url: '/api/roles/{id}',
+    url: '/api/roles/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -867,7 +867,7 @@ export const deleteApiTransactionsById = <ThrowOnError extends boolean = false>(
     DeleteApiTransactionsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/transactions/{id}',
+    url: '/api/transactions/:id',
     ...options,
   });
 };
@@ -884,7 +884,7 @@ export const getApiTransactionsById = <ThrowOnError extends boolean = false>(
     GetApiTransactionsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/transactions/{id}',
+    url: '/api/transactions/:id',
     ...options,
   });
 };
@@ -901,7 +901,7 @@ export const patchApiTransactionsById = <ThrowOnError extends boolean = false>(
     PatchApiTransactionsByIdErrors,
     ThrowOnError
   >({
-    url: '/api/transactions/{id}',
+    url: '/api/transactions/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -960,7 +960,7 @@ export const deleteApiUsersById = <ThrowOnError extends boolean = false>(
     DeleteApiUsersByIdErrors,
     ThrowOnError
   >({
-    url: '/api/users/{id}',
+    url: '/api/users/:id',
     ...options,
   });
 };
@@ -977,7 +977,7 @@ export const getApiUsersById = <ThrowOnError extends boolean = false>(
     GetApiUsersByIdErrors,
     ThrowOnError
   >({
-    url: '/api/users/{id}',
+    url: '/api/users/:id',
     ...options,
   });
 };
@@ -994,7 +994,7 @@ export const patchApiUsersById = <ThrowOnError extends boolean = false>(
     PatchApiUsersByIdErrors,
     ThrowOnError
   >({
-    url: '/api/users/{id}',
+    url: '/api/users/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',

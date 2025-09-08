@@ -1486,7 +1486,7 @@ export type DeleteApiAddressesByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/addresses/{id}';
+  url: '/api/addresses/:id';
 };
 
 export type DeleteApiAddressesByIdErrors = {
@@ -1533,7 +1533,7 @@ export type GetApiAddressesByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/addresses/{id}';
+  url: '/api/addresses/:id';
 };
 
 export type GetApiAddressesByIdErrors = {
@@ -1600,7 +1600,7 @@ export type PatchApiAddressesByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/addresses/{id}';
+  url: '/api/addresses/:id';
 };
 
 export type PatchApiAddressesByIdErrors = {
@@ -2505,7 +2505,7 @@ export type DeleteApiBankDetailsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/bank-details/{id}';
+  url: '/api/bank-details/:id';
 };
 
 export type DeleteApiBankDetailsByIdErrors = {
@@ -2552,7 +2552,7 @@ export type GetApiBankDetailsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/bank-details/{id}';
+  url: '/api/bank-details/:id';
 };
 
 export type GetApiBankDetailsByIdErrors = {
@@ -2615,7 +2615,7 @@ export type PatchApiBankDetailsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/bank-details/{id}';
+  url: '/api/bank-details/:id';
 };
 
 export type PatchApiBankDetailsByIdErrors = {
@@ -2858,7 +2858,7 @@ export type DeleteApiCollectionsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/collections/{id}';
+  url: '/api/collections/:id';
 };
 
 export type DeleteApiCollectionsByIdErrors = {
@@ -2905,7 +2905,7 @@ export type GetApiCollectionsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/collections/{id}';
+  url: '/api/collections/:id';
 };
 
 export type GetApiCollectionsByIdErrors = {
@@ -3045,7 +3045,7 @@ export type PatchApiCollectionsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/collections/{id}';
+  url: '/api/collections/:id';
 };
 
 export type PatchApiCollectionsByIdErrors = {
@@ -3210,7 +3210,7 @@ export type DeleteApiMaterialsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/materials/{id}';
+  url: '/api/materials/:id';
 };
 
 export type DeleteApiMaterialsByIdErrors = {
@@ -3257,7 +3257,7 @@ export type GetApiMaterialsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/materials/{id}';
+  url: '/api/materials/:id';
 };
 
 export type GetApiMaterialsByIdErrors = {
@@ -3319,7 +3319,7 @@ export type PatchApiMaterialsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/materials/{id}';
+  url: '/api/materials/:id';
 };
 
 export type PatchApiMaterialsByIdErrors = {
@@ -3549,7 +3549,7 @@ export type DeleteApiOrganizationsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/organizations/{id}';
+  url: '/api/organizations/:id';
 };
 
 export type DeleteApiOrganizationsByIdErrors = {
@@ -3596,7 +3596,7 @@ export type GetApiOrganizationsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/organizations/{id}';
+  url: '/api/organizations/:id';
 };
 
 export type GetApiOrganizationsByIdErrors = {
@@ -3723,7 +3723,7 @@ export type PatchApiOrganizationsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/organizations/{id}';
+  url: '/api/organizations/:id';
 };
 
 export type PatchApiOrganizationsByIdErrors = {
@@ -3885,7 +3885,7 @@ export type DeleteApiRolesByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/roles/{id}';
+  url: '/api/roles/:id';
 };
 
 export type DeleteApiRolesByIdErrors = {
@@ -3932,7 +3932,7 @@ export type GetApiRolesByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/roles/{id}';
+  url: '/api/roles/:id';
 };
 
 export type GetApiRolesByIdErrors = {
@@ -3993,7 +3993,7 @@ export type PatchApiRolesByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/roles/{id}';
+  url: '/api/roles/:id';
 };
 
 export type PatchApiRolesByIdErrors = {
@@ -4221,7 +4221,7 @@ export type DeleteApiTransactionsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/transactions/{id}';
+  url: '/api/transactions/:id';
 };
 
 export type DeleteApiTransactionsByIdErrors = {
@@ -4268,7 +4268,7 @@ export type GetApiTransactionsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/transactions/{id}';
+  url: '/api/transactions/:id';
 };
 
 export type GetApiTransactionsByIdErrors = {
@@ -4393,7 +4393,7 @@ export type PatchApiTransactionsByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/transactions/{id}';
+  url: '/api/transactions/:id';
 };
 
 export type PatchApiTransactionsByIdErrors = {
@@ -4603,7 +4603,7 @@ export type DeleteApiUsersByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/users/{id}';
+  url: '/api/users/:id';
 };
 
 export type DeleteApiUsersByIdErrors = {
@@ -4650,7 +4650,7 @@ export type GetApiUsersByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/users/{id}';
+  url: '/api/users/:id';
 };
 
 export type GetApiUsersByIdErrors = {
@@ -4755,7 +4755,7 @@ export type PatchApiUsersByIdData = {
     id: string;
   };
   query?: never;
-  url: '/api/users/{id}';
+  url: '/api/users/:id';
 };
 
 export type PatchApiUsersByIdErrors = {

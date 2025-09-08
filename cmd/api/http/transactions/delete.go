@@ -88,7 +88,7 @@ func (r *TransactionsRouter) DeleteRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.DeleteMethod,
-		Path:   "/transactions/{id}",
+		Path:   "/transactions/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"transactions.delete"}),

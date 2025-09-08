@@ -124,7 +124,7 @@ func (r *TransactionsRouter) FindRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/transactions/{id}",
+		Path:   "/transactions/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"transactions.view"}),

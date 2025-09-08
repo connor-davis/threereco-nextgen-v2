@@ -100,7 +100,7 @@ func (r *AddressesRouter) UpdateRoute() routing.Route {
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/addresses/{id}",
+		Path:   "/addresses/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"addresses.update"}),

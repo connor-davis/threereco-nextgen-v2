@@ -88,7 +88,7 @@ func (r *MaterialsRouter) DeleteRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.DeleteMethod,
-		Path:   "/materials/{id}",
+		Path:   "/materials/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"materials.delete"}),

@@ -88,7 +88,7 @@ func (r *AddressesRouter) DeleteRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.DeleteMethod,
-		Path:   "/addresses/{id}",
+		Path:   "/addresses/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"addresses.delete"}),

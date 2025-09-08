@@ -96,7 +96,7 @@ func (r *UsersRouter) FindRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/users/{id}",
+		Path:   "/users/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"users.view"}),

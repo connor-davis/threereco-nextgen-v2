@@ -96,7 +96,7 @@ func (r *BankDetailsRouter) FindRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/bank-details/{id}",
+		Path:   "/bank-details/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"bank_details.view"}),

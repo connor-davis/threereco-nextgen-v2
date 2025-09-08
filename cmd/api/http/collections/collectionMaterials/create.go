@@ -1,4 +1,4 @@
-package bankDetails
+package collectionMaterials
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -8,19 +8,18 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
-type UpdateParams struct {
-	Id uuid.UUID `json:"id"`
+type CreateParams struct {
+	CollectionId uuid.UUID `json:"collectionId"`
 }
 
-func (r *BankDetailsRouter) UpdateRoute() routing.Route {
+func (r *CollectionMaterialsRouter) CreateRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful bank details update.").
+			WithDescription("Successful collection material creation.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"text/plain": openapi3.NewMediaType().
@@ -73,7 +72,7 @@ func (r *BankDetailsRouter) UpdateRoute() routing.Route {
 
 	parameters := []*openapi3.ParameterRef{
 		{
-			Value: openapi3.NewPathParameter("id").
+			Value: openapi3.NewPathParameter("collectionId").
 				WithRequired(true).
 				WithSchema(openapi3.NewUUIDSchema()),
 		},
@@ -82,31 +81,31 @@ func (r *BankDetailsRouter) UpdateRoute() routing.Route {
 	body := &openapi3.RequestBodyRef{
 		Value: openapi3.NewRequestBody().
 			WithRequired(true).
-			WithDescription("Payload to update existing bank details.").
+			WithDescription("Payload to create a new collection material.").
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.UpdateBankDetailSchema.Value).
-					WithExample("example", schemas.UpdateBankDetailSchema.Value),
+					WithSchema(schemas.CreateCollectionMaterialSchema.Value).
+					WithExample("example", schemas.CreateCollectionMaterialSchema.Value),
 			}),
 	}
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Update Bank Details",
-			Description: "Update existing bank details in the system.",
-			Tags:        []string{"Bank Details"},
+			Summary:     "Create Collection Material",
+			Description: "Create a new collection material in the system.",
+			Tags:        []string{"Collection Materials"},
 			Responses:   responses,
 			Parameters:  parameters,
 			RequestBody: body,
 		},
-		Method: routing.PatchMethod,
-		Path:   "/bank-details/:id",
+		Method: routing.PostMethod,
+		Path:   "/collections/:collectionId/materials",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"bank_details.update"}),
+			r.Middleware.Authorized([]string{"collections.materials.create"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params UpdateParams
+			var params CreateParams
 
 			if err := c.ParamsParser(&params); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -115,7 +114,7 @@ func (r *BankDetailsRouter) UpdateRoute() routing.Route {
 				})
 			}
 
-			var payload models.UpdateBankDetailsPayload
+			var payload models.CreateCollectionMaterialPayload
 
 			if err := c.BodyParser(&payload); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -124,14 +123,7 @@ func (r *BankDetailsRouter) UpdateRoute() routing.Route {
 				})
 			}
 
-			if err := r.Services.BankDetails().Update(params.Id, payload); err != nil {
-				if err == gorm.ErrRecordNotFound {
-					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-						"error":   constants.NotFoundError,
-						"message": constants.NotFoundErrorDetails,
-					})
-				}
-
+			if err := r.Services.Collections().Materials().Create(params.CollectionId, payload); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error":   constants.InternalServerError,
 					"message": constants.InternalServerErrorDetails,

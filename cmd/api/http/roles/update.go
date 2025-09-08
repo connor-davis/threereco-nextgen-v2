@@ -100,7 +100,7 @@ func (r *RolesRouter) UpdateRoute() routing.Route {
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/roles/{id}",
+		Path:   "/roles/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"roles.update"}),

@@ -88,7 +88,7 @@ func (r *CollectionsRouter) DeleteRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.DeleteMethod,
-		Path:   "/collections/{id}",
+		Path:   "/collections/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"collections.delete"}),

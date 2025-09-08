@@ -100,7 +100,7 @@ func (r *CollectionsRouter) UpdateRoute() routing.Route {
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/collections/{id}",
+		Path:   "/collections/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"collections.update"}),

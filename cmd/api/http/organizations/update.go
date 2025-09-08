@@ -100,7 +100,7 @@ func (r *OrganizationsRouter) UpdateRoute() routing.Route {
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/organizations/{id}",
+		Path:   "/organizations/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"organizations.update"}),

@@ -93,7 +93,7 @@ func (r *OrganizationsRouter) FindRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/organizations/{id}",
+		Path:   "/organizations/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"organizations.view"}),

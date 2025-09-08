@@ -100,7 +100,7 @@ func (r *UsersRouter) UpdateRoute() routing.Route {
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/users/{id}",
+		Path:   "/users/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"users.update"}),

@@ -1,8 +1,7 @@
-package bankDetails
+package collectionMaterials
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
-	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
@@ -11,16 +10,17 @@ import (
 	"gorm.io/gorm"
 )
 
-type UpdateParams struct {
-	Id uuid.UUID `json:"id"`
+type DeleteParams struct {
+	CollectionId uuid.UUID `json:"collectionId"`
+	Id           uuid.UUID `json:"id"`
 }
 
-func (r *BankDetailsRouter) UpdateRoute() routing.Route {
+func (r *CollectionMaterialsRouter) DeleteRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful bank details update.").
+			WithDescription("Successful collection material deletion.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"text/plain": openapi3.NewMediaType().
@@ -73,40 +73,34 @@ func (r *BankDetailsRouter) UpdateRoute() routing.Route {
 
 	parameters := []*openapi3.ParameterRef{
 		{
+			Value: openapi3.NewPathParameter("collectionId").
+				WithRequired(true).
+				WithSchema(openapi3.NewUUIDSchema()),
+		},
+		{
 			Value: openapi3.NewPathParameter("id").
 				WithRequired(true).
 				WithSchema(openapi3.NewUUIDSchema()),
 		},
 	}
 
-	body := &openapi3.RequestBodyRef{
-		Value: openapi3.NewRequestBody().
-			WithRequired(true).
-			WithDescription("Payload to update existing bank details.").
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.UpdateBankDetailSchema.Value).
-					WithExample("example", schemas.UpdateBankDetailSchema.Value),
-			}),
-	}
-
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Update Bank Details",
-			Description: "Update existing bank details in the system.",
-			Tags:        []string{"Bank Details"},
+			Summary:     "Delete Collection Material",
+			Description: "Delete an existing collection material from the system.",
+			Tags:        []string{"Collection Materials"},
 			Responses:   responses,
 			Parameters:  parameters,
-			RequestBody: body,
+			RequestBody: nil,
 		},
-		Method: routing.PatchMethod,
-		Path:   "/bank-details/:id",
+		Method: routing.DeleteMethod,
+		Path:   "/collections/:collectionId/materials/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"bank_details.update"}),
+			r.Middleware.Authorized([]string{"collections.materials.delete"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params UpdateParams
+			var params DeleteParams
 
 			if err := c.ParamsParser(&params); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -115,16 +109,7 @@ func (r *BankDetailsRouter) UpdateRoute() routing.Route {
 				})
 			}
 
-			var payload models.UpdateBankDetailsPayload
-
-			if err := c.BodyParser(&payload); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-					"error":   constants.BadRequestError,
-					"message": constants.BadRequestErrorDetails,
-				})
-			}
-
-			if err := r.Services.BankDetails().Update(params.Id, payload); err != nil {
+			if err := r.Services.Collections().Materials().Delete(params.Id); err != nil {
 				if err == gorm.ErrRecordNotFound {
 					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 						"error":   constants.NotFoundError,

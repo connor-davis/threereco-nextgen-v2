@@ -98,7 +98,7 @@ func (r *AddressesRouter) FindRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/addresses/{id}",
+		Path:   "/addresses/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"addresses.view"}),

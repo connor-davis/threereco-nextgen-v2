@@ -100,7 +100,7 @@ func (r *TransactionsRouter) UpdateRoute() routing.Route {
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/transactions/{id}",
+		Path:   "/transactions/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"transactions.update"}),

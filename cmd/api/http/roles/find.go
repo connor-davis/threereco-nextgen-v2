@@ -95,7 +95,7 @@ func (r *RolesRouter) FindRoute() routing.Route {
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/roles/{id}",
+		Path:   "/roles/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
 			r.Middleware.Authorized([]string{"roles.view"}),
