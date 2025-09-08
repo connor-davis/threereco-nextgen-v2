@@ -222,6 +222,93 @@ export type Collections = Array<{
   updatedAt: string;
 }>;
 
+export type CreateCollection = {
+  collectorId: string;
+  organizationId: string;
+};
+
+export type CreateMaterial = {
+  carbonFactor: number;
+  gwCode: string;
+  name: string;
+};
+
+export type CreateOrganization = {
+  name: string;
+  roles?: Array<{
+    createdAt: string;
+    description: string | null;
+    id: string;
+    name: string;
+    permissions: Array<string>;
+    updatedAt: string;
+  }>;
+  users?: Array<{
+    activeOrganization: string;
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    banReason: string | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    banned: boolean;
+    createdAt: string;
+    email: string;
+    id: string;
+    mfaEnabled: boolean;
+    mfaVerified: boolean;
+    name: string;
+    phone: string;
+    roles: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    type: 'standard' | 'collector' | 'business' | 'system';
+    updatedAt: string;
+  }>;
+};
+
+export type CreateRole = {
+  description?: string | null;
+  name: string;
+  permissions: Array<string>;
+};
+
+export type CreateUser = {
+  email: string;
+  name: string;
+  password: string;
+  phone: string;
+  roles: Array<{
+    createdAt: string;
+    description: string | null;
+    id: string;
+    name: string;
+    permissions: Array<string>;
+    updatedAt: string;
+  }>;
+  type: 'standard' | 'collector' | 'business' | 'system';
+};
+
 export type ErrorResponse = {
   error?: string;
   message?: string;
@@ -531,8 +618,7 @@ export type SuccessResponse = {
         updatedAt: string;
       }
     | {
-        collector: {
-          activeOrganization: string;
+        buyer: {
           address: {
             city: string;
             country: string;
@@ -544,7 +630,6 @@ export type SuccessResponse = {
             updatedAt: string;
             zipCode: string;
           } | null;
-          banReason: string | null;
           bankDetails: {
             accountHolder: string;
             accountNumber: string;
@@ -554,23 +639,9 @@ export type SuccessResponse = {
             id: string;
             updatedAt: string;
           } | null;
-          banned: boolean;
           createdAt: string;
-          email: string;
           id: string;
-          mfaEnabled: boolean;
-          mfaVerified: boolean;
           name: string;
-          phone: string;
-          roles: Array<{
-            createdAt: string;
-            description: string | null;
-            id: string;
-            name: string;
-            permissions: Array<string>;
-            updatedAt: string;
-          }>;
-          type: 'standard' | 'collector' | 'business' | 'system';
           updatedAt: string;
         };
         createdAt: string;
@@ -588,9 +659,10 @@ export type SuccessResponse = {
             value: number;
           };
           updatedAt: string;
+          value?: number;
           weight: number;
         }>;
-        organization: {
+        seller: {
           address: {
             city: string;
             country: string;
@@ -813,8 +885,7 @@ export type SuccessResponse = {
         updatedAt: string;
       }>
     | Array<{
-        collector: {
-          activeOrganization: string;
+        buyer: {
           address: {
             city: string;
             country: string;
@@ -826,7 +897,6 @@ export type SuccessResponse = {
             updatedAt: string;
             zipCode: string;
           } | null;
-          banReason: string | null;
           bankDetails: {
             accountHolder: string;
             accountNumber: string;
@@ -836,23 +906,9 @@ export type SuccessResponse = {
             id: string;
             updatedAt: string;
           } | null;
-          banned: boolean;
           createdAt: string;
-          email: string;
           id: string;
-          mfaEnabled: boolean;
-          mfaVerified: boolean;
           name: string;
-          phone: string;
-          roles: Array<{
-            createdAt: string;
-            description: string | null;
-            id: string;
-            name: string;
-            permissions: Array<string>;
-            updatedAt: string;
-          }>;
-          type: 'standard' | 'collector' | 'business' | 'system';
           updatedAt: string;
         };
         createdAt: string;
@@ -870,9 +926,10 @@ export type SuccessResponse = {
             value: number;
           };
           updatedAt: string;
+          value?: number;
           weight: number;
         }>;
-        organization: {
+        seller: {
           address: {
             city: string;
             country: string;
@@ -910,8 +967,7 @@ export type SuccessResponse = {
 };
 
 export type Transaction = {
-  collector: {
-    activeOrganization: string;
+  buyer: {
     address: {
       city: string;
       country: string;
@@ -923,7 +979,6 @@ export type Transaction = {
       updatedAt: string;
       zipCode: string;
     } | null;
-    banReason: string | null;
     bankDetails: {
       accountHolder: string;
       accountNumber: string;
@@ -933,23 +988,9 @@ export type Transaction = {
       id: string;
       updatedAt: string;
     } | null;
-    banned: boolean;
     createdAt: string;
-    email: string;
     id: string;
-    mfaEnabled: boolean;
-    mfaVerified: boolean;
     name: string;
-    phone: string;
-    roles: Array<{
-      createdAt: string;
-      description: string | null;
-      id: string;
-      name: string;
-      permissions: Array<string>;
-      updatedAt: string;
-    }>;
-    type: 'standard' | 'collector' | 'business' | 'system';
     updatedAt: string;
   };
   createdAt: string;
@@ -967,9 +1008,10 @@ export type Transaction = {
       value: number;
     };
     updatedAt: string;
+    value?: number;
     weight: number;
   }>;
-  organization: {
+  seller: {
     address: {
       city: string;
       country: string;
@@ -999,7 +1041,101 @@ export type Transaction = {
 };
 
 export type Transactions = Array<{
-  collector: {
+  buyer: {
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    id: string;
+    name: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  id: string;
+  materials: Array<{
+    createdAt: string;
+    id: string;
+    material: {
+      carbonFactor: string;
+      createdAt: string;
+      gwCode: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+      value: number;
+    };
+    updatedAt: string;
+    value?: number;
+    weight: number;
+  }>;
+  seller: {
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    id: string;
+    name: string;
+    updatedAt: string;
+  };
+  updatedAt: string;
+}>;
+
+export type UpdateCollection = {
+  collectorId?: string | null;
+  organizationId?: string | null;
+};
+
+export type UpdateMaterial = {
+  carbonFactor?: number;
+  gwCode?: string;
+  name?: string;
+};
+
+export type UpdateOrganization = {
+  name?: string | null;
+  roles?: Array<{
+    createdAt: string;
+    description: string | null;
+    id: string;
+    name: string;
+    permissions: Array<string>;
+    updatedAt: string;
+  }>;
+  users?: Array<{
     activeOrganization: string;
     address: {
       city: string;
@@ -1040,52 +1176,30 @@ export type Transactions = Array<{
     }>;
     type: 'standard' | 'collector' | 'business' | 'system';
     updatedAt: string;
-  };
-  createdAt: string;
-  id: string;
-  materials: Array<{
-    createdAt: string;
-    id: string;
-    material: {
-      carbonFactor: string;
-      createdAt: string;
-      gwCode: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-      value: number;
-    };
-    updatedAt: string;
-    weight: number;
   }>;
-  organization: {
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
-    } | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
+};
+
+export type UpdateRole = {
+  description?: string | null;
+  name?: string | null;
+  permissions?: Array<string> | null;
+};
+
+export type UpdateUser = {
+  email?: string | null;
+  name?: string | null;
+  password?: string | null;
+  phone?: string | null;
+  roles?: Array<{
     createdAt: string;
+    description: string | null;
     id: string;
     name: string;
+    permissions: Array<string>;
     updatedAt: string;
-  };
-  updatedAt: string;
-}>;
+  }>;
+  type?: 'standard' | 'collector' | 'business' | 'system';
+};
 
 export type User = {
   activeOrganization: string;
@@ -1401,8 +1515,7 @@ export type GetApiAuthenticationCheckResponses = {
           updatedAt: string;
         }
       | {
-          collector: {
-            activeOrganization: string;
+          buyer: {
             address: {
               city: string;
               country: string;
@@ -1414,7 +1527,6 @@ export type GetApiAuthenticationCheckResponses = {
               updatedAt: string;
               zipCode: string;
             } | null;
-            banReason: string | null;
             bankDetails: {
               accountHolder: string;
               accountNumber: string;
@@ -1424,23 +1536,9 @@ export type GetApiAuthenticationCheckResponses = {
               id: string;
               updatedAt: string;
             } | null;
-            banned: boolean;
             createdAt: string;
-            email: string;
             id: string;
-            mfaEnabled: boolean;
-            mfaVerified: boolean;
             name: string;
-            phone: string;
-            roles: Array<{
-              createdAt: string;
-              description: string | null;
-              id: string;
-              name: string;
-              permissions: Array<string>;
-              updatedAt: string;
-            }>;
-            type: 'standard' | 'collector' | 'business' | 'system';
             updatedAt: string;
           };
           createdAt: string;
@@ -1458,9 +1556,10 @@ export type GetApiAuthenticationCheckResponses = {
               value: number;
             };
             updatedAt: string;
+            value?: number;
             weight: number;
           }>;
-          organization: {
+          seller: {
             address: {
               city: string;
               country: string;
@@ -1683,8 +1782,7 @@ export type GetApiAuthenticationCheckResponses = {
           updatedAt: string;
         }>
       | Array<{
-          collector: {
-            activeOrganization: string;
+          buyer: {
             address: {
               city: string;
               country: string;
@@ -1696,7 +1794,6 @@ export type GetApiAuthenticationCheckResponses = {
               updatedAt: string;
               zipCode: string;
             } | null;
-            banReason: string | null;
             bankDetails: {
               accountHolder: string;
               accountNumber: string;
@@ -1706,23 +1803,9 @@ export type GetApiAuthenticationCheckResponses = {
               id: string;
               updatedAt: string;
             } | null;
-            banned: boolean;
             createdAt: string;
-            email: string;
             id: string;
-            mfaEnabled: boolean;
-            mfaVerified: boolean;
             name: string;
-            phone: string;
-            roles: Array<{
-              createdAt: string;
-              description: string | null;
-              id: string;
-              name: string;
-              permissions: Array<string>;
-              updatedAt: string;
-            }>;
-            type: 'standard' | 'collector' | 'business' | 'system';
             updatedAt: string;
           };
           createdAt: string;
@@ -1740,9 +1823,10 @@ export type GetApiAuthenticationCheckResponses = {
               value: number;
             };
             updatedAt: string;
+            value?: number;
             weight: number;
           }>;
-          organization: {
+          seller: {
             address: {
               city: string;
               country: string;
@@ -1942,22 +2026,452 @@ export type PostApiAuthenticationMfaVerifyResponses = {
   200: unknown;
 };
 
-export type GetApiMaterialsData = {
+export type GetApiCollectionsData = {
   body?: never;
   path?: never;
-  query?: {
+  query: {
     /**
      * Page number for pagination. Defaults to 1.
      */
-    page?: number;
+    page: number;
     /**
      * Number of items per page. Defaults to 10.
      */
-    limit?: number;
+    limit: number;
+    /**
+     * Search term for filtering collections.
+     */
+    search: string;
+  };
+  url: '/api/collections';
+};
+
+export type GetApiCollectionsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiCollectionsError =
+  GetApiCollectionsErrors[keyof GetApiCollectionsErrors];
+
+export type GetApiCollectionsResponses = {
+  /**
+   * Successful collections retrieval.
+   */
+  200: Array<{
+    collector: {
+      activeOrganization: string;
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      banReason: string | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      banned: boolean;
+      createdAt: string;
+      email: string;
+      id: string;
+      mfaEnabled: boolean;
+      mfaVerified: boolean;
+      name: string;
+      phone: string;
+      roles: Array<{
+        createdAt: string;
+        description: string | null;
+        id: string;
+        name: string;
+        permissions: Array<string>;
+        updatedAt: string;
+      }>;
+      type: 'standard' | 'collector' | 'business' | 'system';
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      weight: number;
+    }>;
+    organization: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    updatedAt: string;
+  }>;
+};
+
+export type GetApiCollectionsResponse =
+  GetApiCollectionsResponses[keyof GetApiCollectionsResponses];
+
+export type PostApiCollectionsData = {
+  /**
+   * Payload to create a new collection.
+   */
+  body: {
+    collectorId: string;
+    organizationId: string;
+  };
+  path?: never;
+  query?: never;
+  url: '/api/collections';
+};
+
+export type PostApiCollectionsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiCollectionsError =
+  PostApiCollectionsErrors[keyof PostApiCollectionsErrors];
+
+export type PostApiCollectionsResponses = {
+  /**
+   * Successful collection creation.
+   */
+  200: string;
+};
+
+export type PostApiCollectionsResponse =
+  PostApiCollectionsResponses[keyof PostApiCollectionsResponses];
+
+export type DeleteApiCollectionsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/collections/{id}';
+};
+
+export type DeleteApiCollectionsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiCollectionsByIdError =
+  DeleteApiCollectionsByIdErrors[keyof DeleteApiCollectionsByIdErrors];
+
+export type DeleteApiCollectionsByIdResponses = {
+  /**
+   * Successful collection deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiCollectionsByIdResponse =
+  DeleteApiCollectionsByIdResponses[keyof DeleteApiCollectionsByIdResponses];
+
+export type GetApiCollectionsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/collections/{id}';
+};
+
+export type GetApiCollectionsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiCollectionsByIdError =
+  GetApiCollectionsByIdErrors[keyof GetApiCollectionsByIdErrors];
+
+export type GetApiCollectionsByIdResponses = {
+  /**
+   * Successful collection retrieval.
+   */
+  200: {
+    collector: {
+      activeOrganization: string;
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      banReason: string | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      banned: boolean;
+      createdAt: string;
+      email: string;
+      id: string;
+      mfaEnabled: boolean;
+      mfaVerified: boolean;
+      name: string;
+      phone: string;
+      roles: Array<{
+        createdAt: string;
+        description: string | null;
+        id: string;
+        name: string;
+        permissions: Array<string>;
+        updatedAt: string;
+      }>;
+      type: 'standard' | 'collector' | 'business' | 'system';
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      weight: number;
+    }>;
+    organization: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    updatedAt: string;
+  };
+};
+
+export type GetApiCollectionsByIdResponse =
+  GetApiCollectionsByIdResponses[keyof GetApiCollectionsByIdResponses];
+
+export type PatchApiCollectionsByIdData = {
+  /**
+   * Payload to update an existing collection.
+   */
+  body: {
+    collectorId?: string | null;
+    organizationId?: string | null;
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/collections/{id}';
+};
+
+export type PatchApiCollectionsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiCollectionsByIdError =
+  PatchApiCollectionsByIdErrors[keyof PatchApiCollectionsByIdErrors];
+
+export type PatchApiCollectionsByIdResponses = {
+  /**
+   * Successful collection update.
+   */
+  200: string;
+};
+
+export type PatchApiCollectionsByIdResponse =
+  PatchApiCollectionsByIdResponses[keyof PatchApiCollectionsByIdResponses];
+
+export type GetApiMaterialsData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
     /**
      * Search term for filtering materials.
      */
-    search?: string;
+    search: string;
   };
   url: '/api/materials';
 };
@@ -2215,6 +2729,1042 @@ export type PatchApiMaterialsByIdResponses = {
 
 export type PatchApiMaterialsByIdResponse =
   PatchApiMaterialsByIdResponses[keyof PatchApiMaterialsByIdResponses];
+
+export type GetApiOrganizationsData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering organizations.
+     */
+    search: string;
+  };
+  url: '/api/organizations';
+};
+
+export type GetApiOrganizationsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiOrganizationsError =
+  GetApiOrganizationsErrors[keyof GetApiOrganizationsErrors];
+
+export type GetApiOrganizationsResponses = {
+  /**
+   * Successful organizations retrieval.
+   */
+  200: Array<{
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    id: string;
+    name: string;
+    updatedAt: string;
+  }>;
+};
+
+export type GetApiOrganizationsResponse =
+  GetApiOrganizationsResponses[keyof GetApiOrganizationsResponses];
+
+export type PostApiOrganizationsData = {
+  /**
+   * Payload to create a new organization.
+   */
+  body: {
+    name: string;
+    roles?: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    users?: Array<{
+      activeOrganization: string;
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      banReason: string | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      banned: boolean;
+      createdAt: string;
+      email: string;
+      id: string;
+      mfaEnabled: boolean;
+      mfaVerified: boolean;
+      name: string;
+      phone: string;
+      roles: Array<{
+        createdAt: string;
+        description: string | null;
+        id: string;
+        name: string;
+        permissions: Array<string>;
+        updatedAt: string;
+      }>;
+      type: 'standard' | 'collector' | 'business' | 'system';
+      updatedAt: string;
+    }>;
+  };
+  path?: never;
+  query?: never;
+  url: '/api/organizations';
+};
+
+export type PostApiOrganizationsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiOrganizationsError =
+  PostApiOrganizationsErrors[keyof PostApiOrganizationsErrors];
+
+export type PostApiOrganizationsResponses = {
+  /**
+   * Successful organization creation.
+   */
+  200: string;
+};
+
+export type PostApiOrganizationsResponse =
+  PostApiOrganizationsResponses[keyof PostApiOrganizationsResponses];
+
+export type DeleteApiOrganizationsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/organizations/{id}';
+};
+
+export type DeleteApiOrganizationsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiOrganizationsByIdError =
+  DeleteApiOrganizationsByIdErrors[keyof DeleteApiOrganizationsByIdErrors];
+
+export type DeleteApiOrganizationsByIdResponses = {
+  /**
+   * Successful organization deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiOrganizationsByIdResponse =
+  DeleteApiOrganizationsByIdResponses[keyof DeleteApiOrganizationsByIdResponses];
+
+export type GetApiOrganizationsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/organizations/{id}';
+};
+
+export type GetApiOrganizationsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiOrganizationsByIdError =
+  GetApiOrganizationsByIdErrors[keyof GetApiOrganizationsByIdErrors];
+
+export type GetApiOrganizationsByIdResponses = {
+  /**
+   * Successful organization retrieval.
+   */
+  200: {
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    id: string;
+    name: string;
+    updatedAt: string;
+  };
+};
+
+export type GetApiOrganizationsByIdResponse =
+  GetApiOrganizationsByIdResponses[keyof GetApiOrganizationsByIdResponses];
+
+export type PatchApiOrganizationsByIdData = {
+  /**
+   * Payload to update an existing organization.
+   */
+  body: {
+    name?: string | null;
+    roles?: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    users?: Array<{
+      activeOrganization: string;
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      banReason: string | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      banned: boolean;
+      createdAt: string;
+      email: string;
+      id: string;
+      mfaEnabled: boolean;
+      mfaVerified: boolean;
+      name: string;
+      phone: string;
+      roles: Array<{
+        createdAt: string;
+        description: string | null;
+        id: string;
+        name: string;
+        permissions: Array<string>;
+        updatedAt: string;
+      }>;
+      type: 'standard' | 'collector' | 'business' | 'system';
+      updatedAt: string;
+    }>;
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/organizations/{id}';
+};
+
+export type PatchApiOrganizationsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiOrganizationsByIdError =
+  PatchApiOrganizationsByIdErrors[keyof PatchApiOrganizationsByIdErrors];
+
+export type PatchApiOrganizationsByIdResponses = {
+  /**
+   * Successful organization update.
+   */
+  200: string;
+};
+
+export type PatchApiOrganizationsByIdResponse =
+  PatchApiOrganizationsByIdResponses[keyof PatchApiOrganizationsByIdResponses];
+
+export type GetApiRolesData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering roles.
+     */
+    search: string;
+  };
+  url: '/api/roles';
+};
+
+export type GetApiRolesErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiRolesError = GetApiRolesErrors[keyof GetApiRolesErrors];
+
+export type GetApiRolesResponses = {
+  /**
+   * Successful roles retrieval.
+   */
+  200: Array<{
+    createdAt: string;
+    description: string | null;
+    id: string;
+    name: string;
+    permissions: Array<string>;
+    updatedAt: string;
+  }>;
+};
+
+export type GetApiRolesResponse =
+  GetApiRolesResponses[keyof GetApiRolesResponses];
+
+export type PostApiRolesData = {
+  /**
+   * Payload to create a new role.
+   */
+  body: {
+    description?: string | null;
+    name: string;
+    permissions: Array<string>;
+  };
+  path?: never;
+  query?: never;
+  url: '/api/roles';
+};
+
+export type PostApiRolesErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiRolesError = PostApiRolesErrors[keyof PostApiRolesErrors];
+
+export type PostApiRolesResponses = {
+  /**
+   * Successful role creation.
+   */
+  200: string;
+};
+
+export type PostApiRolesResponse =
+  PostApiRolesResponses[keyof PostApiRolesResponses];
+
+export type DeleteApiRolesByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/roles/{id}';
+};
+
+export type DeleteApiRolesByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiRolesByIdError =
+  DeleteApiRolesByIdErrors[keyof DeleteApiRolesByIdErrors];
+
+export type DeleteApiRolesByIdResponses = {
+  /**
+   * Successful role deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiRolesByIdResponse =
+  DeleteApiRolesByIdResponses[keyof DeleteApiRolesByIdResponses];
+
+export type GetApiRolesByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/roles/{id}';
+};
+
+export type GetApiRolesByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiRolesByIdError =
+  GetApiRolesByIdErrors[keyof GetApiRolesByIdErrors];
+
+export type GetApiRolesByIdResponses = {
+  /**
+   * Successful role retrieval.
+   */
+  200: {
+    createdAt: string;
+    description: string | null;
+    id: string;
+    name: string;
+    permissions: Array<string>;
+    updatedAt: string;
+  };
+};
+
+export type GetApiRolesByIdResponse =
+  GetApiRolesByIdResponses[keyof GetApiRolesByIdResponses];
+
+export type PatchApiRolesByIdData = {
+  /**
+   * Payload to update an existing role.
+   */
+  body: {
+    description?: string | null;
+    name?: string | null;
+    permissions?: Array<string> | null;
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/roles/{id}';
+};
+
+export type PatchApiRolesByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiRolesByIdError =
+  PatchApiRolesByIdErrors[keyof PatchApiRolesByIdErrors];
+
+export type PatchApiRolesByIdResponses = {
+  /**
+   * Successful role update.
+   */
+  200: string;
+};
+
+export type PatchApiRolesByIdResponse =
+  PatchApiRolesByIdResponses[keyof PatchApiRolesByIdResponses];
+
+export type GetApiUsersData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering users.
+     */
+    search: string;
+    /**
+     * Type of user to filter by.
+     */
+    type: string;
+  };
+  url: '/api/users';
+};
+
+export type GetApiUsersErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiUsersError = GetApiUsersErrors[keyof GetApiUsersErrors];
+
+export type GetApiUsersResponses = {
+  /**
+   * Successful users retrieval.
+   */
+  200: {
+    activeOrganization: string;
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    banReason: string | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    banned: boolean;
+    createdAt: string;
+    email: string;
+    id: string;
+    mfaEnabled: boolean;
+    mfaVerified: boolean;
+    name: string;
+    phone: string;
+    roles: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    type: 'standard' | 'collector' | 'business' | 'system';
+    updatedAt: string;
+  };
+};
+
+export type GetApiUsersResponse =
+  GetApiUsersResponses[keyof GetApiUsersResponses];
+
+export type PostApiUsersData = {
+  /**
+   * Payload to create a new user.
+   */
+  body: {
+    email: string;
+    name: string;
+    password: string;
+    phone: string;
+    roles: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    type: 'standard' | 'collector' | 'business' | 'system';
+  };
+  path?: never;
+  query?: never;
+  url: '/api/users';
+};
+
+export type PostApiUsersErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiUsersError = PostApiUsersErrors[keyof PostApiUsersErrors];
+
+export type PostApiUsersResponses = {
+  /**
+   * Successful user creation.
+   */
+  200: string;
+};
+
+export type PostApiUsersResponse =
+  PostApiUsersResponses[keyof PostApiUsersResponses];
+
+export type DeleteApiUsersByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/users/{id}';
+};
+
+export type DeleteApiUsersByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiUsersByIdError =
+  DeleteApiUsersByIdErrors[keyof DeleteApiUsersByIdErrors];
+
+export type DeleteApiUsersByIdResponses = {
+  /**
+   * Successful user deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiUsersByIdResponse =
+  DeleteApiUsersByIdResponses[keyof DeleteApiUsersByIdResponses];
+
+export type GetApiUsersByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/users/{id}';
+};
+
+export type GetApiUsersByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiUsersByIdError =
+  GetApiUsersByIdErrors[keyof GetApiUsersByIdErrors];
+
+export type GetApiUsersByIdResponses = {
+  /**
+   * Successful user retrieval.
+   */
+  200: {
+    activeOrganization: string;
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    banReason: string | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    banned: boolean;
+    createdAt: string;
+    email: string;
+    id: string;
+    mfaEnabled: boolean;
+    mfaVerified: boolean;
+    name: string;
+    phone: string;
+    roles: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    type: 'standard' | 'collector' | 'business' | 'system';
+    updatedAt: string;
+  };
+};
+
+export type GetApiUsersByIdResponse =
+  GetApiUsersByIdResponses[keyof GetApiUsersByIdResponses];
+
+export type PatchApiUsersByIdData = {
+  /**
+   * Payload to update an existing user.
+   */
+  body: {
+    email?: string | null;
+    name?: string | null;
+    password?: string | null;
+    phone?: string | null;
+    roles?: Array<{
+      createdAt: string;
+      description: string | null;
+      id: string;
+      name: string;
+      permissions: Array<string>;
+      updatedAt: string;
+    }>;
+    type?: 'standard' | 'collector' | 'business' | 'system';
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/users/{id}';
+};
+
+export type PatchApiUsersByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiUsersByIdError =
+  PatchApiUsersByIdErrors[keyof PatchApiUsersByIdErrors];
+
+export type PatchApiUsersByIdResponses = {
+  /**
+   * Successful user update.
+   */
+  200: string;
+};
+
+export type PatchApiUsersByIdResponse =
+  PatchApiUsersByIdResponses[keyof PatchApiUsersByIdResponses];
 
 export type ClientOptions = {
   baseUrl: 'http://localhost:6173' | 'https://3reco.co.za' | (string & {});

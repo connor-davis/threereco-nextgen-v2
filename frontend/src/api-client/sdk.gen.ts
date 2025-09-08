@@ -2,24 +2,72 @@
 import type { Client, Options as ClientOptions, TDataShape } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type {
+  DeleteApiCollectionsByIdData,
+  DeleteApiCollectionsByIdErrors,
+  DeleteApiCollectionsByIdResponses,
   DeleteApiMaterialsByIdData,
   DeleteApiMaterialsByIdErrors,
   DeleteApiMaterialsByIdResponses,
+  DeleteApiOrganizationsByIdData,
+  DeleteApiOrganizationsByIdErrors,
+  DeleteApiOrganizationsByIdResponses,
+  DeleteApiRolesByIdData,
+  DeleteApiRolesByIdErrors,
+  DeleteApiRolesByIdResponses,
+  DeleteApiUsersByIdData,
+  DeleteApiUsersByIdErrors,
+  DeleteApiUsersByIdResponses,
   GetApiAuthenticationCheckData,
   GetApiAuthenticationCheckErrors,
   GetApiAuthenticationCheckResponses,
   GetApiAuthenticationMfaEnableData,
   GetApiAuthenticationMfaEnableErrors,
   GetApiAuthenticationMfaEnableResponses,
+  GetApiCollectionsByIdData,
+  GetApiCollectionsByIdErrors,
+  GetApiCollectionsByIdResponses,
+  GetApiCollectionsData,
+  GetApiCollectionsErrors,
+  GetApiCollectionsResponses,
   GetApiMaterialsByIdData,
   GetApiMaterialsByIdErrors,
   GetApiMaterialsByIdResponses,
   GetApiMaterialsData,
   GetApiMaterialsErrors,
   GetApiMaterialsResponses,
+  GetApiOrganizationsByIdData,
+  GetApiOrganizationsByIdErrors,
+  GetApiOrganizationsByIdResponses,
+  GetApiOrganizationsData,
+  GetApiOrganizationsErrors,
+  GetApiOrganizationsResponses,
+  GetApiRolesByIdData,
+  GetApiRolesByIdErrors,
+  GetApiRolesByIdResponses,
+  GetApiRolesData,
+  GetApiRolesErrors,
+  GetApiRolesResponses,
+  GetApiUsersByIdData,
+  GetApiUsersByIdErrors,
+  GetApiUsersByIdResponses,
+  GetApiUsersData,
+  GetApiUsersErrors,
+  GetApiUsersResponses,
+  PatchApiCollectionsByIdData,
+  PatchApiCollectionsByIdErrors,
+  PatchApiCollectionsByIdResponses,
   PatchApiMaterialsByIdData,
   PatchApiMaterialsByIdErrors,
   PatchApiMaterialsByIdResponses,
+  PatchApiOrganizationsByIdData,
+  PatchApiOrganizationsByIdErrors,
+  PatchApiOrganizationsByIdResponses,
+  PatchApiRolesByIdData,
+  PatchApiRolesByIdErrors,
+  PatchApiRolesByIdResponses,
+  PatchApiUsersByIdData,
+  PatchApiUsersByIdErrors,
+  PatchApiUsersByIdResponses,
   PostApiAuthenticationLoginData,
   PostApiAuthenticationLoginErrors,
   PostApiAuthenticationLoginResponses,
@@ -29,9 +77,21 @@ import type {
   PostApiAuthenticationMfaVerifyData,
   PostApiAuthenticationMfaVerifyErrors,
   PostApiAuthenticationMfaVerifyResponses,
+  PostApiCollectionsData,
+  PostApiCollectionsErrors,
+  PostApiCollectionsResponses,
   PostApiMaterialsData,
   PostApiMaterialsErrors,
   PostApiMaterialsResponses,
+  PostApiOrganizationsData,
+  PostApiOrganizationsErrors,
+  PostApiOrganizationsResponses,
+  PostApiRolesData,
+  PostApiRolesErrors,
+  PostApiRolesResponses,
+  PostApiUsersData,
+  PostApiUsersErrors,
+  PostApiUsersResponses,
 } from './types.gen';
 
 export type Options<
@@ -153,13 +213,106 @@ export const postApiAuthenticationMfaVerify = <
 };
 
 /**
+ * List Collections
+ * List all collections in the system.
+ */
+export const getApiCollections = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiCollectionsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiCollectionsResponses,
+    GetApiCollectionsErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections',
+    ...options,
+  });
+};
+
+/**
+ * Create Collection
+ * Create a new collection in the system.
+ */
+export const postApiCollections = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiCollectionsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiCollectionsResponses,
+    PostApiCollectionsErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Collection
+ * Delete an existing collection from the system.
+ */
+export const deleteApiCollectionsById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiCollectionsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiCollectionsByIdResponses,
+    DeleteApiCollectionsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find Collection
+ * Find an existing collection in the system.
+ */
+export const getApiCollectionsById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiCollectionsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiCollectionsByIdResponses,
+    GetApiCollectionsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update Collection
+ * Update an existing collection in the system.
+ */
+export const patchApiCollectionsById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiCollectionsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiCollectionsByIdResponses,
+    PatchApiCollectionsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
  * List Materials
  * List all materials in the system.
  */
 export const getApiMaterials = <ThrowOnError extends boolean = false>(
-  options?: Options<GetApiMaterialsData, ThrowOnError>
+  options: Options<GetApiMaterialsData, ThrowOnError>
 ) => {
-  return (options?.client ?? _heyApiClient).get<
+  return (options.client ?? _heyApiClient).get<
     GetApiMaterialsResponses,
     GetApiMaterialsErrors,
     ThrowOnError
@@ -237,6 +390,287 @@ export const patchApiMaterialsById = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/materials/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Organizations
+ * List all organizations in the system.
+ */
+export const getApiOrganizations = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiOrganizationsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiOrganizationsResponses,
+    GetApiOrganizationsErrors,
+    ThrowOnError
+  >({
+    url: '/api/organizations',
+    ...options,
+  });
+};
+
+/**
+ * Create Organization
+ * Create a new organization in the system.
+ */
+export const postApiOrganizations = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiOrganizationsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiOrganizationsResponses,
+    PostApiOrganizationsErrors,
+    ThrowOnError
+  >({
+    url: '/api/organizations',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Organization
+ * Delete an existing organization from the system.
+ */
+export const deleteApiOrganizationsById = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<DeleteApiOrganizationsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiOrganizationsByIdResponses,
+    DeleteApiOrganizationsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/organizations/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find Organization
+ * Find an existing organization in the system.
+ */
+export const getApiOrganizationsById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiOrganizationsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiOrganizationsByIdResponses,
+    GetApiOrganizationsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/organizations/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update Organization
+ * Update an existing organization in the system.
+ */
+export const patchApiOrganizationsById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiOrganizationsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiOrganizationsByIdResponses,
+    PatchApiOrganizationsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/organizations/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Roles
+ * List all roles in the system.
+ */
+export const getApiRoles = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiRolesData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiRolesResponses,
+    GetApiRolesErrors,
+    ThrowOnError
+  >({
+    url: '/api/roles',
+    ...options,
+  });
+};
+
+/**
+ * Create Role
+ * Create a new role in the system.
+ */
+export const postApiRoles = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiRolesData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiRolesResponses,
+    PostApiRolesErrors,
+    ThrowOnError
+  >({
+    url: '/api/roles',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Role
+ * Delete an existing role from the system.
+ */
+export const deleteApiRolesById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiRolesByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiRolesByIdResponses,
+    DeleteApiRolesByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/roles/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find Role
+ * Find an existing role in the system.
+ */
+export const getApiRolesById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiRolesByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiRolesByIdResponses,
+    GetApiRolesByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/roles/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update Role
+ * Update an existing role in the system.
+ */
+export const patchApiRolesById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiRolesByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiRolesByIdResponses,
+    PatchApiRolesByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/roles/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Users
+ * List all users in the system.
+ */
+export const getApiUsers = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiUsersData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiUsersResponses,
+    GetApiUsersErrors,
+    ThrowOnError
+  >({
+    url: '/api/users',
+    ...options,
+  });
+};
+
+/**
+ * Create User
+ * Create a new user in the system.
+ */
+export const postApiUsers = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiUsersData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiUsersResponses,
+    PostApiUsersErrors,
+    ThrowOnError
+  >({
+    url: '/api/users',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete User
+ * Delete an existing user from the system.
+ */
+export const deleteApiUsersById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiUsersByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiUsersByIdResponses,
+    DeleteApiUsersByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/users/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find User
+ * Find an existing user in the system.
+ */
+export const getApiUsersById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiUsersByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiUsersByIdResponses,
+    GetApiUsersByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/users/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update User
+ * Update an existing user in the system.
+ */
+export const patchApiUsersById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiUsersByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiUsersByIdResponses,
+    PatchApiUsersByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/users/{id}',
     ...options,
     headers: {
       'Content-Type': 'application/json',

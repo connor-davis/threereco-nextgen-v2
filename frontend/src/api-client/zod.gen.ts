@@ -273,6 +273,111 @@ export const zCollections = z.array(
   })
 );
 
+export const zCreateCollection = z.object({
+  collectorId: z.uuid(),
+  organizationId: z.uuid(),
+});
+
+export const zCreateMaterial = z.object({
+  carbonFactor: z.number(),
+  gwCode: z.string(),
+  name: z.string(),
+});
+
+export const zCreateOrganization = z.object({
+  name: z.string(),
+  roles: z.optional(
+    z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      })
+    )
+  ),
+  users: z.optional(
+    z.array(
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchName: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      })
+    )
+  ),
+});
+
+export const zCreateRole = z.object({
+  description: z.optional(z.union([z.string(), z.null()])),
+  name: z.string(),
+  permissions: z.array(z.string()),
+});
+
+export const zCreateUser = z.object({
+  email: z.string(),
+  name: z.string(),
+  password: z.string(),
+  phone: z.string(),
+  roles: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      description: z.union([z.string(), z.null()]),
+      id: z.uuid(),
+      name: z.string(),
+      permissions: z.array(z.string()),
+      updatedAt: z.iso.datetime(),
+    })
+  ),
+  type: z.enum(['standard', 'collector', 'business', 'system']),
+});
+
 export const zErrorResponse = z.object({
   error: z.optional(z.string()).default('Bad Request'),
   message: z
@@ -641,8 +746,7 @@ export const zSuccessResponse = z.object({
         updatedAt: z.iso.datetime(),
       }),
       z.object({
-        collector: z.object({
-          activeOrganization: z.uuid(),
+        buyer: z.object({
           address: z.union([
             z.object({
               city: z.string(),
@@ -657,7 +761,6 @@ export const zSuccessResponse = z.object({
             }),
             z.null(),
           ]),
-          banReason: z.union([z.string(), z.null()]),
           bankDetails: z.union([
             z.object({
               accountHolder: z.string(),
@@ -670,25 +773,9 @@ export const zSuccessResponse = z.object({
             }),
             z.null(),
           ]),
-          banned: z.boolean(),
           createdAt: z.iso.datetime(),
-          email: z.string(),
           id: z.uuid(),
-          mfaEnabled: z.boolean(),
-          mfaVerified: z.boolean(),
           name: z.string(),
-          phone: z.string(),
-          roles: z.array(
-            z.object({
-              createdAt: z.iso.datetime(),
-              description: z.union([z.string(), z.null()]),
-              id: z.uuid(),
-              name: z.string(),
-              permissions: z.array(z.string()),
-              updatedAt: z.iso.datetime(),
-            })
-          ),
-          type: z.enum(['standard', 'collector', 'business', 'system']),
           updatedAt: z.iso.datetime(),
         }),
         createdAt: z.iso.datetime(),
@@ -707,10 +794,11 @@ export const zSuccessResponse = z.object({
               value: z.number(),
             }),
             updatedAt: z.iso.datetime(),
+            value: z.optional(z.number()),
             weight: z.number(),
           })
         ),
-        organization: z.object({
+        seller: z.object({
           address: z.union([
             z.object({
               city: z.string(),
@@ -993,8 +1081,7 @@ export const zSuccessResponse = z.object({
       ),
       z.array(
         z.object({
-          collector: z.object({
-            activeOrganization: z.uuid(),
+          buyer: z.object({
             address: z.union([
               z.object({
                 city: z.string(),
@@ -1009,7 +1096,6 @@ export const zSuccessResponse = z.object({
               }),
               z.null(),
             ]),
-            banReason: z.union([z.string(), z.null()]),
             bankDetails: z.union([
               z.object({
                 accountHolder: z.string(),
@@ -1022,25 +1108,9 @@ export const zSuccessResponse = z.object({
               }),
               z.null(),
             ]),
-            banned: z.boolean(),
             createdAt: z.iso.datetime(),
-            email: z.string(),
             id: z.uuid(),
-            mfaEnabled: z.boolean(),
-            mfaVerified: z.boolean(),
             name: z.string(),
-            phone: z.string(),
-            roles: z.array(
-              z.object({
-                createdAt: z.iso.datetime(),
-                description: z.union([z.string(), z.null()]),
-                id: z.uuid(),
-                name: z.string(),
-                permissions: z.array(z.string()),
-                updatedAt: z.iso.datetime(),
-              })
-            ),
-            type: z.enum(['standard', 'collector', 'business', 'system']),
             updatedAt: z.iso.datetime(),
           }),
           createdAt: z.iso.datetime(),
@@ -1059,10 +1129,11 @@ export const zSuccessResponse = z.object({
                 value: z.number(),
               }),
               updatedAt: z.iso.datetime(),
+              value: z.optional(z.number()),
               weight: z.number(),
             })
           ),
-          organization: z.object({
+          seller: z.object({
             address: z.union([
               z.object({
                 city: z.string(),
@@ -1114,8 +1185,7 @@ export const zSuccessResponse = z.object({
 });
 
 export const zTransaction = z.object({
-  collector: z.object({
-    activeOrganization: z.uuid(),
+  buyer: z.object({
     address: z.union([
       z.object({
         city: z.string(),
@@ -1130,7 +1200,6 @@ export const zTransaction = z.object({
       }),
       z.null(),
     ]),
-    banReason: z.union([z.string(), z.null()]),
     bankDetails: z.union([
       z.object({
         accountHolder: z.string(),
@@ -1143,25 +1212,9 @@ export const zTransaction = z.object({
       }),
       z.null(),
     ]),
-    banned: z.boolean(),
     createdAt: z.iso.datetime(),
-    email: z.string(),
     id: z.uuid(),
-    mfaEnabled: z.boolean(),
-    mfaVerified: z.boolean(),
     name: z.string(),
-    phone: z.string(),
-    roles: z.array(
-      z.object({
-        createdAt: z.iso.datetime(),
-        description: z.union([z.string(), z.null()]),
-        id: z.uuid(),
-        name: z.string(),
-        permissions: z.array(z.string()),
-        updatedAt: z.iso.datetime(),
-      })
-    ),
-    type: z.enum(['standard', 'collector', 'business', 'system']),
     updatedAt: z.iso.datetime(),
   }),
   createdAt: z.iso.datetime(),
@@ -1180,10 +1233,11 @@ export const zTransaction = z.object({
         value: z.number(),
       }),
       updatedAt: z.iso.datetime(),
+      value: z.optional(z.number()),
       weight: z.number(),
     })
   ),
-  organization: z.object({
+  seller: z.object({
     address: z.union([
       z.object({
         city: z.string(),
@@ -1220,8 +1274,7 @@ export const zTransaction = z.object({
 
 export const zTransactions = z.array(
   z.object({
-    collector: z.object({
-      activeOrganization: z.uuid(),
+    buyer: z.object({
       address: z.union([
         z.object({
           city: z.string(),
@@ -1236,7 +1289,6 @@ export const zTransactions = z.array(
         }),
         z.null(),
       ]),
-      banReason: z.union([z.string(), z.null()]),
       bankDetails: z.union([
         z.object({
           accountHolder: z.string(),
@@ -1249,25 +1301,9 @@ export const zTransactions = z.array(
         }),
         z.null(),
       ]),
-      banned: z.boolean(),
       createdAt: z.iso.datetime(),
-      email: z.string(),
       id: z.uuid(),
-      mfaEnabled: z.boolean(),
-      mfaVerified: z.boolean(),
       name: z.string(),
-      phone: z.string(),
-      roles: z.array(
-        z.object({
-          createdAt: z.iso.datetime(),
-          description: z.union([z.string(), z.null()]),
-          id: z.uuid(),
-          name: z.string(),
-          permissions: z.array(z.string()),
-          updatedAt: z.iso.datetime(),
-        })
-      ),
-      type: z.enum(['standard', 'collector', 'business', 'system']),
       updatedAt: z.iso.datetime(),
     }),
     createdAt: z.iso.datetime(),
@@ -1286,10 +1322,11 @@ export const zTransactions = z.array(
           value: z.number(),
         }),
         updatedAt: z.iso.datetime(),
+        value: z.optional(z.number()),
         weight: z.number(),
       })
     ),
-    organization: z.object({
+    seller: z.object({
       address: z.union([
         z.object({
           city: z.string(),
@@ -1324,6 +1361,113 @@ export const zTransactions = z.array(
     updatedAt: z.iso.datetime(),
   })
 );
+
+export const zUpdateCollection = z.object({
+  collectorId: z.optional(z.union([z.uuid(), z.null()])),
+  organizationId: z.optional(z.union([z.uuid(), z.null()])),
+});
+
+export const zUpdateMaterial = z.object({
+  carbonFactor: z.optional(z.number()),
+  gwCode: z.optional(z.string()),
+  name: z.optional(z.string()),
+});
+
+export const zUpdateOrganization = z.object({
+  name: z.optional(z.union([z.string(), z.null()])),
+  roles: z.optional(
+    z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      })
+    )
+  ),
+  users: z.optional(
+    z.array(
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchName: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      })
+    )
+  ),
+});
+
+export const zUpdateRole = z.object({
+  description: z.optional(z.union([z.string(), z.null()])),
+  name: z.optional(z.union([z.string(), z.null()])),
+  permissions: z.optional(z.union([z.array(z.string()), z.null()])),
+});
+
+export const zUpdateUser = z.object({
+  email: z.optional(z.union([z.string(), z.null()])),
+  name: z.optional(z.union([z.string(), z.null()])),
+  password: z.optional(z.union([z.string(), z.null()])),
+  phone: z.optional(z.union([z.string(), z.null()])),
+  roles: z.optional(
+    z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      })
+    )
+  ),
+  type: z.optional(z.enum(['standard', 'collector', 'business', 'system'])),
+});
 
 export const zUser = z.object({
   activeOrganization: z.uuid(),
@@ -1671,8 +1815,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
         updatedAt: z.iso.datetime(),
       }),
       z.object({
-        collector: z.object({
-          activeOrganization: z.uuid(),
+        buyer: z.object({
           address: z.union([
             z.object({
               city: z.string(),
@@ -1687,7 +1830,6 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             }),
             z.null(),
           ]),
-          banReason: z.union([z.string(), z.null()]),
           bankDetails: z.union([
             z.object({
               accountHolder: z.string(),
@@ -1700,25 +1842,9 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             }),
             z.null(),
           ]),
-          banned: z.boolean(),
           createdAt: z.iso.datetime(),
-          email: z.string(),
           id: z.uuid(),
-          mfaEnabled: z.boolean(),
-          mfaVerified: z.boolean(),
           name: z.string(),
-          phone: z.string(),
-          roles: z.array(
-            z.object({
-              createdAt: z.iso.datetime(),
-              description: z.union([z.string(), z.null()]),
-              id: z.uuid(),
-              name: z.string(),
-              permissions: z.array(z.string()),
-              updatedAt: z.iso.datetime(),
-            })
-          ),
-          type: z.enum(['standard', 'collector', 'business', 'system']),
           updatedAt: z.iso.datetime(),
         }),
         createdAt: z.iso.datetime(),
@@ -1737,10 +1863,11 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               value: z.number(),
             }),
             updatedAt: z.iso.datetime(),
+            value: z.optional(z.number()),
             weight: z.number(),
           })
         ),
-        organization: z.object({
+        seller: z.object({
           address: z.union([
             z.object({
               city: z.string(),
@@ -2023,8 +2150,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
       ),
       z.array(
         z.object({
-          collector: z.object({
-            activeOrganization: z.uuid(),
+          buyer: z.object({
             address: z.union([
               z.object({
                 city: z.string(),
@@ -2039,7 +2165,6 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               }),
               z.null(),
             ]),
-            banReason: z.union([z.string(), z.null()]),
             bankDetails: z.union([
               z.object({
                 accountHolder: z.string(),
@@ -2052,25 +2177,9 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               }),
               z.null(),
             ]),
-            banned: z.boolean(),
             createdAt: z.iso.datetime(),
-            email: z.string(),
             id: z.uuid(),
-            mfaEnabled: z.boolean(),
-            mfaVerified: z.boolean(),
             name: z.string(),
-            phone: z.string(),
-            roles: z.array(
-              z.object({
-                createdAt: z.iso.datetime(),
-                description: z.union([z.string(), z.null()]),
-                id: z.uuid(),
-                name: z.string(),
-                permissions: z.array(z.string()),
-                updatedAt: z.iso.datetime(),
-              })
-            ),
-            type: z.enum(['standard', 'collector', 'business', 'system']),
             updatedAt: z.iso.datetime(),
           }),
           createdAt: z.iso.datetime(),
@@ -2089,10 +2198,11 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 value: z.number(),
               }),
               updatedAt: z.iso.datetime(),
+              value: z.optional(z.number()),
               weight: z.number(),
             })
           ),
-          organization: z.object({
+          seller: z.object({
             address: z.union([
               z.object({
                 city: z.string(),
@@ -2172,16 +2282,293 @@ export const zPostApiAuthenticationMfaVerifyData = z.object({
   query: z.optional(z.never()),
 });
 
+export const zGetApiCollectionsData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful collections retrieval.
+ */
+export const zGetApiCollectionsResponse = z.array(
+  z.object({
+    collector: z.object({
+      activeOrganization: z.uuid(),
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      banReason: z.union([z.string(), z.null()]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      banned: z.boolean(),
+      createdAt: z.iso.datetime(),
+      email: z.string(),
+      id: z.uuid(),
+      mfaEnabled: z.boolean(),
+      mfaVerified: z.boolean(),
+      name: z.string(),
+      phone: z.string(),
+      roles: z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      type: z.enum(['standard', 'collector', 'business', 'system']),
+      updatedAt: z.iso.datetime(),
+    }),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    materials: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        material: z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+          value: z.number(),
+        }),
+        updatedAt: z.iso.datetime(),
+        weight: z.number(),
+      })
+    ),
+    organization: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    updatedAt: z.iso.datetime(),
+  })
+);
+
+export const zPostApiCollectionsData = z.object({
+  body: z.object({
+    collectorId: z.uuid(),
+    organizationId: z.uuid(),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection creation.
+ */
+export const zPostApiCollectionsResponse = z.string();
+
+export const zDeleteApiCollectionsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection deletion.
+ */
+export const zDeleteApiCollectionsByIdResponse = z.string();
+
+export const zGetApiCollectionsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection retrieval.
+ */
+export const zGetApiCollectionsByIdResponse = z.object({
+  collector: z.object({
+    activeOrganization: z.uuid(),
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    banReason: z.union([z.string(), z.null()]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    banned: z.boolean(),
+    createdAt: z.iso.datetime(),
+    email: z.string(),
+    id: z.uuid(),
+    mfaEnabled: z.boolean(),
+    mfaVerified: z.boolean(),
+    name: z.string(),
+    phone: z.string(),
+    roles: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      })
+    ),
+    type: z.enum(['standard', 'collector', 'business', 'system']),
+    updatedAt: z.iso.datetime(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  materials: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      material: z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+        value: z.number(),
+      }),
+      updatedAt: z.iso.datetime(),
+      weight: z.number(),
+    })
+  ),
+  organization: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiCollectionsByIdData = z.object({
+  body: z.object({
+    collectorId: z.optional(z.union([z.uuid(), z.null()])),
+    organizationId: z.optional(z.union([z.uuid(), z.null()])),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection update.
+ */
+export const zPatchApiCollectionsByIdResponse = z.string();
+
 export const zGetApiMaterialsData = z.object({
   body: z.optional(z.never()),
   path: z.optional(z.never()),
-  query: z.optional(
-    z.object({
-      page: z.optional(z.coerce.bigint().gte(BigInt(1))).default(BigInt(1)),
-      limit: z.optional(z.coerce.bigint().gte(BigInt(10))).default(BigInt(10)),
-      search: z.optional(z.string()),
-    })
-  ),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
 });
 
 /**
@@ -2264,3 +2651,555 @@ export const zPatchApiMaterialsByIdData = z.object({
  * Successful material update.
  */
 export const zPatchApiMaterialsByIdResponse = z.string();
+
+export const zGetApiOrganizationsData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful organizations retrieval.
+ */
+export const zGetApiOrganizationsResponse = z.array(
+  z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  })
+);
+
+export const zPostApiOrganizationsData = z.object({
+  body: z.object({
+    name: z.string(),
+    roles: z.optional(
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      )
+    ),
+    users: z.optional(
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchName: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      )
+    ),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful organization creation.
+ */
+export const zPostApiOrganizationsResponse = z.string();
+
+export const zDeleteApiOrganizationsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful organization deletion.
+ */
+export const zDeleteApiOrganizationsByIdResponse = z.string();
+
+export const zGetApiOrganizationsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful organization retrieval.
+ */
+export const zGetApiOrganizationsByIdResponse = z.object({
+  address: z.union([
+    z.object({
+      city: z.string(),
+      country: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      lineOne: z.string(),
+      lineTwo: z.union([z.string(), z.null()]),
+      province: z.string(),
+      updatedAt: z.iso.datetime(),
+      zipCode: z.string(),
+    }),
+    z.null(),
+  ]),
+  bankDetails: z.union([
+    z.object({
+      accountHolder: z.string(),
+      accountNumber: z.string(),
+      bankName: z.string(),
+      branchName: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      updatedAt: z.iso.datetime(),
+    }),
+    z.null(),
+  ]),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  name: z.string(),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiOrganizationsByIdData = z.object({
+  body: z.object({
+    name: z.optional(z.union([z.string(), z.null()])),
+    roles: z.optional(
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      )
+    ),
+    users: z.optional(
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchName: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      )
+    ),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful organization update.
+ */
+export const zPatchApiOrganizationsByIdResponse = z.string();
+
+export const zGetApiRolesData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful roles retrieval.
+ */
+export const zGetApiRolesResponse = z.array(
+  z.object({
+    createdAt: z.iso.datetime(),
+    description: z.union([z.string(), z.null()]),
+    id: z.uuid(),
+    name: z.string(),
+    permissions: z.array(z.string()),
+    updatedAt: z.iso.datetime(),
+  })
+);
+
+export const zPostApiRolesData = z.object({
+  body: z.object({
+    description: z.optional(z.union([z.string(), z.null()])),
+    name: z.string(),
+    permissions: z.array(z.string()),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful role creation.
+ */
+export const zPostApiRolesResponse = z.string();
+
+export const zDeleteApiRolesByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful role deletion.
+ */
+export const zDeleteApiRolesByIdResponse = z.string();
+
+export const zGetApiRolesByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful role retrieval.
+ */
+export const zGetApiRolesByIdResponse = z.object({
+  createdAt: z.iso.datetime(),
+  description: z.union([z.string(), z.null()]),
+  id: z.uuid(),
+  name: z.string(),
+  permissions: z.array(z.string()),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiRolesByIdData = z.object({
+  body: z.object({
+    description: z.optional(z.union([z.string(), z.null()])),
+    name: z.optional(z.union([z.string(), z.null()])),
+    permissions: z.optional(z.union([z.array(z.string()), z.null()])),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful role update.
+ */
+export const zPatchApiRolesByIdResponse = z.string();
+
+export const zGetApiUsersData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+    type: z.string(),
+  }),
+});
+
+/**
+ * Successful users retrieval.
+ */
+export const zGetApiUsersResponse = z.object({
+  activeOrganization: z.uuid(),
+  address: z.union([
+    z.object({
+      city: z.string(),
+      country: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      lineOne: z.string(),
+      lineTwo: z.union([z.string(), z.null()]),
+      province: z.string(),
+      updatedAt: z.iso.datetime(),
+      zipCode: z.string(),
+    }),
+    z.null(),
+  ]),
+  banReason: z.union([z.string(), z.null()]),
+  bankDetails: z.union([
+    z.object({
+      accountHolder: z.string(),
+      accountNumber: z.string(),
+      bankName: z.string(),
+      branchName: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      updatedAt: z.iso.datetime(),
+    }),
+    z.null(),
+  ]),
+  banned: z.boolean(),
+  createdAt: z.iso.datetime(),
+  email: z.string(),
+  id: z.uuid(),
+  mfaEnabled: z.boolean(),
+  mfaVerified: z.boolean(),
+  name: z.string(),
+  phone: z.string(),
+  roles: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      description: z.union([z.string(), z.null()]),
+      id: z.uuid(),
+      name: z.string(),
+      permissions: z.array(z.string()),
+      updatedAt: z.iso.datetime(),
+    })
+  ),
+  type: z.enum(['standard', 'collector', 'business', 'system']),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPostApiUsersData = z.object({
+  body: z.object({
+    email: z.string(),
+    name: z.string(),
+    password: z.string(),
+    phone: z.string(),
+    roles: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      })
+    ),
+    type: z.enum(['standard', 'collector', 'business', 'system']),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful user creation.
+ */
+export const zPostApiUsersResponse = z.string();
+
+export const zDeleteApiUsersByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful user deletion.
+ */
+export const zDeleteApiUsersByIdResponse = z.string();
+
+export const zGetApiUsersByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful user retrieval.
+ */
+export const zGetApiUsersByIdResponse = z.object({
+  activeOrganization: z.uuid(),
+  address: z.union([
+    z.object({
+      city: z.string(),
+      country: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      lineOne: z.string(),
+      lineTwo: z.union([z.string(), z.null()]),
+      province: z.string(),
+      updatedAt: z.iso.datetime(),
+      zipCode: z.string(),
+    }),
+    z.null(),
+  ]),
+  banReason: z.union([z.string(), z.null()]),
+  bankDetails: z.union([
+    z.object({
+      accountHolder: z.string(),
+      accountNumber: z.string(),
+      bankName: z.string(),
+      branchName: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      updatedAt: z.iso.datetime(),
+    }),
+    z.null(),
+  ]),
+  banned: z.boolean(),
+  createdAt: z.iso.datetime(),
+  email: z.string(),
+  id: z.uuid(),
+  mfaEnabled: z.boolean(),
+  mfaVerified: z.boolean(),
+  name: z.string(),
+  phone: z.string(),
+  roles: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      description: z.union([z.string(), z.null()]),
+      id: z.uuid(),
+      name: z.string(),
+      permissions: z.array(z.string()),
+      updatedAt: z.iso.datetime(),
+    })
+  ),
+  type: z.enum(['standard', 'collector', 'business', 'system']),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiUsersByIdData = z.object({
+  body: z.object({
+    email: z.optional(z.union([z.string(), z.null()])),
+    name: z.optional(z.union([z.string(), z.null()])),
+    password: z.optional(z.union([z.string(), z.null()])),
+    phone: z.optional(z.union([z.string(), z.null()])),
+    roles: z.optional(
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      )
+    ),
+    type: z.optional(z.enum(['standard', 'collector', 'business', 'system'])),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful user update.
+ */
+export const zPatchApiUsersByIdResponse = z.string();

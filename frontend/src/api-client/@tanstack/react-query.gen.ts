@@ -9,39 +9,111 @@ import {
 import { client as _heyApiClient } from '../client.gen';
 import {
   type Options,
+  deleteApiCollectionsById,
   deleteApiMaterialsById,
+  deleteApiOrganizationsById,
+  deleteApiRolesById,
+  deleteApiUsersById,
   getApiAuthenticationCheck,
   getApiAuthenticationMfaEnable,
+  getApiCollections,
+  getApiCollectionsById,
   getApiMaterials,
   getApiMaterialsById,
+  getApiOrganizations,
+  getApiOrganizationsById,
+  getApiRoles,
+  getApiRolesById,
+  getApiUsers,
+  getApiUsersById,
+  patchApiCollectionsById,
   patchApiMaterialsById,
+  patchApiOrganizationsById,
+  patchApiRolesById,
+  patchApiUsersById,
   postApiAuthenticationLogin,
   postApiAuthenticationLogout,
   postApiAuthenticationMfaVerify,
+  postApiCollections,
   postApiMaterials,
+  postApiOrganizations,
+  postApiRoles,
+  postApiUsers,
 } from '../sdk.gen';
 import type {
+  DeleteApiCollectionsByIdData,
+  DeleteApiCollectionsByIdError,
+  DeleteApiCollectionsByIdResponse,
   DeleteApiMaterialsByIdData,
   DeleteApiMaterialsByIdError,
   DeleteApiMaterialsByIdResponse,
+  DeleteApiOrganizationsByIdData,
+  DeleteApiOrganizationsByIdError,
+  DeleteApiOrganizationsByIdResponse,
+  DeleteApiRolesByIdData,
+  DeleteApiRolesByIdError,
+  DeleteApiRolesByIdResponse,
+  DeleteApiUsersByIdData,
+  DeleteApiUsersByIdError,
+  DeleteApiUsersByIdResponse,
   GetApiAuthenticationCheckData,
   GetApiAuthenticationMfaEnableData,
+  GetApiCollectionsByIdData,
+  GetApiCollectionsData,
+  GetApiCollectionsError,
+  GetApiCollectionsResponse,
   GetApiMaterialsByIdData,
   GetApiMaterialsData,
   GetApiMaterialsError,
   GetApiMaterialsResponse,
+  GetApiOrganizationsByIdData,
+  GetApiOrganizationsData,
+  GetApiOrganizationsError,
+  GetApiOrganizationsResponse,
+  GetApiRolesByIdData,
+  GetApiRolesData,
+  GetApiRolesError,
+  GetApiRolesResponse,
+  GetApiUsersByIdData,
+  GetApiUsersData,
+  GetApiUsersError,
+  GetApiUsersResponse,
+  PatchApiCollectionsByIdData,
+  PatchApiCollectionsByIdError,
+  PatchApiCollectionsByIdResponse,
   PatchApiMaterialsByIdData,
   PatchApiMaterialsByIdError,
   PatchApiMaterialsByIdResponse,
+  PatchApiOrganizationsByIdData,
+  PatchApiOrganizationsByIdError,
+  PatchApiOrganizationsByIdResponse,
+  PatchApiRolesByIdData,
+  PatchApiRolesByIdError,
+  PatchApiRolesByIdResponse,
+  PatchApiUsersByIdData,
+  PatchApiUsersByIdError,
+  PatchApiUsersByIdResponse,
   PostApiAuthenticationLoginData,
   PostApiAuthenticationLoginError,
   PostApiAuthenticationLogoutData,
   PostApiAuthenticationLogoutError,
   PostApiAuthenticationMfaVerifyData,
   PostApiAuthenticationMfaVerifyError,
+  PostApiCollectionsData,
+  PostApiCollectionsError,
+  PostApiCollectionsResponse,
   PostApiMaterialsData,
   PostApiMaterialsError,
   PostApiMaterialsResponse,
+  PostApiOrganizationsData,
+  PostApiOrganizationsError,
+  PostApiOrganizationsResponse,
+  PostApiRolesData,
+  PostApiRolesError,
+  PostApiRolesResponse,
+  PostApiUsersData,
+  PostApiUsersError,
+  PostApiUsersResponse,
 } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
@@ -289,20 +361,20 @@ export const postApiAuthenticationMfaVerifyMutation = (
   return mutationOptions;
 };
 
-export const getApiMaterialsQueryKey = (
-  options?: Options<GetApiMaterialsData>
-) => createQueryKey('getApiMaterials', options);
+export const getApiCollectionsQueryKey = (
+  options: Options<GetApiCollectionsData>
+) => createQueryKey('getApiCollections', options);
 
 /**
- * List Materials
- * List all materials in the system.
+ * List Collections
+ * List all collections in the system.
  */
-export const getApiMaterialsOptions = (
-  options?: Options<GetApiMaterialsData>
+export const getApiCollectionsOptions = (
+  options: Options<GetApiCollectionsData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiMaterials({
+      const { data } = await getApiCollections({
         ...options,
         ...queryKey[0],
         signal,
@@ -310,7 +382,7 @@ export const getApiMaterialsOptions = (
       });
       return data;
     },
-    queryKey: getApiMaterialsQueryKey(options),
+    queryKey: getApiCollectionsQueryKey(options),
   });
 };
 
@@ -350,8 +422,219 @@ const createInfiniteParams = <
   return params as unknown as typeof page;
 };
 
+export const getApiCollectionsInfiniteQueryKey = (
+  options: Options<GetApiCollectionsData>
+): QueryKey<Options<GetApiCollectionsData>> =>
+  createQueryKey('getApiCollections', options, true);
+
+/**
+ * List Collections
+ * List all collections in the system.
+ */
+export const getApiCollectionsInfiniteOptions = (
+  options: Options<GetApiCollectionsData>
+) => {
+  return infiniteQueryOptions<
+    GetApiCollectionsResponse,
+    GetApiCollectionsError,
+    InfiniteData<GetApiCollectionsResponse>,
+    QueryKey<Options<GetApiCollectionsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiCollectionsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiCollectionsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiCollections({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiCollectionsInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiCollectionsQueryKey = (
+  options: Options<PostApiCollectionsData>
+) => createQueryKey('postApiCollections', options);
+
+/**
+ * Create Collection
+ * Create a new collection in the system.
+ */
+export const postApiCollectionsOptions = (
+  options: Options<PostApiCollectionsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiCollections({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiCollectionsQueryKey(options),
+  });
+};
+
+/**
+ * Create Collection
+ * Create a new collection in the system.
+ */
+export const postApiCollectionsMutation = (
+  options?: Partial<Options<PostApiCollectionsData>>
+): UseMutationOptions<
+  PostApiCollectionsResponse,
+  PostApiCollectionsError,
+  Options<PostApiCollectionsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiCollectionsResponse,
+    PostApiCollectionsError,
+    Options<PostApiCollectionsData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiCollections({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Collection
+ * Delete an existing collection from the system.
+ */
+export const deleteApiCollectionsByIdMutation = (
+  options?: Partial<Options<DeleteApiCollectionsByIdData>>
+): UseMutationOptions<
+  DeleteApiCollectionsByIdResponse,
+  DeleteApiCollectionsByIdError,
+  Options<DeleteApiCollectionsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiCollectionsByIdResponse,
+    DeleteApiCollectionsByIdError,
+    Options<DeleteApiCollectionsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiCollectionsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiCollectionsByIdQueryKey = (
+  options: Options<GetApiCollectionsByIdData>
+) => createQueryKey('getApiCollectionsById', options);
+
+/**
+ * Find Collection
+ * Find an existing collection in the system.
+ */
+export const getApiCollectionsByIdOptions = (
+  options: Options<GetApiCollectionsByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiCollectionsById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiCollectionsByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Collection
+ * Update an existing collection in the system.
+ */
+export const patchApiCollectionsByIdMutation = (
+  options?: Partial<Options<PatchApiCollectionsByIdData>>
+): UseMutationOptions<
+  PatchApiCollectionsByIdResponse,
+  PatchApiCollectionsByIdError,
+  Options<PatchApiCollectionsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiCollectionsByIdResponse,
+    PatchApiCollectionsByIdError,
+    Options<PatchApiCollectionsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiCollectionsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiMaterialsQueryKey = (
+  options: Options<GetApiMaterialsData>
+) => createQueryKey('getApiMaterials', options);
+
+/**
+ * List Materials
+ * List all materials in the system.
+ */
+export const getApiMaterialsOptions = (
+  options: Options<GetApiMaterialsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiMaterials({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiMaterialsQueryKey(options),
+  });
+};
+
 export const getApiMaterialsInfiniteQueryKey = (
-  options?: Options<GetApiMaterialsData>
+  options: Options<GetApiMaterialsData>
 ): QueryKey<Options<GetApiMaterialsData>> =>
   createQueryKey('getApiMaterials', options, true);
 
@@ -360,7 +643,7 @@ export const getApiMaterialsInfiniteQueryKey = (
  * List all materials in the system.
  */
 export const getApiMaterialsInfiniteOptions = (
-  options?: Options<GetApiMaterialsData>
+  options: Options<GetApiMaterialsData>
 ) => {
   return infiniteQueryOptions<
     GetApiMaterialsResponse,
@@ -526,6 +809,627 @@ export const patchApiMaterialsByIdMutation = (
   > = {
     mutationFn: async (localOptions) => {
       const { data } = await patchApiMaterialsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiOrganizationsQueryKey = (
+  options: Options<GetApiOrganizationsData>
+) => createQueryKey('getApiOrganizations', options);
+
+/**
+ * List Organizations
+ * List all organizations in the system.
+ */
+export const getApiOrganizationsOptions = (
+  options: Options<GetApiOrganizationsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiOrganizations({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiOrganizationsQueryKey(options),
+  });
+};
+
+export const getApiOrganizationsInfiniteQueryKey = (
+  options: Options<GetApiOrganizationsData>
+): QueryKey<Options<GetApiOrganizationsData>> =>
+  createQueryKey('getApiOrganizations', options, true);
+
+/**
+ * List Organizations
+ * List all organizations in the system.
+ */
+export const getApiOrganizationsInfiniteOptions = (
+  options: Options<GetApiOrganizationsData>
+) => {
+  return infiniteQueryOptions<
+    GetApiOrganizationsResponse,
+    GetApiOrganizationsError,
+    InfiniteData<GetApiOrganizationsResponse>,
+    QueryKey<Options<GetApiOrganizationsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiOrganizationsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiOrganizationsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiOrganizations({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiOrganizationsInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiOrganizationsQueryKey = (
+  options: Options<PostApiOrganizationsData>
+) => createQueryKey('postApiOrganizations', options);
+
+/**
+ * Create Organization
+ * Create a new organization in the system.
+ */
+export const postApiOrganizationsOptions = (
+  options: Options<PostApiOrganizationsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiOrganizations({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiOrganizationsQueryKey(options),
+  });
+};
+
+/**
+ * Create Organization
+ * Create a new organization in the system.
+ */
+export const postApiOrganizationsMutation = (
+  options?: Partial<Options<PostApiOrganizationsData>>
+): UseMutationOptions<
+  PostApiOrganizationsResponse,
+  PostApiOrganizationsError,
+  Options<PostApiOrganizationsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiOrganizationsResponse,
+    PostApiOrganizationsError,
+    Options<PostApiOrganizationsData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiOrganizations({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Organization
+ * Delete an existing organization from the system.
+ */
+export const deleteApiOrganizationsByIdMutation = (
+  options?: Partial<Options<DeleteApiOrganizationsByIdData>>
+): UseMutationOptions<
+  DeleteApiOrganizationsByIdResponse,
+  DeleteApiOrganizationsByIdError,
+  Options<DeleteApiOrganizationsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiOrganizationsByIdResponse,
+    DeleteApiOrganizationsByIdError,
+    Options<DeleteApiOrganizationsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiOrganizationsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiOrganizationsByIdQueryKey = (
+  options: Options<GetApiOrganizationsByIdData>
+) => createQueryKey('getApiOrganizationsById', options);
+
+/**
+ * Find Organization
+ * Find an existing organization in the system.
+ */
+export const getApiOrganizationsByIdOptions = (
+  options: Options<GetApiOrganizationsByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiOrganizationsById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiOrganizationsByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Organization
+ * Update an existing organization in the system.
+ */
+export const patchApiOrganizationsByIdMutation = (
+  options?: Partial<Options<PatchApiOrganizationsByIdData>>
+): UseMutationOptions<
+  PatchApiOrganizationsByIdResponse,
+  PatchApiOrganizationsByIdError,
+  Options<PatchApiOrganizationsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiOrganizationsByIdResponse,
+    PatchApiOrganizationsByIdError,
+    Options<PatchApiOrganizationsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiOrganizationsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiRolesQueryKey = (options: Options<GetApiRolesData>) =>
+  createQueryKey('getApiRoles', options);
+
+/**
+ * List Roles
+ * List all roles in the system.
+ */
+export const getApiRolesOptions = (options: Options<GetApiRolesData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiRoles({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiRolesQueryKey(options),
+  });
+};
+
+export const getApiRolesInfiniteQueryKey = (
+  options: Options<GetApiRolesData>
+): QueryKey<Options<GetApiRolesData>> =>
+  createQueryKey('getApiRoles', options, true);
+
+/**
+ * List Roles
+ * List all roles in the system.
+ */
+export const getApiRolesInfiniteOptions = (
+  options: Options<GetApiRolesData>
+) => {
+  return infiniteQueryOptions<
+    GetApiRolesResponse,
+    GetApiRolesError,
+    InfiniteData<GetApiRolesResponse>,
+    QueryKey<Options<GetApiRolesData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiRolesData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiRolesData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiRoles({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiRolesInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiRolesQueryKey = (options: Options<PostApiRolesData>) =>
+  createQueryKey('postApiRoles', options);
+
+/**
+ * Create Role
+ * Create a new role in the system.
+ */
+export const postApiRolesOptions = (options: Options<PostApiRolesData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiRoles({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiRolesQueryKey(options),
+  });
+};
+
+/**
+ * Create Role
+ * Create a new role in the system.
+ */
+export const postApiRolesMutation = (
+  options?: Partial<Options<PostApiRolesData>>
+): UseMutationOptions<
+  PostApiRolesResponse,
+  PostApiRolesError,
+  Options<PostApiRolesData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiRolesResponse,
+    PostApiRolesError,
+    Options<PostApiRolesData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiRoles({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Role
+ * Delete an existing role from the system.
+ */
+export const deleteApiRolesByIdMutation = (
+  options?: Partial<Options<DeleteApiRolesByIdData>>
+): UseMutationOptions<
+  DeleteApiRolesByIdResponse,
+  DeleteApiRolesByIdError,
+  Options<DeleteApiRolesByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiRolesByIdResponse,
+    DeleteApiRolesByIdError,
+    Options<DeleteApiRolesByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiRolesById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiRolesByIdQueryKey = (
+  options: Options<GetApiRolesByIdData>
+) => createQueryKey('getApiRolesById', options);
+
+/**
+ * Find Role
+ * Find an existing role in the system.
+ */
+export const getApiRolesByIdOptions = (
+  options: Options<GetApiRolesByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiRolesById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiRolesByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Role
+ * Update an existing role in the system.
+ */
+export const patchApiRolesByIdMutation = (
+  options?: Partial<Options<PatchApiRolesByIdData>>
+): UseMutationOptions<
+  PatchApiRolesByIdResponse,
+  PatchApiRolesByIdError,
+  Options<PatchApiRolesByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiRolesByIdResponse,
+    PatchApiRolesByIdError,
+    Options<PatchApiRolesByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiRolesById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiUsersQueryKey = (options: Options<GetApiUsersData>) =>
+  createQueryKey('getApiUsers', options);
+
+/**
+ * List Users
+ * List all users in the system.
+ */
+export const getApiUsersOptions = (options: Options<GetApiUsersData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiUsers({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiUsersQueryKey(options),
+  });
+};
+
+export const getApiUsersInfiniteQueryKey = (
+  options: Options<GetApiUsersData>
+): QueryKey<Options<GetApiUsersData>> =>
+  createQueryKey('getApiUsers', options, true);
+
+/**
+ * List Users
+ * List all users in the system.
+ */
+export const getApiUsersInfiniteOptions = (
+  options: Options<GetApiUsersData>
+) => {
+  return infiniteQueryOptions<
+    GetApiUsersResponse,
+    GetApiUsersError,
+    InfiniteData<GetApiUsersResponse>,
+    QueryKey<Options<GetApiUsersData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiUsersData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiUsersData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiUsers({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiUsersInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiUsersQueryKey = (options: Options<PostApiUsersData>) =>
+  createQueryKey('postApiUsers', options);
+
+/**
+ * Create User
+ * Create a new user in the system.
+ */
+export const postApiUsersOptions = (options: Options<PostApiUsersData>) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiUsers({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiUsersQueryKey(options),
+  });
+};
+
+/**
+ * Create User
+ * Create a new user in the system.
+ */
+export const postApiUsersMutation = (
+  options?: Partial<Options<PostApiUsersData>>
+): UseMutationOptions<
+  PostApiUsersResponse,
+  PostApiUsersError,
+  Options<PostApiUsersData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiUsersResponse,
+    PostApiUsersError,
+    Options<PostApiUsersData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiUsers({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete User
+ * Delete an existing user from the system.
+ */
+export const deleteApiUsersByIdMutation = (
+  options?: Partial<Options<DeleteApiUsersByIdData>>
+): UseMutationOptions<
+  DeleteApiUsersByIdResponse,
+  DeleteApiUsersByIdError,
+  Options<DeleteApiUsersByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiUsersByIdResponse,
+    DeleteApiUsersByIdError,
+    Options<DeleteApiUsersByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiUsersById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiUsersByIdQueryKey = (
+  options: Options<GetApiUsersByIdData>
+) => createQueryKey('getApiUsersById', options);
+
+/**
+ * Find User
+ * Find an existing user in the system.
+ */
+export const getApiUsersByIdOptions = (
+  options: Options<GetApiUsersByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiUsersById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiUsersByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update User
+ * Update an existing user in the system.
+ */
+export const patchApiUsersByIdMutation = (
+  options?: Partial<Options<PatchApiUsersByIdData>>
+): UseMutationOptions<
+  PatchApiUsersByIdResponse,
+  PatchApiUsersByIdError,
+  Options<PatchApiUsersByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiUsersByIdResponse,
+    PatchApiUsersByIdError,
+    Options<PatchApiUsersByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiUsersById({
         ...options,
         ...localOptions,
         throwOnError: true,

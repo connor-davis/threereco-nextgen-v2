@@ -8,7 +8,7 @@ type Collection struct {
 	SellerId  uuid.UUID            `json:"-" gorm:"type:uuid;not null"`
 	Seller    User                 `json:"seller" gorm:"foreignKey:SellerId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	BuyerId   uuid.UUID            `json:"-" gorm:"type:uuid;not null"`
-	Buyer     Organization         `json:"buyer" gorm:"foreignKey:OrganizationId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Buyer     Organization         `json:"buyer" gorm:"foreignKey:BuyerId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type CreateCollectionPayload struct {
