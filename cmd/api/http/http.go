@@ -62,6 +62,15 @@ func NewHttpRouter(storage storage.Storage, sessions session.Store, services ser
 	collectionsRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
 	collectionsRoutes := collectionsRouter.InitializeRoutes()
 
+	transactionsRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
+	transactionsRoutes := transactionsRouter.InitializeRoutes()
+
+	addressesRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
+	addressesRoutes := addressesRouter.InitializeRoutes()
+
+	bankDetailsRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
+	bankDetailsRoutes := bankDetailsRouter.InitializeRoutes()
+
 	routes := []routing.Route{}
 
 	routes = append(routes, authenticationRoutes...)
@@ -70,6 +79,9 @@ func NewHttpRouter(storage storage.Storage, sessions session.Store, services ser
 	routes = append(routes, rolesRoutes...)
 	routes = append(routes, organizationsRoutes...)
 	routes = append(routes, collectionsRoutes...)
+	routes = append(routes, transactionsRoutes...)
+	routes = append(routes, addressesRoutes...)
+	routes = append(routes, bankDetailsRoutes...)
 
 	return HttpRouter{
 		Storage:    storage,
@@ -217,43 +229,47 @@ func (h *HttpRouter) InitializeOpenAPI() *openapi3.T {
 		Paths: paths,
 		Components: &openapi3.Components{
 			Schemas: openapi3.Schemas{
-				"SuccessResponse":    schemas.SuccessResponseSchema,
-				"ErrorResponse":      schemas.ErrorResponseSchema,
-				"MfaVerifyPayload":   schemas.MfaVerifyPayloadSchema,
-				"LoginPayload":       schemas.LoginPayloadSchema,
-				"SignUpPayload":      schemas.SignUpPayloadSchema,
-				"User":               schemas.UserSchema,
-				"Users":              schemas.UsersSchema,
-				"Role":               schemas.RoleSchema,
-				"Roles":              schemas.RolesSchema,
-				"Organization":       schemas.OrganizationSchema,
-				"Organizations":      schemas.OrganizationsSchema,
-				"Material":           schemas.MaterialSchema,
-				"Materials":          schemas.MaterialsSchema,
-				"Address":            schemas.AddressSchema,
-				"Addresses":          schemas.AddressesSchema,
-				"BankDetail":         schemas.BankDetailSchema,
-				"BankDetails":        schemas.BankDetailsSchema,
-				"Collection":         schemas.CollectionSchema,
-				"Collections":        schemas.CollectionsSchema,
-				"Transaction":        schemas.TransactionSchema,
-				"Transactions":       schemas.TransactionsSchema,
-				"CreateUser":         schemas.CreateUserSchema,
-				"UpdateUser":         schemas.UpdateUserSchema,
-				"CreateRole":         schemas.CreateRoleSchema,
-				"UpdateRole":         schemas.UpdateRoleSchema,
-				"CreateOrganization": schemas.CreateOrganizationSchema,
-				"UpdateOrganization": schemas.UpdateOrganizationSchema,
-				"CreateMaterial":     schemas.CreateMaterialSchema,
-				"UpdateMaterial":     schemas.UpdateMaterialSchema,
-				"CreateCollection":   schemas.CreateCollectionSchema,
-				"UpdateCollection":   schemas.UpdateCollectionSchema,
-				"CreateTransaction":  schemas.CreateTransactionSchema,
-				"UpdateTransaction":  schemas.UpdateTransactionSchema,
-				"CreateAddress":      schemas.CreateAddressSchema,
-				"UpdateAddress":      schemas.UpdateAddressSchema,
-				"CreateBankDetail":   schemas.CreateBankDetailSchema,
-				"UpdateBankDetail":   schemas.UpdateBankDetailSchema,
+				"SuccessResponse":           schemas.SuccessResponseSchema,
+				"ErrorResponse":             schemas.ErrorResponseSchema,
+				"MfaVerifyPayload":          schemas.MfaVerifyPayloadSchema,
+				"LoginPayload":              schemas.LoginPayloadSchema,
+				"SignUpPayload":             schemas.SignUpPayloadSchema,
+				"User":                      schemas.UserSchema,
+				"Users":                     schemas.UsersSchema,
+				"Role":                      schemas.RoleSchema,
+				"Roles":                     schemas.RolesSchema,
+				"Organization":              schemas.OrganizationSchema,
+				"Organizations":             schemas.OrganizationsSchema,
+				"Material":                  schemas.MaterialSchema,
+				"Materials":                 schemas.MaterialsSchema,
+				"Address":                   schemas.AddressSchema,
+				"Addresses":                 schemas.AddressesSchema,
+				"BankDetail":                schemas.BankDetailSchema,
+				"BankDetails":               schemas.BankDetailsSchema,
+				"Collection":                schemas.CollectionSchema,
+				"Collections":               schemas.CollectionsSchema,
+				"Transaction":               schemas.TransactionSchema,
+				"Transactions":              schemas.TransactionsSchema,
+				"CreateUser":                schemas.CreateUserSchema,
+				"UpdateUser":                schemas.UpdateUserSchema,
+				"CreateRole":                schemas.CreateRoleSchema,
+				"UpdateRole":                schemas.UpdateRoleSchema,
+				"CreateOrganization":        schemas.CreateOrganizationSchema,
+				"UpdateOrganization":        schemas.UpdateOrganizationSchema,
+				"CreateMaterial":            schemas.CreateMaterialSchema,
+				"UpdateMaterial":            schemas.UpdateMaterialSchema,
+				"CreateCollection":          schemas.CreateCollectionSchema,
+				"UpdateCollection":          schemas.UpdateCollectionSchema,
+				"CreateCollectionMaterial":  schemas.CreateCollectionMaterialSchema,
+				"UpdateCollectionMaterial":  schemas.UpdateCollectionMaterialSchema,
+				"CreateTransaction":         schemas.CreateTransactionSchema,
+				"UpdateTransaction":         schemas.UpdateTransactionSchema,
+				"CreateTransactionMaterial": schemas.CreateTransactionMaterialSchema,
+				"UpdateTransactionMaterial": schemas.UpdateTransactionMaterialSchema,
+				"CreateAddress":             schemas.CreateAddressSchema,
+				"UpdateAddress":             schemas.UpdateAddressSchema,
+				"CreateBankDetail":          schemas.CreateBankDetailSchema,
+				"UpdateBankDetail":          schemas.UpdateBankDetailSchema,
 			},
 		},
 	}
