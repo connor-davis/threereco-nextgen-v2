@@ -248,6 +248,8 @@ func (h *HttpRouter) InitializeOpenAPI() *openapi3.T {
 				"UpdateMaterial":     schemas.UpdateMaterialSchema,
 				"CreateCollection":   schemas.CreateCollectionSchema,
 				"UpdateCollection":   schemas.UpdateCollectionSchema,
+				"CreateTransaction":  schemas.CreateTransactionSchema,
+				"UpdateTransaction":  schemas.UpdateTransactionSchema,
 			},
 		},
 	}
