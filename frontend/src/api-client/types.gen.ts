@@ -45,7 +45,50 @@ export type BankDetails = Array<{
 } | null>;
 
 export type Collection = {
-  collector: {
+  buyer: {
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    id: string;
+    name: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  id: string;
+  materials: Array<{
+    createdAt: string;
+    id: string;
+    material: {
+      carbonFactor: string;
+      createdAt: string;
+      gwCode: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+      value: number;
+    };
+    updatedAt: string;
+    weight: number;
+  }>;
+  seller: {
     activeOrganization: string;
     address: {
       city: string;
@@ -85,56 +128,56 @@ export type Collection = {
       updatedAt: string;
     }>;
     type: 'standard' | 'collector' | 'business' | 'system';
-    updatedAt: string;
-  };
-  createdAt: string;
-  id: string;
-  materials: Array<{
-    createdAt: string;
-    id: string;
-    material: {
-      carbonFactor: string;
-      createdAt: string;
-      gwCode: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-      value: number;
-    };
-    updatedAt: string;
-    weight: number;
-  }>;
-  organization: {
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
-    } | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
-    createdAt: string;
-    id: string;
-    name: string;
     updatedAt: string;
   };
   updatedAt: string;
 };
 
 export type Collections = Array<{
-  collector: {
+  buyer: {
+    address: {
+      city: string;
+      country: string;
+      createdAt: string;
+      id: string;
+      lineOne: string;
+      lineTwo: string | null;
+      province: string;
+      updatedAt: string;
+      zipCode: string;
+    } | null;
+    bankDetails: {
+      accountHolder: string;
+      accountNumber: string;
+      bankName: string;
+      branchName: string;
+      createdAt: string;
+      id: string;
+      updatedAt: string;
+    } | null;
+    createdAt: string;
+    id: string;
+    name: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  id: string;
+  materials: Array<{
+    createdAt: string;
+    id: string;
+    material: {
+      carbonFactor: string;
+      createdAt: string;
+      gwCode: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+      value: number;
+    };
+    updatedAt: string;
+    weight: number;
+  }>;
+  seller: {
     activeOrganization: string;
     address: {
       city: string;
@@ -176,55 +219,12 @@ export type Collections = Array<{
     type: 'standard' | 'collector' | 'business' | 'system';
     updatedAt: string;
   };
-  createdAt: string;
-  id: string;
-  materials: Array<{
-    createdAt: string;
-    id: string;
-    material: {
-      carbonFactor: string;
-      createdAt: string;
-      gwCode: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-      value: number;
-    };
-    updatedAt: string;
-    weight: number;
-  }>;
-  organization: {
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
-    } | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
-    createdAt: string;
-    id: string;
-    name: string;
-    updatedAt: string;
-  };
   updatedAt: string;
 }>;
 
 export type CreateCollection = {
-  buyerId?: string;
-  sellerId?: string;
+  buyerId: string;
+  sellerId: string;
 };
 
 export type CreateMaterial = {
@@ -530,7 +530,50 @@ export type SuccessResponse = {
         value: number;
       }
     | {
-        collector: {
+        buyer: {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchName: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        };
+        createdAt: string;
+        id: string;
+        materials: Array<{
+          createdAt: string;
+          id: string;
+          material: {
+            carbonFactor: string;
+            createdAt: string;
+            gwCode: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+            value: number;
+          };
+          updatedAt: string;
+          weight: number;
+        }>;
+        seller: {
           activeOrganization: string;
           address: {
             city: string;
@@ -570,49 +613,6 @@ export type SuccessResponse = {
             updatedAt: string;
           }>;
           type: 'standard' | 'collector' | 'business' | 'system';
-          updatedAt: string;
-        };
-        createdAt: string;
-        id: string;
-        materials: Array<{
-          createdAt: string;
-          id: string;
-          material: {
-            carbonFactor: string;
-            createdAt: string;
-            gwCode: string;
-            id: string;
-            name: string;
-            updatedAt: string;
-            value: number;
-          };
-          updatedAt: string;
-          weight: number;
-        }>;
-        organization: {
-          address: {
-            city: string;
-            country: string;
-            createdAt: string;
-            id: string;
-            lineOne: string;
-            lineTwo: string | null;
-            province: string;
-            updatedAt: string;
-            zipCode: string;
-          } | null;
-          bankDetails: {
-            accountHolder: string;
-            accountNumber: string;
-            bankName: string;
-            branchName: string;
-            createdAt: string;
-            id: string;
-            updatedAt: string;
-          } | null;
-          createdAt: string;
-          id: string;
-          name: string;
           updatedAt: string;
         };
         updatedAt: string;
@@ -797,7 +797,50 @@ export type SuccessResponse = {
         value: number;
       }>
     | Array<{
-        collector: {
+        buyer: {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchName: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        };
+        createdAt: string;
+        id: string;
+        materials: Array<{
+          createdAt: string;
+          id: string;
+          material: {
+            carbonFactor: string;
+            createdAt: string;
+            gwCode: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+            value: number;
+          };
+          updatedAt: string;
+          weight: number;
+        }>;
+        seller: {
           activeOrganization: string;
           address: {
             city: string;
@@ -837,49 +880,6 @@ export type SuccessResponse = {
             updatedAt: string;
           }>;
           type: 'standard' | 'collector' | 'business' | 'system';
-          updatedAt: string;
-        };
-        createdAt: string;
-        id: string;
-        materials: Array<{
-          createdAt: string;
-          id: string;
-          material: {
-            carbonFactor: string;
-            createdAt: string;
-            gwCode: string;
-            id: string;
-            name: string;
-            updatedAt: string;
-            value: number;
-          };
-          updatedAt: string;
-          weight: number;
-        }>;
-        organization: {
-          address: {
-            city: string;
-            country: string;
-            createdAt: string;
-            id: string;
-            lineOne: string;
-            lineTwo: string | null;
-            province: string;
-            updatedAt: string;
-            zipCode: string;
-          } | null;
-          bankDetails: {
-            accountHolder: string;
-            accountNumber: string;
-            bankName: string;
-            branchName: string;
-            createdAt: string;
-            id: string;
-            updatedAt: string;
-          } | null;
-          createdAt: string;
-          id: string;
-          name: string;
           updatedAt: string;
         };
         updatedAt: string;
@@ -1427,7 +1427,50 @@ export type GetApiAuthenticationCheckResponses = {
           value: number;
         }
       | {
-          collector: {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchName: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+              value: number;
+            };
+            updatedAt: string;
+            weight: number;
+          }>;
+          seller: {
             activeOrganization: string;
             address: {
               city: string;
@@ -1467,49 +1510,6 @@ export type GetApiAuthenticationCheckResponses = {
               updatedAt: string;
             }>;
             type: 'standard' | 'collector' | 'business' | 'system';
-            updatedAt: string;
-          };
-          createdAt: string;
-          id: string;
-          materials: Array<{
-            createdAt: string;
-            id: string;
-            material: {
-              carbonFactor: string;
-              createdAt: string;
-              gwCode: string;
-              id: string;
-              name: string;
-              updatedAt: string;
-              value: number;
-            };
-            updatedAt: string;
-            weight: number;
-          }>;
-          organization: {
-            address: {
-              city: string;
-              country: string;
-              createdAt: string;
-              id: string;
-              lineOne: string;
-              lineTwo: string | null;
-              province: string;
-              updatedAt: string;
-              zipCode: string;
-            } | null;
-            bankDetails: {
-              accountHolder: string;
-              accountNumber: string;
-              bankName: string;
-              branchName: string;
-              createdAt: string;
-              id: string;
-              updatedAt: string;
-            } | null;
-            createdAt: string;
-            id: string;
-            name: string;
             updatedAt: string;
           };
           updatedAt: string;
@@ -1694,7 +1694,50 @@ export type GetApiAuthenticationCheckResponses = {
           value: number;
         }>
       | Array<{
-          collector: {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchName: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+              value: number;
+            };
+            updatedAt: string;
+            weight: number;
+          }>;
+          seller: {
             activeOrganization: string;
             address: {
               city: string;
@@ -1734,49 +1777,6 @@ export type GetApiAuthenticationCheckResponses = {
               updatedAt: string;
             }>;
             type: 'standard' | 'collector' | 'business' | 'system';
-            updatedAt: string;
-          };
-          createdAt: string;
-          id: string;
-          materials: Array<{
-            createdAt: string;
-            id: string;
-            material: {
-              carbonFactor: string;
-              createdAt: string;
-              gwCode: string;
-              id: string;
-              name: string;
-              updatedAt: string;
-              value: number;
-            };
-            updatedAt: string;
-            weight: number;
-          }>;
-          organization: {
-            address: {
-              city: string;
-              country: string;
-              createdAt: string;
-              id: string;
-              lineOne: string;
-              lineTwo: string | null;
-              province: string;
-              updatedAt: string;
-              zipCode: string;
-            } | null;
-            bankDetails: {
-              accountHolder: string;
-              accountNumber: string;
-              bankName: string;
-              branchName: string;
-              createdAt: string;
-              id: string;
-              updatedAt: string;
-            } | null;
-            createdAt: string;
-            id: string;
-            name: string;
             updatedAt: string;
           };
           updatedAt: string;
@@ -2079,7 +2079,50 @@ export type GetApiCollectionsResponses = {
    * Successful collections retrieval.
    */
   200: Array<{
-    collector: {
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      weight: number;
+    }>;
+    seller: {
       activeOrganization: string;
       address: {
         city: string;
@@ -2121,49 +2164,6 @@ export type GetApiCollectionsResponses = {
       type: 'standard' | 'collector' | 'business' | 'system';
       updatedAt: string;
     };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      weight: number;
-    }>;
-    organization: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
     updatedAt: string;
   }>;
 };
@@ -2176,8 +2176,8 @@ export type PostApiCollectionsData = {
    * Payload to create a new collection.
    */
   body: {
-    buyerId?: string;
-    sellerId?: string;
+    buyerId: string;
+    sellerId: string;
   };
   path?: never;
   query?: never;
@@ -2311,7 +2311,50 @@ export type GetApiCollectionsByIdResponses = {
    * Successful collection retrieval.
    */
   200: {
-    collector: {
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      weight: number;
+    }>;
+    seller: {
       activeOrganization: string;
       address: {
         city: string;
@@ -2351,49 +2394,6 @@ export type GetApiCollectionsByIdResponses = {
         updatedAt: string;
       }>;
       type: 'standard' | 'collector' | 'business' | 'system';
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      weight: number;
-    }>;
-    organization: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
       updatedAt: string;
     };
     updatedAt: string;

@@ -62,7 +62,58 @@ export const zBankDetails = z.array(
 );
 
 export const zCollection = z.object({
-  collector: z.object({
+  buyer: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  materials: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      material: z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+        value: z.number(),
+      }),
+      updatedAt: z.iso.datetime(),
+      weight: z.number(),
+    })
+  ),
+  seller: z.object({
     activeOrganization: z.uuid(),
     address: z.union([
       z.object({
@@ -112,63 +163,63 @@ export const zCollection = z.object({
     type: z.enum(['standard', 'collector', 'business', 'system']),
     updatedAt: z.iso.datetime(),
   }),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  materials: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      material: z.object({
-        carbonFactor: z.string(),
-        createdAt: z.iso.datetime(),
-        gwCode: z.string(),
-        id: z.uuid(),
-        name: z.string(),
-        updatedAt: z.iso.datetime(),
-        value: z.number(),
-      }),
-      updatedAt: z.iso.datetime(),
-      weight: z.number(),
-    })
-  ),
-  organization: z.object({
-    address: z.union([
-      z.object({
-        city: z.string(),
-        country: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
-      }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
   updatedAt: z.iso.datetime(),
 });
 
 export const zCollections = z.array(
   z.object({
-    collector: z.object({
+    buyer: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    materials: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        material: z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+          value: z.number(),
+        }),
+        updatedAt: z.iso.datetime(),
+        weight: z.number(),
+      })
+    ),
+    seller: z.object({
       activeOrganization: z.uuid(),
       address: z.union([
         z.object({
@@ -218,64 +269,13 @@ export const zCollections = z.array(
       type: z.enum(['standard', 'collector', 'business', 'system']),
       updatedAt: z.iso.datetime(),
     }),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    materials: z.array(
-      z.object({
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        material: z.object({
-          carbonFactor: z.string(),
-          createdAt: z.iso.datetime(),
-          gwCode: z.string(),
-          id: z.uuid(),
-          name: z.string(),
-          updatedAt: z.iso.datetime(),
-          value: z.number(),
-        }),
-        updatedAt: z.iso.datetime(),
-        weight: z.number(),
-      })
-    ),
-    organization: z.object({
-      address: z.union([
-        z.object({
-          city: z.string(),
-          country: z.string(),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          lineOne: z.string(),
-          lineTwo: z.union([z.string(), z.null()]),
-          province: z.string(),
-          updatedAt: z.iso.datetime(),
-          zipCode: z.string(),
-        }),
-        z.null(),
-      ]),
-      bankDetails: z.union([
-        z.object({
-          accountHolder: z.string(),
-          accountNumber: z.string(),
-          bankName: z.string(),
-          branchName: z.string(),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          updatedAt: z.iso.datetime(),
-        }),
-        z.null(),
-      ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
     updatedAt: z.iso.datetime(),
   })
 );
 
 export const zCreateCollection = z.object({
-  buyerId: z.optional(z.uuid()),
-  sellerId: z.optional(z.uuid()),
+  buyerId: z.uuid(),
+  sellerId: z.uuid(),
 });
 
 export const zCreateMaterial = z.object({
@@ -642,7 +642,58 @@ export const zSuccessResponse = z.object({
         value: z.number(),
       }),
       z.object({
-        collector: z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchName: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+            }),
+            updatedAt: z.iso.datetime(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
           activeOrganization: z.uuid(),
           address: z.union([
             z.object({
@@ -690,57 +741,6 @@ export const zSuccessResponse = z.object({
             })
           ),
           type: z.enum(['standard', 'collector', 'business', 'system']),
-          updatedAt: z.iso.datetime(),
-        }),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        materials: z.array(
-          z.object({
-            createdAt: z.iso.datetime(),
-            id: z.uuid(),
-            material: z.object({
-              carbonFactor: z.string(),
-              createdAt: z.iso.datetime(),
-              gwCode: z.string(),
-              id: z.uuid(),
-              name: z.string(),
-              updatedAt: z.iso.datetime(),
-              value: z.number(),
-            }),
-            updatedAt: z.iso.datetime(),
-            weight: z.number(),
-          })
-        ),
-        organization: z.object({
-          address: z.union([
-            z.object({
-              city: z.string(),
-              country: z.string(),
-              createdAt: z.iso.datetime(),
-              id: z.uuid(),
-              lineOne: z.string(),
-              lineTwo: z.union([z.string(), z.null()]),
-              province: z.string(),
-              updatedAt: z.iso.datetime(),
-              zipCode: z.string(),
-            }),
-            z.null(),
-          ]),
-          bankDetails: z.union([
-            z.object({
-              accountHolder: z.string(),
-              accountNumber: z.string(),
-              bankName: z.string(),
-              branchName: z.string(),
-              createdAt: z.iso.datetime(),
-              id: z.uuid(),
-              updatedAt: z.iso.datetime(),
-            }),
-            z.null(),
-          ]),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
         updatedAt: z.iso.datetime(),
@@ -975,7 +975,58 @@ export const zSuccessResponse = z.object({
       ),
       z.array(
         z.object({
-          collector: z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchName: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+                value: z.number(),
+              }),
+              updatedAt: z.iso.datetime(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
             activeOrganization: z.uuid(),
             address: z.union([
               z.object({
@@ -1023,57 +1074,6 @@ export const zSuccessResponse = z.object({
               })
             ),
             type: z.enum(['standard', 'collector', 'business', 'system']),
-            updatedAt: z.iso.datetime(),
-          }),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          materials: z.array(
-            z.object({
-              createdAt: z.iso.datetime(),
-              id: z.uuid(),
-              material: z.object({
-                carbonFactor: z.string(),
-                createdAt: z.iso.datetime(),
-                gwCode: z.string(),
-                id: z.uuid(),
-                name: z.string(),
-                updatedAt: z.iso.datetime(),
-                value: z.number(),
-              }),
-              updatedAt: z.iso.datetime(),
-              weight: z.number(),
-            })
-          ),
-          organization: z.object({
-            address: z.union([
-              z.object({
-                city: z.string(),
-                country: z.string(),
-                createdAt: z.iso.datetime(),
-                id: z.uuid(),
-                lineOne: z.string(),
-                lineTwo: z.union([z.string(), z.null()]),
-                province: z.string(),
-                updatedAt: z.iso.datetime(),
-                zipCode: z.string(),
-              }),
-              z.null(),
-            ]),
-            bankDetails: z.union([
-              z.object({
-                accountHolder: z.string(),
-                accountNumber: z.string(),
-                bankName: z.string(),
-                branchName: z.string(),
-                createdAt: z.iso.datetime(),
-                id: z.uuid(),
-                updatedAt: z.iso.datetime(),
-              }),
-              z.null(),
-            ]),
-            createdAt: z.iso.datetime(),
-            id: z.uuid(),
-            name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
           updatedAt: z.iso.datetime(),
@@ -1711,7 +1711,58 @@ export const zGetApiAuthenticationCheckResponse = z.object({
         value: z.number(),
       }),
       z.object({
-        collector: z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchName: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+            }),
+            updatedAt: z.iso.datetime(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
           activeOrganization: z.uuid(),
           address: z.union([
             z.object({
@@ -1759,57 +1810,6 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             })
           ),
           type: z.enum(['standard', 'collector', 'business', 'system']),
-          updatedAt: z.iso.datetime(),
-        }),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        materials: z.array(
-          z.object({
-            createdAt: z.iso.datetime(),
-            id: z.uuid(),
-            material: z.object({
-              carbonFactor: z.string(),
-              createdAt: z.iso.datetime(),
-              gwCode: z.string(),
-              id: z.uuid(),
-              name: z.string(),
-              updatedAt: z.iso.datetime(),
-              value: z.number(),
-            }),
-            updatedAt: z.iso.datetime(),
-            weight: z.number(),
-          })
-        ),
-        organization: z.object({
-          address: z.union([
-            z.object({
-              city: z.string(),
-              country: z.string(),
-              createdAt: z.iso.datetime(),
-              id: z.uuid(),
-              lineOne: z.string(),
-              lineTwo: z.union([z.string(), z.null()]),
-              province: z.string(),
-              updatedAt: z.iso.datetime(),
-              zipCode: z.string(),
-            }),
-            z.null(),
-          ]),
-          bankDetails: z.union([
-            z.object({
-              accountHolder: z.string(),
-              accountNumber: z.string(),
-              bankName: z.string(),
-              branchName: z.string(),
-              createdAt: z.iso.datetime(),
-              id: z.uuid(),
-              updatedAt: z.iso.datetime(),
-            }),
-            z.null(),
-          ]),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
         updatedAt: z.iso.datetime(),
@@ -2044,7 +2044,58 @@ export const zGetApiAuthenticationCheckResponse = z.object({
       ),
       z.array(
         z.object({
-          collector: z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchName: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+                value: z.number(),
+              }),
+              updatedAt: z.iso.datetime(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
             activeOrganization: z.uuid(),
             address: z.union([
               z.object({
@@ -2092,57 +2143,6 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               })
             ),
             type: z.enum(['standard', 'collector', 'business', 'system']),
-            updatedAt: z.iso.datetime(),
-          }),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          materials: z.array(
-            z.object({
-              createdAt: z.iso.datetime(),
-              id: z.uuid(),
-              material: z.object({
-                carbonFactor: z.string(),
-                createdAt: z.iso.datetime(),
-                gwCode: z.string(),
-                id: z.uuid(),
-                name: z.string(),
-                updatedAt: z.iso.datetime(),
-                value: z.number(),
-              }),
-              updatedAt: z.iso.datetime(),
-              weight: z.number(),
-            })
-          ),
-          organization: z.object({
-            address: z.union([
-              z.object({
-                city: z.string(),
-                country: z.string(),
-                createdAt: z.iso.datetime(),
-                id: z.uuid(),
-                lineOne: z.string(),
-                lineTwo: z.union([z.string(), z.null()]),
-                province: z.string(),
-                updatedAt: z.iso.datetime(),
-                zipCode: z.string(),
-              }),
-              z.null(),
-            ]),
-            bankDetails: z.union([
-              z.object({
-                accountHolder: z.string(),
-                accountNumber: z.string(),
-                bankName: z.string(),
-                branchName: z.string(),
-                createdAt: z.iso.datetime(),
-                id: z.uuid(),
-                updatedAt: z.iso.datetime(),
-              }),
-              z.null(),
-            ]),
-            createdAt: z.iso.datetime(),
-            id: z.uuid(),
-            name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
           updatedAt: z.iso.datetime(),
@@ -2297,7 +2297,58 @@ export const zGetApiCollectionsData = z.object({
  */
 export const zGetApiCollectionsResponse = z.array(
   z.object({
-    collector: z.object({
+    buyer: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    materials: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        material: z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+          value: z.number(),
+        }),
+        updatedAt: z.iso.datetime(),
+        weight: z.number(),
+      })
+    ),
+    seller: z.object({
       activeOrganization: z.uuid(),
       address: z.union([
         z.object({
@@ -2347,65 +2398,14 @@ export const zGetApiCollectionsResponse = z.array(
       type: z.enum(['standard', 'collector', 'business', 'system']),
       updatedAt: z.iso.datetime(),
     }),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    materials: z.array(
-      z.object({
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        material: z.object({
-          carbonFactor: z.string(),
-          createdAt: z.iso.datetime(),
-          gwCode: z.string(),
-          id: z.uuid(),
-          name: z.string(),
-          updatedAt: z.iso.datetime(),
-          value: z.number(),
-        }),
-        updatedAt: z.iso.datetime(),
-        weight: z.number(),
-      })
-    ),
-    organization: z.object({
-      address: z.union([
-        z.object({
-          city: z.string(),
-          country: z.string(),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          lineOne: z.string(),
-          lineTwo: z.union([z.string(), z.null()]),
-          province: z.string(),
-          updatedAt: z.iso.datetime(),
-          zipCode: z.string(),
-        }),
-        z.null(),
-      ]),
-      bankDetails: z.union([
-        z.object({
-          accountHolder: z.string(),
-          accountNumber: z.string(),
-          bankName: z.string(),
-          branchName: z.string(),
-          createdAt: z.iso.datetime(),
-          id: z.uuid(),
-          updatedAt: z.iso.datetime(),
-        }),
-        z.null(),
-      ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
     updatedAt: z.iso.datetime(),
   })
 );
 
 export const zPostApiCollectionsData = z.object({
   body: z.object({
-    buyerId: z.optional(z.uuid()),
-    sellerId: z.optional(z.uuid()),
+    buyerId: z.uuid(),
+    sellerId: z.uuid(),
   }),
   path: z.optional(z.never()),
   query: z.optional(z.never()),
@@ -2441,7 +2441,58 @@ export const zGetApiCollectionsByIdData = z.object({
  * Successful collection retrieval.
  */
 export const zGetApiCollectionsByIdResponse = z.object({
-  collector: z.object({
+  buyer: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  materials: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      material: z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+        value: z.number(),
+      }),
+      updatedAt: z.iso.datetime(),
+      weight: z.number(),
+    })
+  ),
+  seller: z.object({
     activeOrganization: z.uuid(),
     address: z.union([
       z.object({
@@ -2489,57 +2540,6 @@ export const zGetApiCollectionsByIdResponse = z.object({
       })
     ),
     type: z.enum(['standard', 'collector', 'business', 'system']),
-    updatedAt: z.iso.datetime(),
-  }),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  materials: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      material: z.object({
-        carbonFactor: z.string(),
-        createdAt: z.iso.datetime(),
-        gwCode: z.string(),
-        id: z.uuid(),
-        name: z.string(),
-        updatedAt: z.iso.datetime(),
-        value: z.number(),
-      }),
-      updatedAt: z.iso.datetime(),
-      weight: z.number(),
-    })
-  ),
-  organization: z.object({
-    address: z.union([
-      z.object({
-        city: z.string(),
-        country: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
-      }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
     updatedAt: z.iso.datetime(),
   }),
   updatedAt: z.iso.datetime(),
