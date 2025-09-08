@@ -20,3 +20,17 @@ var AddressSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var AddressesSchema = openapi3.NewArraySchema().WithItems(AddressSchema.Value).NewRef()
+
+var CreateAddressSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateAddressProperties).
+	WithRequired([]string{
+		"lineOne",
+		"city",
+		"zipCode",
+		"province",
+		"country",
+	}).NewRef()
+
+var UpdateAddressSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateAddressProperties).
+	NewRef()

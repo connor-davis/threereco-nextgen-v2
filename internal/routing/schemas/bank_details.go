@@ -18,3 +18,16 @@ var BankDetailSchema = openapi3.NewSchema().
 	}).NewRef()
 
 var BankDetailsSchema = openapi3.NewArraySchema().WithItems(BankDetailSchema.Value).NewRef()
+
+var CreateBankDetailSchema = openapi3.NewSchema().
+	WithProperties(properties.CreateBankDetailsProperties).
+	WithRequired([]string{
+		"accountNumber",
+		"accountHolder",
+		"bankName",
+		"branchName",
+	}).NewRef()
+
+var UpdateBankDetailSchema = openapi3.NewSchema().
+	WithProperties(properties.UpdateBankDetailsProperties).
+	NewRef()
