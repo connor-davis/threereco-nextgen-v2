@@ -26,13 +26,15 @@ var CollectionMaterialProperties = map[string]*openapi3.Schema{
 }
 
 var CreateCollectionMaterialProperties = map[string]*openapi3.Schema{
-	"materialId": openapi3.NewUUIDSchema(),
-	"weight":     openapi3.NewFloat64Schema(),
-	"value":      openapi3.NewFloat64Schema(),
+	"collectionId": openapi3.NewUUIDSchema(),
+	"materialId":   openapi3.NewUUIDSchema(),
+	"weight":       openapi3.NewFloat64Schema(),
+	"value":        openapi3.NewFloat64Schema(),
 }
 
 var UpdateCollectionMaterialProperties = map[string]*openapi3.Schema{
-	"materialId": openapi3.NewUUIDSchema().WithNullable(),
-	"weight":     openapi3.NewFloat64Schema().WithNullable(),
-	"value":      openapi3.NewFloat64Schema().WithNullable(),
+	"collectionId": openapi3.NewUUIDSchema().WithNullable(),
+	"materialId":   openapi3.NewUUIDSchema().WithNullable(),
+	"weight":       openapi3.NewFloat64Schema().WithNullable(),
+	"value":        openapi3.NewFloat64Schema().WithNullable(),
 }

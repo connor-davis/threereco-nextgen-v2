@@ -27,13 +27,15 @@ var TransactionMaterialProperties = map[string]*openapi3.Schema{
 }
 
 var CreateTransactionMaterialProperties = map[string]*openapi3.Schema{
-	"materialId": openapi3.NewUUIDSchema(),
-	"weight":     openapi3.NewFloat64Schema(),
-	"value":      openapi3.NewFloat64Schema(),
+	"transactionId": openapi3.NewUUIDSchema(),
+	"materialId":    openapi3.NewUUIDSchema(),
+	"weight":        openapi3.NewFloat64Schema(),
+	"value":         openapi3.NewFloat64Schema(),
 }
 
 var UpdateTransactionMaterialProperties = map[string]*openapi3.Schema{
-	"materialId": openapi3.NewUUIDSchema().WithNullable(),
-	"weight":     openapi3.NewFloat64Schema().WithNullable(),
-	"value":      openapi3.NewFloat64Schema().WithNullable(),
+	"transactionId": openapi3.NewUUIDSchema().WithNullable(),
+	"materialId":    openapi3.NewUUIDSchema().WithNullable(),
+	"weight":        openapi3.NewFloat64Schema().WithNullable(),
+	"value":         openapi3.NewFloat64Schema().WithNullable(),
 }

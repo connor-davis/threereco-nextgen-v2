@@ -36,13 +36,9 @@ func (s *collections) Materials() collectionMaterialsService {
 }
 
 func (s *collections) Create(payload models.CreateCollectionPayload) error {
-	var collection models.Collection
-
-	collection.SellerId = payload.SellerId
-	collection.BuyerId = payload.BuyerId
-
 	if err := s.storage.Postgres.
-		Create(&collection).Error; err != nil {
+		Model(&models.Collection{}).
+		Create(&payload).Error; err != nil {
 		return err
 	}
 

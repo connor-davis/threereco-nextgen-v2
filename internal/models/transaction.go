@@ -31,13 +31,15 @@ type TransactionMaterial struct {
 }
 
 type CreateTransactionMaterialPayload struct {
-	MaterialId uuid.UUID `json:"materialId"`
-	Weight     float64   `json:"weight"`
-	Value      float64   `json:"value"`
+	TransactionId uuid.UUID `json:"transactionId"`
+	MaterialId    uuid.UUID `json:"materialId"`
+	Weight        float64   `json:"weight"`
+	Value         float64   `json:"value"`
 }
 
 type UpdateTransactionMaterialPayload struct {
-	MaterialId *uuid.UUID `json:"materialId"`
-	Weight     *float64   `json:"weight"`
-	Value      *float64   `json:"value"`
+	TransactionId *uuid.UUID `json:"transactionId"`
+	MaterialId    *uuid.UUID `json:"materialId"`
+	Weight        *float64   `json:"weight"`
+	Value         *float64   `json:"value"`
 }

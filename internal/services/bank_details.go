@@ -4,15 +4,16 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/storage"
 	"github.com/google/uuid"
+	"gorm.io/gorm/clause"
 )
 
 type bankDetailsService interface {
-	Create(bankDetails models.BankDetails) error
-	Update(bankDetailsId uuid.UUID, bankDetails models.BankDetails) error
+	Create(payload models.CreateBankDetailsPayload) error
+	Update(bankDetailsId uuid.UUID, payload models.UpdateBankDetailsPayload) error
 	Delete(bankDetailsId uuid.UUID) error
 	Find(bankDetailsId uuid.UUID) (*models.BankDetails, error)
-	List() ([]models.BankDetails, error)
-	Count() (int64, error)
+	List(clauses ...clause.Expression) ([]models.BankDetails, error)
+	Count(clauses ...clause.Expression) (int64, error)
 }
 
 type bankDetails struct {
@@ -25,16 +26,50 @@ func newBankDetailsService(storage storage.Storage) bankDetailsService {
 	}
 }
 
-func (s *bankDetails) Create(bankDetails models.BankDetails) error {
-	if err := s.storage.Postgres.Create(&bankDetails).Error; err != nil {
+func (s *bankDetails) Create(payload models.CreateBankDetailsPayload) error {
+	if err := s.storage.Postgres.
+		Model(&models.BankDetails{}).
+		Create(&payload).Error; err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (s *bankDetails) Update(bankDetailsId uuid.UUID, bankDetails models.BankDetails) error {
-	if err := s.storage.Postgres.Where("id = ?", bankDetailsId).Updates(&bankDetails).Error; err != nil {
+func (s *bankDetails) Update(bankDetailsId uuid.UUID, payload models.UpdateBankDetailsPayload) error {
+	var bankDetails models.BankDetails
+
+	if err := s.storage.Postgres.
+		Where("id = ?", bankDetailsId).
+		First(&bankDetails).Error; err != nil {
+		return err
+	}
+
+	if payload.AccountHolder != nil {
+		bankDetails.AccountHolder = *payload.AccountHolder
+	}
+
+	if payload.AccountNumber != nil {
+		bankDetails.AccountNumber = *payload.AccountNumber
+	}
+
+	if payload.BankName != nil {
+		bankDetails.BankName = *payload.BankName
+	}
+
+	if payload.BranchCode != nil {
+		bankDetails.BranchCode = *payload.BranchCode
+	}
+
+	if err := s.storage.Postgres.
+		Model(&models.BankDetails{}).
+		Where("id = ?", bankDetailsId).
+		Updates(&map[string]any{
+			"account_holder": bankDetails.AccountHolder,
+			"account_number": bankDetails.AccountNumber,
+			"bank_name":      bankDetails.BankName,
+			"branch_code":    bankDetails.BranchCode,
+		}).Error; err != nil {
 		return err
 	}
 
@@ -42,7 +77,9 @@ func (s *bankDetails) Update(bankDetailsId uuid.UUID, bankDetails models.BankDet
 }
 
 func (s *bankDetails) Delete(bankDetailsId uuid.UUID) error {
-	if err := s.storage.Postgres.Where("id = ?", bankDetailsId).Delete(&models.BankDetails{}).Error; err != nil {
+	if err := s.storage.Postgres.
+		Where("id = ?", bankDetailsId).
+		Delete(&models.BankDetails{}).Error; err != nil {
 		return err
 	}
 
@@ -52,27 +89,34 @@ func (s *bankDetails) Delete(bankDetailsId uuid.UUID) error {
 func (s *bankDetails) Find(bankDetailsId uuid.UUID) (*models.BankDetails, error) {
 	var bankDetails *models.BankDetails
 
-	if err := s.storage.Postgres.Where("id = ?", bankDetailsId).First(&bankDetails).Error; err != nil {
+	if err := s.storage.Postgres.
+		Where("id = ?", bankDetailsId).
+		First(&bankDetails).Error; err != nil {
 		return nil, err
 	}
 
 	return bankDetails, nil
 }
 
-func (s *bankDetails) List() ([]models.BankDetails, error) {
+func (s *bankDetails) List(clauses ...clause.Expression) ([]models.BankDetails, error) {
 	var bankDetails []models.BankDetails
 
-	if err := s.storage.Postgres.Find(&bankDetails).Error; err != nil {
+	if err := s.storage.Postgres.
+		Clauses(clauses...).
+		Find(&bankDetails).Error; err != nil {
 		return nil, err
 	}
 
 	return bankDetails, nil
 }
 
-func (s *bankDetails) Count() (int64, error) {
+func (s *bankDetails) Count(clauses ...clause.Expression) (int64, error) {
 	var count int64
 
-	if err := s.storage.Postgres.Model(&models.BankDetails{}).Count(&count).Error; err != nil {
+	if err := s.storage.Postgres.
+		Model(&models.BankDetails{}).
+		Clauses(clauses...).
+		Count(&count).Error; err != nil {
 		return 0, err
 	}
 

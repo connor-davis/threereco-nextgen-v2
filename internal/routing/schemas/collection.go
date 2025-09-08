@@ -21,6 +21,7 @@ var CollectionMaterialsArraySchema = openapi3.NewArraySchema().WithItems(Collect
 var CreateCollectionMaterialSchema = openapi3.NewSchema().
 	WithProperties(properties.CreateCollectionMaterialProperties).
 	WithRequired([]string{
+		"collectionId",
 		"materialId",
 		"weight",
 		"value",

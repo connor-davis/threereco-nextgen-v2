@@ -98,13 +98,6 @@ func (s *users) Update(userId uuid.UUID, payload models.UpdateUserPayload) error
 		return err
 	}
 
-	if payload.Roles != nil {
-		if err := s.storage.Postgres.
-			Model(&user).Association("Roles").Replace(payload.Roles); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
 

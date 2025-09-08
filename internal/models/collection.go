@@ -31,13 +31,15 @@ type CollectionMaterial struct {
 }
 
 type CreateCollectionMaterialPayload struct {
-	MaterialId uuid.UUID `json:"materialId"`
-	Weight     float64   `json:"weight"`
-	Value      float64   `json:"value"`
+	CollectionId uuid.UUID `json:"collectionId"`
+	MaterialId   uuid.UUID `json:"materialId"`
+	Weight       float64   `json:"weight"`
+	Value        float64   `json:"value"`
 }
 
 type UpdateCollectionMaterialPayload struct {
-	MaterialId *uuid.UUID `json:"materialId"`
-	Weight     *float64   `json:"weight"`
-	Value      *float64   `json:"value"`
+	CollectionId *uuid.UUID `json:"collectionId"`
+	MaterialId   *uuid.UUID `json:"materialId"`
+	Weight       *float64   `json:"weight"`
+	Value        *float64   `json:"value"`
 }

@@ -27,15 +27,9 @@ func newCollectionMaterialsService(storage storage.Storage) collectionMaterialsS
 }
 
 func (s *collectionMaterials) Create(collectionId uuid.UUID, payload models.CreateCollectionMaterialPayload) error {
-	var collectionMaterial models.CollectionMaterial
-
-	collectionMaterial.CollectionId = collectionId
-	collectionMaterial.MaterialId = payload.MaterialId
-	collectionMaterial.Weight = payload.Weight
-	collectionMaterial.Value = payload.Value
-
 	if err := s.storage.Postgres.
-		Create(&collectionMaterial).Error; err != nil {
+		Model(&models.CollectionMaterial{}).
+		Create(&payload).Error; err != nil {
 		return err
 	}
 
@@ -49,6 +43,10 @@ func (s *collectionMaterials) Update(collectionId uuid.UUID, collectionMaterialI
 		Where("id = ?", collectionMaterialId).
 		First(&collectionMaterial).Error; err != nil {
 		return err
+	}
+
+	if payload.CollectionId != nil {
+		collectionMaterial.CollectionId = *payload.CollectionId
 	}
 
 	if payload.MaterialId != nil {
@@ -67,9 +65,10 @@ func (s *collectionMaterials) Update(collectionId uuid.UUID, collectionMaterialI
 		Model(&models.CollectionMaterial{}).
 		Where("id = ?", collectionMaterialId).
 		Updates(&map[string]any{
-			"material_id": collectionMaterial.MaterialId,
-			"weight":      collectionMaterial.Weight,
-			"value":       collectionMaterial.Value,
+			"collection_id": collectionMaterial.CollectionId,
+			"material_id":   collectionMaterial.MaterialId,
+			"weight":        collectionMaterial.Weight,
+			"value":         collectionMaterial.Value,
 		}).Error; err != nil {
 		return err
 	}

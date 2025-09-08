@@ -21,6 +21,7 @@ var TransactionMaterialsArraySchema = openapi3.NewArraySchema().WithItems(Transa
 var CreateTransactionMaterialSchema = openapi3.NewSchema().
 	WithProperties(properties.CreateTransactionMaterialProperties).
 	WithRequired([]string{
+		"transactionId",
 		"materialId",
 		"weight",
 		"value",
