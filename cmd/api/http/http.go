@@ -4,12 +4,15 @@ import (
 	"fmt"
 	"regexp"
 
+	"github.com/connor-davis/threereco-nextgen/cmd/api/http/addresses"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/authentication"
+	bankDetails "github.com/connor-davis/threereco-nextgen/cmd/api/http/bank-details"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/collections"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/materials"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/middleware"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/organizations"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/roles"
+	"github.com/connor-davis/threereco-nextgen/cmd/api/http/transactions"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/users"
 	"github.com/connor-davis/threereco-nextgen/env"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
@@ -62,13 +65,13 @@ func NewHttpRouter(storage storage.Storage, sessions session.Store, services ser
 	collectionsRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
 	collectionsRoutes := collectionsRouter.InitializeRoutes()
 
-	transactionsRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
+	transactionsRouter := transactions.NewTransactionsRouter(storage, sessions, services, middleware)
 	transactionsRoutes := transactionsRouter.InitializeRoutes()
 
-	addressesRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
+	addressesRouter := addresses.NewAddressesRouter(storage, sessions, services, middleware)
 	addressesRoutes := addressesRouter.InitializeRoutes()
 
-	bankDetailsRouter := collections.NewCollectionsRouter(storage, sessions, services, middleware)
+	bankDetailsRouter := bankDetails.NewBankDetailsRouter(storage, sessions, services, middleware)
 	bankDetailsRoutes := bankDetailsRouter.InitializeRoutes()
 
 	routes := []routing.Route{}
