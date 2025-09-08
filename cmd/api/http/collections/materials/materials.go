@@ -15,7 +15,7 @@ type CollectionMaterialsRouter struct {
 	Middleware middleware.Middleware
 }
 
-func NewCollectionsRouter(
+func NewCollectionMaterialsRouter(
 	storage storage.Storage,
 	sessions session.Store,
 	services services.Services,

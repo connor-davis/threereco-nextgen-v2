@@ -1691,7 +1691,7 @@ export const zPostApiAddressesData = z.object({
  */
 export const zPostApiAddressesResponse = z.string();
 
-export const zDeleteApiAddressesByIdData = z.object({
+export const zDeleteApiAddressesIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -1702,9 +1702,9 @@ export const zDeleteApiAddressesByIdData = z.object({
 /**
  * Successful address deletion.
  */
-export const zDeleteApiAddressesByIdResponse = z.string();
+export const zDeleteApiAddressesIdResponse = z.string();
 
-export const zGetApiAddressesByIdData = z.object({
+export const zGetApiAddressesIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -1715,7 +1715,7 @@ export const zGetApiAddressesByIdData = z.object({
 /**
  * Successful address retrieval.
  */
-export const zGetApiAddressesByIdResponse = z.union([
+export const zGetApiAddressesIdResponse = z.union([
   z.object({
     city: z.string(),
     country: z.string(),
@@ -1730,7 +1730,7 @@ export const zGetApiAddressesByIdResponse = z.union([
   z.null(),
 ]);
 
-export const zPatchApiAddressesByIdData = z.object({
+export const zPatchApiAddressesIdData = z.object({
   body: z.object({
     city: z.optional(z.union([z.string(), z.null()])),
     country: z.optional(z.union([z.string(), z.null()])),
@@ -1748,7 +1748,7 @@ export const zPatchApiAddressesByIdData = z.object({
 /**
  * Successful address update.
  */
-export const zPatchApiAddressesByIdResponse = z.string();
+export const zPatchApiAddressesIdResponse = z.string();
 
 export const zGetApiAuthenticationCheckData = z.object({
   body: z.optional(z.never()),
@@ -2503,7 +2503,7 @@ export const zPostApiBankDetailsData = z.object({
  */
 export const zPostApiBankDetailsResponse = z.string();
 
-export const zDeleteApiBankDetailsByIdData = z.object({
+export const zDeleteApiBankDetailsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -2514,9 +2514,9 @@ export const zDeleteApiBankDetailsByIdData = z.object({
 /**
  * Successful bank details deletion.
  */
-export const zDeleteApiBankDetailsByIdResponse = z.string();
+export const zDeleteApiBankDetailsIdResponse = z.string();
 
-export const zGetApiBankDetailsByIdData = z.object({
+export const zGetApiBankDetailsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -2527,7 +2527,7 @@ export const zGetApiBankDetailsByIdData = z.object({
 /**
  * Successful bank details retrieval.
  */
-export const zGetApiBankDetailsByIdResponse = z.union([
+export const zGetApiBankDetailsIdResponse = z.union([
   z.object({
     accountHolder: z.string(),
     accountNumber: z.string(),
@@ -2540,7 +2540,7 @@ export const zGetApiBankDetailsByIdResponse = z.union([
   z.null(),
 ]);
 
-export const zPatchApiBankDetailsByIdData = z.object({
+export const zPatchApiBankDetailsIdData = z.object({
   body: z.object({
     accountHolder: z.optional(z.union([z.string(), z.null()])),
     accountNumber: z.optional(z.union([z.string(), z.null()])),
@@ -2556,7 +2556,7 @@ export const zPatchApiBankDetailsByIdData = z.object({
 /**
  * Successful bank details update.
  */
-export const zPatchApiBankDetailsByIdResponse = z.string();
+export const zPatchApiBankDetailsIdResponse = z.string();
 
 export const zGetApiCollectionsData = z.object({
   body: z.optional(z.never()),
@@ -2692,7 +2692,7 @@ export const zPostApiCollectionsData = z.object({
  */
 export const zPostApiCollectionsResponse = z.string();
 
-export const zDeleteApiCollectionsByIdData = z.object({
+export const zDeleteApiCollectionsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -2703,9 +2703,9 @@ export const zDeleteApiCollectionsByIdData = z.object({
 /**
  * Successful collection deletion.
  */
-export const zDeleteApiCollectionsByIdResponse = z.string();
+export const zDeleteApiCollectionsIdResponse = z.string();
 
-export const zGetApiCollectionsByIdData = z.object({
+export const zGetApiCollectionsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -2716,7 +2716,7 @@ export const zGetApiCollectionsByIdData = z.object({
 /**
  * Successful collection retrieval.
  */
-export const zGetApiCollectionsByIdResponse = z.object({
+export const zGetApiCollectionsIdResponse = z.object({
   buyer: z.object({
     address: z.union([
       z.object({
@@ -2821,7 +2821,7 @@ export const zGetApiCollectionsByIdResponse = z.object({
   updatedAt: z.iso.datetime(),
 });
 
-export const zPatchApiCollectionsByIdData = z.object({
+export const zPatchApiCollectionsIdData = z.object({
   body: z.object({
     buyerId: z.optional(z.union([z.uuid(), z.null()])),
     sellerId: z.optional(z.union([z.uuid(), z.null()])),
@@ -2835,7 +2835,7 @@ export const zPatchApiCollectionsByIdData = z.object({
 /**
  * Successful collection update.
  */
-export const zPatchApiCollectionsByIdResponse = z.string();
+export const zPatchApiCollectionsIdResponse = z.string();
 
 export const zGetApiMaterialsData = z.object({
   body: z.optional(z.never()),
@@ -2877,7 +2877,7 @@ export const zPostApiMaterialsData = z.object({
  */
 export const zPostApiMaterialsResponse = z.string();
 
-export const zDeleteApiMaterialsByIdData = z.object({
+export const zDeleteApiMaterialsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -2888,9 +2888,9 @@ export const zDeleteApiMaterialsByIdData = z.object({
 /**
  * Successful material deletion.
  */
-export const zDeleteApiMaterialsByIdResponse = z.string();
+export const zDeleteApiMaterialsIdResponse = z.string();
 
-export const zGetApiMaterialsByIdData = z.object({
+export const zGetApiMaterialsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -2901,7 +2901,7 @@ export const zGetApiMaterialsByIdData = z.object({
 /**
  * Successful material retrieval.
  */
-export const zGetApiMaterialsByIdResponse = z.object({
+export const zGetApiMaterialsIdResponse = z.object({
   carbonFactor: z.string(),
   createdAt: z.iso.datetime(),
   gwCode: z.string(),
@@ -2911,7 +2911,7 @@ export const zGetApiMaterialsByIdResponse = z.object({
   value: z.number(),
 });
 
-export const zPatchApiMaterialsByIdData = z.object({
+export const zPatchApiMaterialsIdData = z.object({
   body: z.object({
     carbonFactor: z.optional(z.number()),
     gwCode: z.optional(z.string()),
@@ -2926,7 +2926,7 @@ export const zPatchApiMaterialsByIdData = z.object({
 /**
  * Successful material update.
  */
-export const zPatchApiMaterialsByIdResponse = z.string();
+export const zPatchApiMaterialsIdResponse = z.string();
 
 export const zGetApiOrganizationsData = z.object({
   body: z.optional(z.never()),
@@ -3055,7 +3055,7 @@ export const zPostApiOrganizationsData = z.object({
  */
 export const zPostApiOrganizationsResponse = z.string();
 
-export const zDeleteApiOrganizationsByIdData = z.object({
+export const zDeleteApiOrganizationsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3066,9 +3066,9 @@ export const zDeleteApiOrganizationsByIdData = z.object({
 /**
  * Successful organization deletion.
  */
-export const zDeleteApiOrganizationsByIdResponse = z.string();
+export const zDeleteApiOrganizationsIdResponse = z.string();
 
-export const zGetApiOrganizationsByIdData = z.object({
+export const zGetApiOrganizationsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3079,7 +3079,7 @@ export const zGetApiOrganizationsByIdData = z.object({
 /**
  * Successful organization retrieval.
  */
-export const zGetApiOrganizationsByIdResponse = z.object({
+export const zGetApiOrganizationsIdResponse = z.object({
   address: z.union([
     z.object({
       city: z.string(),
@@ -3112,7 +3112,7 @@ export const zGetApiOrganizationsByIdResponse = z.object({
   updatedAt: z.iso.datetime(),
 });
 
-export const zPatchApiOrganizationsByIdData = z.object({
+export const zPatchApiOrganizationsIdData = z.object({
   body: z.object({
     name: z.optional(z.union([z.string(), z.null()])),
     roles: z.optional(
@@ -3191,7 +3191,7 @@ export const zPatchApiOrganizationsByIdData = z.object({
 /**
  * Successful organization update.
  */
-export const zPatchApiOrganizationsByIdResponse = z.string();
+export const zPatchApiOrganizationsIdResponse = z.string();
 
 export const zGetApiRolesData = z.object({
   body: z.optional(z.never()),
@@ -3232,7 +3232,7 @@ export const zPostApiRolesData = z.object({
  */
 export const zPostApiRolesResponse = z.string();
 
-export const zDeleteApiRolesByIdData = z.object({
+export const zDeleteApiRolesIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3243,9 +3243,9 @@ export const zDeleteApiRolesByIdData = z.object({
 /**
  * Successful role deletion.
  */
-export const zDeleteApiRolesByIdResponse = z.string();
+export const zDeleteApiRolesIdResponse = z.string();
 
-export const zGetApiRolesByIdData = z.object({
+export const zGetApiRolesIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3256,7 +3256,7 @@ export const zGetApiRolesByIdData = z.object({
 /**
  * Successful role retrieval.
  */
-export const zGetApiRolesByIdResponse = z.object({
+export const zGetApiRolesIdResponse = z.object({
   createdAt: z.iso.datetime(),
   description: z.union([z.string(), z.null()]),
   id: z.uuid(),
@@ -3265,7 +3265,7 @@ export const zGetApiRolesByIdResponse = z.object({
   updatedAt: z.iso.datetime(),
 });
 
-export const zPatchApiRolesByIdData = z.object({
+export const zPatchApiRolesIdData = z.object({
   body: z.object({
     description: z.optional(z.union([z.string(), z.null()])),
     name: z.optional(z.union([z.string(), z.null()])),
@@ -3280,7 +3280,7 @@ export const zPatchApiRolesByIdData = z.object({
 /**
  * Successful role update.
  */
-export const zPatchApiRolesByIdResponse = z.string();
+export const zPatchApiRolesIdResponse = z.string();
 
 export const zGetApiTransactionsData = z.object({
   body: z.optional(z.never()),
@@ -3399,7 +3399,7 @@ export const zPostApiTransactionsData = z.object({
  */
 export const zPostApiTransactionsResponse = z.string();
 
-export const zDeleteApiTransactionsByIdData = z.object({
+export const zDeleteApiTransactionsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3410,9 +3410,9 @@ export const zDeleteApiTransactionsByIdData = z.object({
 /**
  * Successful transaction deletion.
  */
-export const zDeleteApiTransactionsByIdResponse = z.string();
+export const zDeleteApiTransactionsIdResponse = z.string();
 
-export const zGetApiTransactionsByIdData = z.object({
+export const zGetApiTransactionsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3423,7 +3423,7 @@ export const zGetApiTransactionsByIdData = z.object({
 /**
  * Successful transaction retrieval.
  */
-export const zGetApiTransactionsByIdResponse = z.object({
+export const zGetApiTransactionsIdResponse = z.object({
   buyer: z.object({
     address: z.union([
       z.object({
@@ -3511,7 +3511,7 @@ export const zGetApiTransactionsByIdResponse = z.object({
   updatedAt: z.iso.datetime(),
 });
 
-export const zPatchApiTransactionsByIdData = z.object({
+export const zPatchApiTransactionsIdData = z.object({
   body: z.object({
     buyerId: z.optional(z.union([z.uuid(), z.null()])),
     sellerId: z.optional(z.union([z.uuid(), z.null()])),
@@ -3525,7 +3525,7 @@ export const zPatchApiTransactionsByIdData = z.object({
 /**
  * Successful transaction update.
  */
-export const zPatchApiTransactionsByIdResponse = z.string();
+export const zPatchApiTransactionsIdResponse = z.string();
 
 export const zGetApiUsersData = z.object({
   body: z.optional(z.never()),
@@ -3619,7 +3619,7 @@ export const zPostApiUsersData = z.object({
  */
 export const zPostApiUsersResponse = z.string();
 
-export const zDeleteApiUsersByIdData = z.object({
+export const zDeleteApiUsersIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3630,9 +3630,9 @@ export const zDeleteApiUsersByIdData = z.object({
 /**
  * Successful user deletion.
  */
-export const zDeleteApiUsersByIdResponse = z.string();
+export const zDeleteApiUsersIdResponse = z.string();
 
-export const zGetApiUsersByIdData = z.object({
+export const zGetApiUsersIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
     id: z.uuid(),
@@ -3643,7 +3643,7 @@ export const zGetApiUsersByIdData = z.object({
 /**
  * Successful user retrieval.
  */
-export const zGetApiUsersByIdResponse = z.object({
+export const zGetApiUsersIdResponse = z.object({
   activeOrganization: z.uuid(),
   address: z.union([
     z.object({
@@ -3694,7 +3694,7 @@ export const zGetApiUsersByIdResponse = z.object({
   updatedAt: z.iso.datetime(),
 });
 
-export const zPatchApiUsersByIdData = z.object({
+export const zPatchApiUsersIdData = z.object({
   body: z.object({
     email: z.optional(z.union([z.string(), z.null()])),
     name: z.optional(z.union([z.string(), z.null()])),
@@ -3723,4 +3723,4 @@ export const zPatchApiUsersByIdData = z.object({
 /**
  * Successful user update.
  */
-export const zPatchApiUsersByIdResponse = z.string();
+export const zPatchApiUsersIdResponse = z.string();

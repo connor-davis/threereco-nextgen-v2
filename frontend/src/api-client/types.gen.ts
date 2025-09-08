@@ -1480,7 +1480,7 @@ export type PostApiAddressesResponses = {
 export type PostApiAddressesResponse =
   PostApiAddressesResponses[keyof PostApiAddressesResponses];
 
-export type DeleteApiAddressesByIdData = {
+export type DeleteApiAddressesIdData = {
   body?: never;
   path: {
     id: string;
@@ -1489,7 +1489,7 @@ export type DeleteApiAddressesByIdData = {
   url: '/api/addresses/:id';
 };
 
-export type DeleteApiAddressesByIdErrors = {
+export type DeleteApiAddressesIdErrors = {
   /**
    * Bad Request
    */
@@ -1514,20 +1514,20 @@ export type DeleteApiAddressesByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiAddressesByIdError =
-  DeleteApiAddressesByIdErrors[keyof DeleteApiAddressesByIdErrors];
+export type DeleteApiAddressesIdError =
+  DeleteApiAddressesIdErrors[keyof DeleteApiAddressesIdErrors];
 
-export type DeleteApiAddressesByIdResponses = {
+export type DeleteApiAddressesIdResponses = {
   /**
    * Successful address deletion.
    */
   200: string;
 };
 
-export type DeleteApiAddressesByIdResponse =
-  DeleteApiAddressesByIdResponses[keyof DeleteApiAddressesByIdResponses];
+export type DeleteApiAddressesIdResponse =
+  DeleteApiAddressesIdResponses[keyof DeleteApiAddressesIdResponses];
 
-export type GetApiAddressesByIdData = {
+export type GetApiAddressesIdData = {
   body?: never;
   path: {
     id: string;
@@ -1536,7 +1536,7 @@ export type GetApiAddressesByIdData = {
   url: '/api/addresses/:id';
 };
 
-export type GetApiAddressesByIdErrors = {
+export type GetApiAddressesIdErrors = {
   /**
    * Bad Request
    */
@@ -1561,10 +1561,10 @@ export type GetApiAddressesByIdErrors = {
   default: unknown;
 };
 
-export type GetApiAddressesByIdError =
-  GetApiAddressesByIdErrors[keyof GetApiAddressesByIdErrors];
+export type GetApiAddressesIdError =
+  GetApiAddressesIdErrors[keyof GetApiAddressesIdErrors];
 
-export type GetApiAddressesByIdResponses = {
+export type GetApiAddressesIdResponses = {
   /**
    * Successful address retrieval.
    */
@@ -1581,10 +1581,10 @@ export type GetApiAddressesByIdResponses = {
   } | null;
 };
 
-export type GetApiAddressesByIdResponse =
-  GetApiAddressesByIdResponses[keyof GetApiAddressesByIdResponses];
+export type GetApiAddressesIdResponse =
+  GetApiAddressesIdResponses[keyof GetApiAddressesIdResponses];
 
-export type PatchApiAddressesByIdData = {
+export type PatchApiAddressesIdData = {
   /**
    * Payload to update an existing address.
    */
@@ -1603,7 +1603,7 @@ export type PatchApiAddressesByIdData = {
   url: '/api/addresses/:id';
 };
 
-export type PatchApiAddressesByIdErrors = {
+export type PatchApiAddressesIdErrors = {
   /**
    * Bad Request
    */
@@ -1628,18 +1628,18 @@ export type PatchApiAddressesByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiAddressesByIdError =
-  PatchApiAddressesByIdErrors[keyof PatchApiAddressesByIdErrors];
+export type PatchApiAddressesIdError =
+  PatchApiAddressesIdErrors[keyof PatchApiAddressesIdErrors];
 
-export type PatchApiAddressesByIdResponses = {
+export type PatchApiAddressesIdResponses = {
   /**
    * Successful address update.
    */
   200: string;
 };
 
-export type PatchApiAddressesByIdResponse =
-  PatchApiAddressesByIdResponses[keyof PatchApiAddressesByIdResponses];
+export type PatchApiAddressesIdResponse =
+  PatchApiAddressesIdResponses[keyof PatchApiAddressesIdResponses];
 
 export type GetApiAuthenticationCheckData = {
   body?: never;
@@ -2499,7 +2499,7 @@ export type PostApiBankDetailsResponses = {
 export type PostApiBankDetailsResponse =
   PostApiBankDetailsResponses[keyof PostApiBankDetailsResponses];
 
-export type DeleteApiBankDetailsByIdData = {
+export type DeleteApiBankDetailsIdData = {
   body?: never;
   path: {
     id: string;
@@ -2508,7 +2508,7 @@ export type DeleteApiBankDetailsByIdData = {
   url: '/api/bank-details/:id';
 };
 
-export type DeleteApiBankDetailsByIdErrors = {
+export type DeleteApiBankDetailsIdErrors = {
   /**
    * Bad Request
    */
@@ -2533,20 +2533,20 @@ export type DeleteApiBankDetailsByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiBankDetailsByIdError =
-  DeleteApiBankDetailsByIdErrors[keyof DeleteApiBankDetailsByIdErrors];
+export type DeleteApiBankDetailsIdError =
+  DeleteApiBankDetailsIdErrors[keyof DeleteApiBankDetailsIdErrors];
 
-export type DeleteApiBankDetailsByIdResponses = {
+export type DeleteApiBankDetailsIdResponses = {
   /**
    * Successful bank details deletion.
    */
   200: string;
 };
 
-export type DeleteApiBankDetailsByIdResponse =
-  DeleteApiBankDetailsByIdResponses[keyof DeleteApiBankDetailsByIdResponses];
+export type DeleteApiBankDetailsIdResponse =
+  DeleteApiBankDetailsIdResponses[keyof DeleteApiBankDetailsIdResponses];
 
-export type GetApiBankDetailsByIdData = {
+export type GetApiBankDetailsIdData = {
   body?: never;
   path: {
     id: string;
@@ -2555,7 +2555,7 @@ export type GetApiBankDetailsByIdData = {
   url: '/api/bank-details/:id';
 };
 
-export type GetApiBankDetailsByIdErrors = {
+export type GetApiBankDetailsIdErrors = {
   /**
    * Bad Request
    */
@@ -2580,10 +2580,10 @@ export type GetApiBankDetailsByIdErrors = {
   default: unknown;
 };
 
-export type GetApiBankDetailsByIdError =
-  GetApiBankDetailsByIdErrors[keyof GetApiBankDetailsByIdErrors];
+export type GetApiBankDetailsIdError =
+  GetApiBankDetailsIdErrors[keyof GetApiBankDetailsIdErrors];
 
-export type GetApiBankDetailsByIdResponses = {
+export type GetApiBankDetailsIdResponses = {
   /**
    * Successful bank details retrieval.
    */
@@ -2598,10 +2598,10 @@ export type GetApiBankDetailsByIdResponses = {
   } | null;
 };
 
-export type GetApiBankDetailsByIdResponse =
-  GetApiBankDetailsByIdResponses[keyof GetApiBankDetailsByIdResponses];
+export type GetApiBankDetailsIdResponse =
+  GetApiBankDetailsIdResponses[keyof GetApiBankDetailsIdResponses];
 
-export type PatchApiBankDetailsByIdData = {
+export type PatchApiBankDetailsIdData = {
   /**
    * Payload to update existing bank details.
    */
@@ -2618,7 +2618,7 @@ export type PatchApiBankDetailsByIdData = {
   url: '/api/bank-details/:id';
 };
 
-export type PatchApiBankDetailsByIdErrors = {
+export type PatchApiBankDetailsIdErrors = {
   /**
    * Bad Request
    */
@@ -2643,18 +2643,18 @@ export type PatchApiBankDetailsByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiBankDetailsByIdError =
-  PatchApiBankDetailsByIdErrors[keyof PatchApiBankDetailsByIdErrors];
+export type PatchApiBankDetailsIdError =
+  PatchApiBankDetailsIdErrors[keyof PatchApiBankDetailsIdErrors];
 
-export type PatchApiBankDetailsByIdResponses = {
+export type PatchApiBankDetailsIdResponses = {
   /**
    * Successful bank details update.
    */
   200: string;
 };
 
-export type PatchApiBankDetailsByIdResponse =
-  PatchApiBankDetailsByIdResponses[keyof PatchApiBankDetailsByIdResponses];
+export type PatchApiBankDetailsIdResponse =
+  PatchApiBankDetailsIdResponses[keyof PatchApiBankDetailsIdResponses];
 
 export type GetApiCollectionsData = {
   body?: never;
@@ -2852,7 +2852,7 @@ export type PostApiCollectionsResponses = {
 export type PostApiCollectionsResponse =
   PostApiCollectionsResponses[keyof PostApiCollectionsResponses];
 
-export type DeleteApiCollectionsByIdData = {
+export type DeleteApiCollectionsIdData = {
   body?: never;
   path: {
     id: string;
@@ -2861,7 +2861,7 @@ export type DeleteApiCollectionsByIdData = {
   url: '/api/collections/:id';
 };
 
-export type DeleteApiCollectionsByIdErrors = {
+export type DeleteApiCollectionsIdErrors = {
   /**
    * Bad Request
    */
@@ -2886,20 +2886,20 @@ export type DeleteApiCollectionsByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiCollectionsByIdError =
-  DeleteApiCollectionsByIdErrors[keyof DeleteApiCollectionsByIdErrors];
+export type DeleteApiCollectionsIdError =
+  DeleteApiCollectionsIdErrors[keyof DeleteApiCollectionsIdErrors];
 
-export type DeleteApiCollectionsByIdResponses = {
+export type DeleteApiCollectionsIdResponses = {
   /**
    * Successful collection deletion.
    */
   200: string;
 };
 
-export type DeleteApiCollectionsByIdResponse =
-  DeleteApiCollectionsByIdResponses[keyof DeleteApiCollectionsByIdResponses];
+export type DeleteApiCollectionsIdResponse =
+  DeleteApiCollectionsIdResponses[keyof DeleteApiCollectionsIdResponses];
 
-export type GetApiCollectionsByIdData = {
+export type GetApiCollectionsIdData = {
   body?: never;
   path: {
     id: string;
@@ -2908,7 +2908,7 @@ export type GetApiCollectionsByIdData = {
   url: '/api/collections/:id';
 };
 
-export type GetApiCollectionsByIdErrors = {
+export type GetApiCollectionsIdErrors = {
   /**
    * Bad Request
    */
@@ -2933,10 +2933,10 @@ export type GetApiCollectionsByIdErrors = {
   default: unknown;
 };
 
-export type GetApiCollectionsByIdError =
-  GetApiCollectionsByIdErrors[keyof GetApiCollectionsByIdErrors];
+export type GetApiCollectionsIdError =
+  GetApiCollectionsIdErrors[keyof GetApiCollectionsIdErrors];
 
-export type GetApiCollectionsByIdResponses = {
+export type GetApiCollectionsIdResponses = {
   /**
    * Successful collection retrieval.
    */
@@ -3030,10 +3030,10 @@ export type GetApiCollectionsByIdResponses = {
   };
 };
 
-export type GetApiCollectionsByIdResponse =
-  GetApiCollectionsByIdResponses[keyof GetApiCollectionsByIdResponses];
+export type GetApiCollectionsIdResponse =
+  GetApiCollectionsIdResponses[keyof GetApiCollectionsIdResponses];
 
-export type PatchApiCollectionsByIdData = {
+export type PatchApiCollectionsIdData = {
   /**
    * Payload to update an existing collection.
    */
@@ -3048,7 +3048,7 @@ export type PatchApiCollectionsByIdData = {
   url: '/api/collections/:id';
 };
 
-export type PatchApiCollectionsByIdErrors = {
+export type PatchApiCollectionsIdErrors = {
   /**
    * Bad Request
    */
@@ -3073,18 +3073,18 @@ export type PatchApiCollectionsByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiCollectionsByIdError =
-  PatchApiCollectionsByIdErrors[keyof PatchApiCollectionsByIdErrors];
+export type PatchApiCollectionsIdError =
+  PatchApiCollectionsIdErrors[keyof PatchApiCollectionsIdErrors];
 
-export type PatchApiCollectionsByIdResponses = {
+export type PatchApiCollectionsIdResponses = {
   /**
    * Successful collection update.
    */
   200: string;
 };
 
-export type PatchApiCollectionsByIdResponse =
-  PatchApiCollectionsByIdResponses[keyof PatchApiCollectionsByIdResponses];
+export type PatchApiCollectionsIdResponse =
+  PatchApiCollectionsIdResponses[keyof PatchApiCollectionsIdResponses];
 
 export type GetApiMaterialsData = {
   body?: never;
@@ -3204,7 +3204,7 @@ export type PostApiMaterialsResponses = {
 export type PostApiMaterialsResponse =
   PostApiMaterialsResponses[keyof PostApiMaterialsResponses];
 
-export type DeleteApiMaterialsByIdData = {
+export type DeleteApiMaterialsIdData = {
   body?: never;
   path: {
     id: string;
@@ -3213,7 +3213,7 @@ export type DeleteApiMaterialsByIdData = {
   url: '/api/materials/:id';
 };
 
-export type DeleteApiMaterialsByIdErrors = {
+export type DeleteApiMaterialsIdErrors = {
   /**
    * Bad Request
    */
@@ -3238,20 +3238,20 @@ export type DeleteApiMaterialsByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiMaterialsByIdError =
-  DeleteApiMaterialsByIdErrors[keyof DeleteApiMaterialsByIdErrors];
+export type DeleteApiMaterialsIdError =
+  DeleteApiMaterialsIdErrors[keyof DeleteApiMaterialsIdErrors];
 
-export type DeleteApiMaterialsByIdResponses = {
+export type DeleteApiMaterialsIdResponses = {
   /**
    * Successful material deletion.
    */
   200: string;
 };
 
-export type DeleteApiMaterialsByIdResponse =
-  DeleteApiMaterialsByIdResponses[keyof DeleteApiMaterialsByIdResponses];
+export type DeleteApiMaterialsIdResponse =
+  DeleteApiMaterialsIdResponses[keyof DeleteApiMaterialsIdResponses];
 
-export type GetApiMaterialsByIdData = {
+export type GetApiMaterialsIdData = {
   body?: never;
   path: {
     id: string;
@@ -3260,7 +3260,7 @@ export type GetApiMaterialsByIdData = {
   url: '/api/materials/:id';
 };
 
-export type GetApiMaterialsByIdErrors = {
+export type GetApiMaterialsIdErrors = {
   /**
    * Bad Request
    */
@@ -3285,10 +3285,10 @@ export type GetApiMaterialsByIdErrors = {
   default: unknown;
 };
 
-export type GetApiMaterialsByIdError =
-  GetApiMaterialsByIdErrors[keyof GetApiMaterialsByIdErrors];
+export type GetApiMaterialsIdError =
+  GetApiMaterialsIdErrors[keyof GetApiMaterialsIdErrors];
 
-export type GetApiMaterialsByIdResponses = {
+export type GetApiMaterialsIdResponses = {
   /**
    * Successful material retrieval.
    */
@@ -3303,10 +3303,10 @@ export type GetApiMaterialsByIdResponses = {
   };
 };
 
-export type GetApiMaterialsByIdResponse =
-  GetApiMaterialsByIdResponses[keyof GetApiMaterialsByIdResponses];
+export type GetApiMaterialsIdResponse =
+  GetApiMaterialsIdResponses[keyof GetApiMaterialsIdResponses];
 
-export type PatchApiMaterialsByIdData = {
+export type PatchApiMaterialsIdData = {
   /**
    * Payload to update an existing material.
    */
@@ -3322,7 +3322,7 @@ export type PatchApiMaterialsByIdData = {
   url: '/api/materials/:id';
 };
 
-export type PatchApiMaterialsByIdErrors = {
+export type PatchApiMaterialsIdErrors = {
   /**
    * Bad Request
    */
@@ -3347,18 +3347,18 @@ export type PatchApiMaterialsByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiMaterialsByIdError =
-  PatchApiMaterialsByIdErrors[keyof PatchApiMaterialsByIdErrors];
+export type PatchApiMaterialsIdError =
+  PatchApiMaterialsIdErrors[keyof PatchApiMaterialsIdErrors];
 
-export type PatchApiMaterialsByIdResponses = {
+export type PatchApiMaterialsIdResponses = {
   /**
    * Successful material update.
    */
   200: string;
 };
 
-export type PatchApiMaterialsByIdResponse =
-  PatchApiMaterialsByIdResponses[keyof PatchApiMaterialsByIdResponses];
+export type PatchApiMaterialsIdResponse =
+  PatchApiMaterialsIdResponses[keyof PatchApiMaterialsIdResponses];
 
 export type GetApiOrganizationsData = {
   body?: never;
@@ -3543,7 +3543,7 @@ export type PostApiOrganizationsResponses = {
 export type PostApiOrganizationsResponse =
   PostApiOrganizationsResponses[keyof PostApiOrganizationsResponses];
 
-export type DeleteApiOrganizationsByIdData = {
+export type DeleteApiOrganizationsIdData = {
   body?: never;
   path: {
     id: string;
@@ -3552,7 +3552,7 @@ export type DeleteApiOrganizationsByIdData = {
   url: '/api/organizations/:id';
 };
 
-export type DeleteApiOrganizationsByIdErrors = {
+export type DeleteApiOrganizationsIdErrors = {
   /**
    * Bad Request
    */
@@ -3577,20 +3577,20 @@ export type DeleteApiOrganizationsByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiOrganizationsByIdError =
-  DeleteApiOrganizationsByIdErrors[keyof DeleteApiOrganizationsByIdErrors];
+export type DeleteApiOrganizationsIdError =
+  DeleteApiOrganizationsIdErrors[keyof DeleteApiOrganizationsIdErrors];
 
-export type DeleteApiOrganizationsByIdResponses = {
+export type DeleteApiOrganizationsIdResponses = {
   /**
    * Successful organization deletion.
    */
   200: string;
 };
 
-export type DeleteApiOrganizationsByIdResponse =
-  DeleteApiOrganizationsByIdResponses[keyof DeleteApiOrganizationsByIdResponses];
+export type DeleteApiOrganizationsIdResponse =
+  DeleteApiOrganizationsIdResponses[keyof DeleteApiOrganizationsIdResponses];
 
-export type GetApiOrganizationsByIdData = {
+export type GetApiOrganizationsIdData = {
   body?: never;
   path: {
     id: string;
@@ -3599,7 +3599,7 @@ export type GetApiOrganizationsByIdData = {
   url: '/api/organizations/:id';
 };
 
-export type GetApiOrganizationsByIdErrors = {
+export type GetApiOrganizationsIdErrors = {
   /**
    * Bad Request
    */
@@ -3624,10 +3624,10 @@ export type GetApiOrganizationsByIdErrors = {
   default: unknown;
 };
 
-export type GetApiOrganizationsByIdError =
-  GetApiOrganizationsByIdErrors[keyof GetApiOrganizationsByIdErrors];
+export type GetApiOrganizationsIdError =
+  GetApiOrganizationsIdErrors[keyof GetApiOrganizationsIdErrors];
 
-export type GetApiOrganizationsByIdResponses = {
+export type GetApiOrganizationsIdResponses = {
   /**
    * Successful organization retrieval.
    */
@@ -3659,10 +3659,10 @@ export type GetApiOrganizationsByIdResponses = {
   };
 };
 
-export type GetApiOrganizationsByIdResponse =
-  GetApiOrganizationsByIdResponses[keyof GetApiOrganizationsByIdResponses];
+export type GetApiOrganizationsIdResponse =
+  GetApiOrganizationsIdResponses[keyof GetApiOrganizationsIdResponses];
 
-export type PatchApiOrganizationsByIdData = {
+export type PatchApiOrganizationsIdData = {
   /**
    * Payload to update an existing organization.
    */
@@ -3726,7 +3726,7 @@ export type PatchApiOrganizationsByIdData = {
   url: '/api/organizations/:id';
 };
 
-export type PatchApiOrganizationsByIdErrors = {
+export type PatchApiOrganizationsIdErrors = {
   /**
    * Bad Request
    */
@@ -3751,18 +3751,18 @@ export type PatchApiOrganizationsByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiOrganizationsByIdError =
-  PatchApiOrganizationsByIdErrors[keyof PatchApiOrganizationsByIdErrors];
+export type PatchApiOrganizationsIdError =
+  PatchApiOrganizationsIdErrors[keyof PatchApiOrganizationsIdErrors];
 
-export type PatchApiOrganizationsByIdResponses = {
+export type PatchApiOrganizationsIdResponses = {
   /**
    * Successful organization update.
    */
   200: string;
 };
 
-export type PatchApiOrganizationsByIdResponse =
-  PatchApiOrganizationsByIdResponses[keyof PatchApiOrganizationsByIdResponses];
+export type PatchApiOrganizationsIdResponse =
+  PatchApiOrganizationsIdResponses[keyof PatchApiOrganizationsIdResponses];
 
 export type GetApiRolesData = {
   body?: never;
@@ -3879,7 +3879,7 @@ export type PostApiRolesResponses = {
 export type PostApiRolesResponse =
   PostApiRolesResponses[keyof PostApiRolesResponses];
 
-export type DeleteApiRolesByIdData = {
+export type DeleteApiRolesIdData = {
   body?: never;
   path: {
     id: string;
@@ -3888,7 +3888,7 @@ export type DeleteApiRolesByIdData = {
   url: '/api/roles/:id';
 };
 
-export type DeleteApiRolesByIdErrors = {
+export type DeleteApiRolesIdErrors = {
   /**
    * Bad Request
    */
@@ -3913,20 +3913,20 @@ export type DeleteApiRolesByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiRolesByIdError =
-  DeleteApiRolesByIdErrors[keyof DeleteApiRolesByIdErrors];
+export type DeleteApiRolesIdError =
+  DeleteApiRolesIdErrors[keyof DeleteApiRolesIdErrors];
 
-export type DeleteApiRolesByIdResponses = {
+export type DeleteApiRolesIdResponses = {
   /**
    * Successful role deletion.
    */
   200: string;
 };
 
-export type DeleteApiRolesByIdResponse =
-  DeleteApiRolesByIdResponses[keyof DeleteApiRolesByIdResponses];
+export type DeleteApiRolesIdResponse =
+  DeleteApiRolesIdResponses[keyof DeleteApiRolesIdResponses];
 
-export type GetApiRolesByIdData = {
+export type GetApiRolesIdData = {
   body?: never;
   path: {
     id: string;
@@ -3935,7 +3935,7 @@ export type GetApiRolesByIdData = {
   url: '/api/roles/:id';
 };
 
-export type GetApiRolesByIdErrors = {
+export type GetApiRolesIdErrors = {
   /**
    * Bad Request
    */
@@ -3960,10 +3960,9 @@ export type GetApiRolesByIdErrors = {
   default: unknown;
 };
 
-export type GetApiRolesByIdError =
-  GetApiRolesByIdErrors[keyof GetApiRolesByIdErrors];
+export type GetApiRolesIdError = GetApiRolesIdErrors[keyof GetApiRolesIdErrors];
 
-export type GetApiRolesByIdResponses = {
+export type GetApiRolesIdResponses = {
   /**
    * Successful role retrieval.
    */
@@ -3977,10 +3976,10 @@ export type GetApiRolesByIdResponses = {
   };
 };
 
-export type GetApiRolesByIdResponse =
-  GetApiRolesByIdResponses[keyof GetApiRolesByIdResponses];
+export type GetApiRolesIdResponse =
+  GetApiRolesIdResponses[keyof GetApiRolesIdResponses];
 
-export type PatchApiRolesByIdData = {
+export type PatchApiRolesIdData = {
   /**
    * Payload to update an existing role.
    */
@@ -3996,7 +3995,7 @@ export type PatchApiRolesByIdData = {
   url: '/api/roles/:id';
 };
 
-export type PatchApiRolesByIdErrors = {
+export type PatchApiRolesIdErrors = {
   /**
    * Bad Request
    */
@@ -4021,18 +4020,18 @@ export type PatchApiRolesByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiRolesByIdError =
-  PatchApiRolesByIdErrors[keyof PatchApiRolesByIdErrors];
+export type PatchApiRolesIdError =
+  PatchApiRolesIdErrors[keyof PatchApiRolesIdErrors];
 
-export type PatchApiRolesByIdResponses = {
+export type PatchApiRolesIdResponses = {
   /**
    * Successful role update.
    */
   200: string;
 };
 
-export type PatchApiRolesByIdResponse =
-  PatchApiRolesByIdResponses[keyof PatchApiRolesByIdResponses];
+export type PatchApiRolesIdResponse =
+  PatchApiRolesIdResponses[keyof PatchApiRolesIdResponses];
 
 export type GetApiTransactionsData = {
   body?: never;
@@ -4215,7 +4214,7 @@ export type PostApiTransactionsResponses = {
 export type PostApiTransactionsResponse =
   PostApiTransactionsResponses[keyof PostApiTransactionsResponses];
 
-export type DeleteApiTransactionsByIdData = {
+export type DeleteApiTransactionsIdData = {
   body?: never;
   path: {
     id: string;
@@ -4224,7 +4223,7 @@ export type DeleteApiTransactionsByIdData = {
   url: '/api/transactions/:id';
 };
 
-export type DeleteApiTransactionsByIdErrors = {
+export type DeleteApiTransactionsIdErrors = {
   /**
    * Bad Request
    */
@@ -4249,20 +4248,20 @@ export type DeleteApiTransactionsByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiTransactionsByIdError =
-  DeleteApiTransactionsByIdErrors[keyof DeleteApiTransactionsByIdErrors];
+export type DeleteApiTransactionsIdError =
+  DeleteApiTransactionsIdErrors[keyof DeleteApiTransactionsIdErrors];
 
-export type DeleteApiTransactionsByIdResponses = {
+export type DeleteApiTransactionsIdResponses = {
   /**
    * Successful transaction deletion.
    */
   200: string;
 };
 
-export type DeleteApiTransactionsByIdResponse =
-  DeleteApiTransactionsByIdResponses[keyof DeleteApiTransactionsByIdResponses];
+export type DeleteApiTransactionsIdResponse =
+  DeleteApiTransactionsIdResponses[keyof DeleteApiTransactionsIdResponses];
 
-export type GetApiTransactionsByIdData = {
+export type GetApiTransactionsIdData = {
   body?: never;
   path: {
     id: string;
@@ -4271,7 +4270,7 @@ export type GetApiTransactionsByIdData = {
   url: '/api/transactions/:id';
 };
 
-export type GetApiTransactionsByIdErrors = {
+export type GetApiTransactionsIdErrors = {
   /**
    * Bad Request
    */
@@ -4296,10 +4295,10 @@ export type GetApiTransactionsByIdErrors = {
   default: unknown;
 };
 
-export type GetApiTransactionsByIdError =
-  GetApiTransactionsByIdErrors[keyof GetApiTransactionsByIdErrors];
+export type GetApiTransactionsIdError =
+  GetApiTransactionsIdErrors[keyof GetApiTransactionsIdErrors];
 
-export type GetApiTransactionsByIdResponses = {
+export type GetApiTransactionsIdResponses = {
   /**
    * Successful transaction retrieval.
    */
@@ -4378,10 +4377,10 @@ export type GetApiTransactionsByIdResponses = {
   };
 };
 
-export type GetApiTransactionsByIdResponse =
-  GetApiTransactionsByIdResponses[keyof GetApiTransactionsByIdResponses];
+export type GetApiTransactionsIdResponse =
+  GetApiTransactionsIdResponses[keyof GetApiTransactionsIdResponses];
 
-export type PatchApiTransactionsByIdData = {
+export type PatchApiTransactionsIdData = {
   /**
    * Payload to update an existing transaction.
    */
@@ -4396,7 +4395,7 @@ export type PatchApiTransactionsByIdData = {
   url: '/api/transactions/:id';
 };
 
-export type PatchApiTransactionsByIdErrors = {
+export type PatchApiTransactionsIdErrors = {
   /**
    * Bad Request
    */
@@ -4421,18 +4420,18 @@ export type PatchApiTransactionsByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiTransactionsByIdError =
-  PatchApiTransactionsByIdErrors[keyof PatchApiTransactionsByIdErrors];
+export type PatchApiTransactionsIdError =
+  PatchApiTransactionsIdErrors[keyof PatchApiTransactionsIdErrors];
 
-export type PatchApiTransactionsByIdResponses = {
+export type PatchApiTransactionsIdResponses = {
   /**
    * Successful transaction update.
    */
   200: string;
 };
 
-export type PatchApiTransactionsByIdResponse =
-  PatchApiTransactionsByIdResponses[keyof PatchApiTransactionsByIdResponses];
+export type PatchApiTransactionsIdResponse =
+  PatchApiTransactionsIdResponses[keyof PatchApiTransactionsIdResponses];
 
 export type GetApiUsersData = {
   body?: never;
@@ -4597,7 +4596,7 @@ export type PostApiUsersResponses = {
 export type PostApiUsersResponse =
   PostApiUsersResponses[keyof PostApiUsersResponses];
 
-export type DeleteApiUsersByIdData = {
+export type DeleteApiUsersIdData = {
   body?: never;
   path: {
     id: string;
@@ -4606,7 +4605,7 @@ export type DeleteApiUsersByIdData = {
   url: '/api/users/:id';
 };
 
-export type DeleteApiUsersByIdErrors = {
+export type DeleteApiUsersIdErrors = {
   /**
    * Bad Request
    */
@@ -4631,20 +4630,20 @@ export type DeleteApiUsersByIdErrors = {
   default: unknown;
 };
 
-export type DeleteApiUsersByIdError =
-  DeleteApiUsersByIdErrors[keyof DeleteApiUsersByIdErrors];
+export type DeleteApiUsersIdError =
+  DeleteApiUsersIdErrors[keyof DeleteApiUsersIdErrors];
 
-export type DeleteApiUsersByIdResponses = {
+export type DeleteApiUsersIdResponses = {
   /**
    * Successful user deletion.
    */
   200: string;
 };
 
-export type DeleteApiUsersByIdResponse =
-  DeleteApiUsersByIdResponses[keyof DeleteApiUsersByIdResponses];
+export type DeleteApiUsersIdResponse =
+  DeleteApiUsersIdResponses[keyof DeleteApiUsersIdResponses];
 
-export type GetApiUsersByIdData = {
+export type GetApiUsersIdData = {
   body?: never;
   path: {
     id: string;
@@ -4653,7 +4652,7 @@ export type GetApiUsersByIdData = {
   url: '/api/users/:id';
 };
 
-export type GetApiUsersByIdErrors = {
+export type GetApiUsersIdErrors = {
   /**
    * Bad Request
    */
@@ -4678,10 +4677,9 @@ export type GetApiUsersByIdErrors = {
   default: unknown;
 };
 
-export type GetApiUsersByIdError =
-  GetApiUsersByIdErrors[keyof GetApiUsersByIdErrors];
+export type GetApiUsersIdError = GetApiUsersIdErrors[keyof GetApiUsersIdErrors];
 
-export type GetApiUsersByIdResponses = {
+export type GetApiUsersIdResponses = {
   /**
    * Successful user retrieval.
    */
@@ -4729,10 +4727,10 @@ export type GetApiUsersByIdResponses = {
   };
 };
 
-export type GetApiUsersByIdResponse =
-  GetApiUsersByIdResponses[keyof GetApiUsersByIdResponses];
+export type GetApiUsersIdResponse =
+  GetApiUsersIdResponses[keyof GetApiUsersIdResponses];
 
-export type PatchApiUsersByIdData = {
+export type PatchApiUsersIdData = {
   /**
    * Payload to update an existing user.
    */
@@ -4758,7 +4756,7 @@ export type PatchApiUsersByIdData = {
   url: '/api/users/:id';
 };
 
-export type PatchApiUsersByIdErrors = {
+export type PatchApiUsersIdErrors = {
   /**
    * Bad Request
    */
@@ -4783,18 +4781,18 @@ export type PatchApiUsersByIdErrors = {
   default: unknown;
 };
 
-export type PatchApiUsersByIdError =
-  PatchApiUsersByIdErrors[keyof PatchApiUsersByIdErrors];
+export type PatchApiUsersIdError =
+  PatchApiUsersIdErrors[keyof PatchApiUsersIdErrors];
 
-export type PatchApiUsersByIdResponses = {
+export type PatchApiUsersIdResponses = {
   /**
    * Successful user update.
    */
   200: string;
 };
 
-export type PatchApiUsersByIdResponse =
-  PatchApiUsersByIdResponses[keyof PatchApiUsersByIdResponses];
+export type PatchApiUsersIdResponse =
+  PatchApiUsersIdResponses[keyof PatchApiUsersIdResponses];
 
 export type ClientOptions = {
   baseUrl: 'http://localhost:6173' | 'https://3reco.co.za' | (string & {});

@@ -9,40 +9,40 @@ import {
 import { client as _heyApiClient } from '../client.gen';
 import {
   type Options,
-  deleteApiAddressesById,
-  deleteApiBankDetailsById,
-  deleteApiCollectionsById,
-  deleteApiMaterialsById,
-  deleteApiOrganizationsById,
-  deleteApiRolesById,
-  deleteApiTransactionsById,
-  deleteApiUsersById,
+  deleteApiAddressesId,
+  deleteApiBankDetailsId,
+  deleteApiCollectionsId,
+  deleteApiMaterialsId,
+  deleteApiOrganizationsId,
+  deleteApiRolesId,
+  deleteApiTransactionsId,
+  deleteApiUsersId,
   getApiAddresses,
-  getApiAddressesById,
+  getApiAddressesId,
   getApiAuthenticationCheck,
   getApiAuthenticationMfaEnable,
   getApiBankDetails,
-  getApiBankDetailsById,
+  getApiBankDetailsId,
   getApiCollections,
-  getApiCollectionsById,
+  getApiCollectionsId,
   getApiMaterials,
-  getApiMaterialsById,
+  getApiMaterialsId,
   getApiOrganizations,
-  getApiOrganizationsById,
+  getApiOrganizationsId,
   getApiRoles,
-  getApiRolesById,
+  getApiRolesId,
   getApiTransactions,
-  getApiTransactionsById,
+  getApiTransactionsId,
   getApiUsers,
-  getApiUsersById,
-  patchApiAddressesById,
-  patchApiBankDetailsById,
-  patchApiCollectionsById,
-  patchApiMaterialsById,
-  patchApiOrganizationsById,
-  patchApiRolesById,
-  patchApiTransactionsById,
-  patchApiUsersById,
+  getApiUsersId,
+  patchApiAddressesId,
+  patchApiBankDetailsId,
+  patchApiCollectionsId,
+  patchApiMaterialsId,
+  patchApiOrganizationsId,
+  patchApiRolesId,
+  patchApiTransactionsId,
+  patchApiUsersId,
   postApiAddresses,
   postApiAuthenticationLogin,
   postApiAuthenticationLogout,
@@ -56,88 +56,88 @@ import {
   postApiUsers,
 } from '../sdk.gen';
 import type {
-  DeleteApiAddressesByIdData,
-  DeleteApiAddressesByIdError,
-  DeleteApiAddressesByIdResponse,
-  DeleteApiBankDetailsByIdData,
-  DeleteApiBankDetailsByIdError,
-  DeleteApiBankDetailsByIdResponse,
-  DeleteApiCollectionsByIdData,
-  DeleteApiCollectionsByIdError,
-  DeleteApiCollectionsByIdResponse,
-  DeleteApiMaterialsByIdData,
-  DeleteApiMaterialsByIdError,
-  DeleteApiMaterialsByIdResponse,
-  DeleteApiOrganizationsByIdData,
-  DeleteApiOrganizationsByIdError,
-  DeleteApiOrganizationsByIdResponse,
-  DeleteApiRolesByIdData,
-  DeleteApiRolesByIdError,
-  DeleteApiRolesByIdResponse,
-  DeleteApiTransactionsByIdData,
-  DeleteApiTransactionsByIdError,
-  DeleteApiTransactionsByIdResponse,
-  DeleteApiUsersByIdData,
-  DeleteApiUsersByIdError,
-  DeleteApiUsersByIdResponse,
-  GetApiAddressesByIdData,
+  DeleteApiAddressesIdData,
+  DeleteApiAddressesIdError,
+  DeleteApiAddressesIdResponse,
+  DeleteApiBankDetailsIdData,
+  DeleteApiBankDetailsIdError,
+  DeleteApiBankDetailsIdResponse,
+  DeleteApiCollectionsIdData,
+  DeleteApiCollectionsIdError,
+  DeleteApiCollectionsIdResponse,
+  DeleteApiMaterialsIdData,
+  DeleteApiMaterialsIdError,
+  DeleteApiMaterialsIdResponse,
+  DeleteApiOrganizationsIdData,
+  DeleteApiOrganizationsIdError,
+  DeleteApiOrganizationsIdResponse,
+  DeleteApiRolesIdData,
+  DeleteApiRolesIdError,
+  DeleteApiRolesIdResponse,
+  DeleteApiTransactionsIdData,
+  DeleteApiTransactionsIdError,
+  DeleteApiTransactionsIdResponse,
+  DeleteApiUsersIdData,
+  DeleteApiUsersIdError,
+  DeleteApiUsersIdResponse,
   GetApiAddressesData,
   GetApiAddressesError,
+  GetApiAddressesIdData,
   GetApiAddressesResponse,
   GetApiAuthenticationCheckData,
   GetApiAuthenticationMfaEnableData,
-  GetApiBankDetailsByIdData,
   GetApiBankDetailsData,
   GetApiBankDetailsError,
+  GetApiBankDetailsIdData,
   GetApiBankDetailsResponse,
-  GetApiCollectionsByIdData,
   GetApiCollectionsData,
   GetApiCollectionsError,
+  GetApiCollectionsIdData,
   GetApiCollectionsResponse,
-  GetApiMaterialsByIdData,
   GetApiMaterialsData,
   GetApiMaterialsError,
+  GetApiMaterialsIdData,
   GetApiMaterialsResponse,
-  GetApiOrganizationsByIdData,
   GetApiOrganizationsData,
   GetApiOrganizationsError,
+  GetApiOrganizationsIdData,
   GetApiOrganizationsResponse,
-  GetApiRolesByIdData,
   GetApiRolesData,
   GetApiRolesError,
+  GetApiRolesIdData,
   GetApiRolesResponse,
-  GetApiTransactionsByIdData,
   GetApiTransactionsData,
   GetApiTransactionsError,
+  GetApiTransactionsIdData,
   GetApiTransactionsResponse,
-  GetApiUsersByIdData,
   GetApiUsersData,
   GetApiUsersError,
+  GetApiUsersIdData,
   GetApiUsersResponse,
-  PatchApiAddressesByIdData,
-  PatchApiAddressesByIdError,
-  PatchApiAddressesByIdResponse,
-  PatchApiBankDetailsByIdData,
-  PatchApiBankDetailsByIdError,
-  PatchApiBankDetailsByIdResponse,
-  PatchApiCollectionsByIdData,
-  PatchApiCollectionsByIdError,
-  PatchApiCollectionsByIdResponse,
-  PatchApiMaterialsByIdData,
-  PatchApiMaterialsByIdError,
-  PatchApiMaterialsByIdResponse,
-  PatchApiOrganizationsByIdData,
-  PatchApiOrganizationsByIdError,
-  PatchApiOrganizationsByIdResponse,
-  PatchApiRolesByIdData,
-  PatchApiRolesByIdError,
-  PatchApiRolesByIdResponse,
-  PatchApiTransactionsByIdData,
-  PatchApiTransactionsByIdError,
-  PatchApiTransactionsByIdResponse,
-  PatchApiUsersByIdData,
-  PatchApiUsersByIdError,
-  PatchApiUsersByIdResponse,
+  PatchApiAddressesIdData,
+  PatchApiAddressesIdError,
+  PatchApiAddressesIdResponse,
+  PatchApiBankDetailsIdData,
+  PatchApiBankDetailsIdError,
+  PatchApiBankDetailsIdResponse,
+  PatchApiCollectionsIdData,
+  PatchApiCollectionsIdError,
+  PatchApiCollectionsIdResponse,
+  PatchApiMaterialsIdData,
+  PatchApiMaterialsIdError,
+  PatchApiMaterialsIdResponse,
+  PatchApiOrganizationsIdData,
+  PatchApiOrganizationsIdError,
+  PatchApiOrganizationsIdResponse,
+  PatchApiRolesIdData,
+  PatchApiRolesIdError,
+  PatchApiRolesIdResponse,
+  PatchApiTransactionsIdData,
+  PatchApiTransactionsIdError,
+  PatchApiTransactionsIdResponse,
+  PatchApiUsersIdData,
+  PatchApiUsersIdError,
+  PatchApiUsersIdResponse,
   PostApiAddressesData,
   PostApiAddressesError,
   PostApiAddressesResponse,
@@ -376,20 +376,20 @@ export const postApiAddressesMutation = (
  * Delete Address
  * Delete an existing address from the system.
  */
-export const deleteApiAddressesByIdMutation = (
-  options?: Partial<Options<DeleteApiAddressesByIdData>>
+export const deleteApiAddressesIdMutation = (
+  options?: Partial<Options<DeleteApiAddressesIdData>>
 ): UseMutationOptions<
-  DeleteApiAddressesByIdResponse,
-  DeleteApiAddressesByIdError,
-  Options<DeleteApiAddressesByIdData>
+  DeleteApiAddressesIdResponse,
+  DeleteApiAddressesIdError,
+  Options<DeleteApiAddressesIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiAddressesByIdResponse,
-    DeleteApiAddressesByIdError,
-    Options<DeleteApiAddressesByIdData>
+    DeleteApiAddressesIdResponse,
+    DeleteApiAddressesIdError,
+    Options<DeleteApiAddressesIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiAddressesById({
+      const { data } = await deleteApiAddressesId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -400,20 +400,20 @@ export const deleteApiAddressesByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiAddressesByIdQueryKey = (
-  options: Options<GetApiAddressesByIdData>
-) => createQueryKey('getApiAddressesById', options);
+export const getApiAddressesIdQueryKey = (
+  options: Options<GetApiAddressesIdData>
+) => createQueryKey('getApiAddressesId', options);
 
 /**
  * Find Address
  * Find an existing address in the system.
  */
-export const getApiAddressesByIdOptions = (
-  options: Options<GetApiAddressesByIdData>
+export const getApiAddressesIdOptions = (
+  options: Options<GetApiAddressesIdData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiAddressesById({
+      const { data } = await getApiAddressesId({
         ...options,
         ...queryKey[0],
         signal,
@@ -421,7 +421,7 @@ export const getApiAddressesByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiAddressesByIdQueryKey(options),
+    queryKey: getApiAddressesIdQueryKey(options),
   });
 };
 
@@ -429,20 +429,20 @@ export const getApiAddressesByIdOptions = (
  * Update Address
  * Update an existing address in the system.
  */
-export const patchApiAddressesByIdMutation = (
-  options?: Partial<Options<PatchApiAddressesByIdData>>
+export const patchApiAddressesIdMutation = (
+  options?: Partial<Options<PatchApiAddressesIdData>>
 ): UseMutationOptions<
-  PatchApiAddressesByIdResponse,
-  PatchApiAddressesByIdError,
-  Options<PatchApiAddressesByIdData>
+  PatchApiAddressesIdResponse,
+  PatchApiAddressesIdError,
+  Options<PatchApiAddressesIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiAddressesByIdResponse,
-    PatchApiAddressesByIdError,
-    Options<PatchApiAddressesByIdData>
+    PatchApiAddressesIdResponse,
+    PatchApiAddressesIdError,
+    Options<PatchApiAddressesIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiAddressesById({
+      const { data } = await patchApiAddressesId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -796,20 +796,20 @@ export const postApiBankDetailsMutation = (
  * Delete Bank Details
  * Delete existing bank details from the system.
  */
-export const deleteApiBankDetailsByIdMutation = (
-  options?: Partial<Options<DeleteApiBankDetailsByIdData>>
+export const deleteApiBankDetailsIdMutation = (
+  options?: Partial<Options<DeleteApiBankDetailsIdData>>
 ): UseMutationOptions<
-  DeleteApiBankDetailsByIdResponse,
-  DeleteApiBankDetailsByIdError,
-  Options<DeleteApiBankDetailsByIdData>
+  DeleteApiBankDetailsIdResponse,
+  DeleteApiBankDetailsIdError,
+  Options<DeleteApiBankDetailsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiBankDetailsByIdResponse,
-    DeleteApiBankDetailsByIdError,
-    Options<DeleteApiBankDetailsByIdData>
+    DeleteApiBankDetailsIdResponse,
+    DeleteApiBankDetailsIdError,
+    Options<DeleteApiBankDetailsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiBankDetailsById({
+      const { data } = await deleteApiBankDetailsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -820,20 +820,20 @@ export const deleteApiBankDetailsByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiBankDetailsByIdQueryKey = (
-  options: Options<GetApiBankDetailsByIdData>
-) => createQueryKey('getApiBankDetailsById', options);
+export const getApiBankDetailsIdQueryKey = (
+  options: Options<GetApiBankDetailsIdData>
+) => createQueryKey('getApiBankDetailsId', options);
 
 /**
  * Find Bank Detail
  * Find existing bank details in the system.
  */
-export const getApiBankDetailsByIdOptions = (
-  options: Options<GetApiBankDetailsByIdData>
+export const getApiBankDetailsIdOptions = (
+  options: Options<GetApiBankDetailsIdData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiBankDetailsById({
+      const { data } = await getApiBankDetailsId({
         ...options,
         ...queryKey[0],
         signal,
@@ -841,7 +841,7 @@ export const getApiBankDetailsByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiBankDetailsByIdQueryKey(options),
+    queryKey: getApiBankDetailsIdQueryKey(options),
   });
 };
 
@@ -849,20 +849,20 @@ export const getApiBankDetailsByIdOptions = (
  * Update Bank Details
  * Update existing bank details in the system.
  */
-export const patchApiBankDetailsByIdMutation = (
-  options?: Partial<Options<PatchApiBankDetailsByIdData>>
+export const patchApiBankDetailsIdMutation = (
+  options?: Partial<Options<PatchApiBankDetailsIdData>>
 ): UseMutationOptions<
-  PatchApiBankDetailsByIdResponse,
-  PatchApiBankDetailsByIdError,
-  Options<PatchApiBankDetailsByIdData>
+  PatchApiBankDetailsIdResponse,
+  PatchApiBankDetailsIdError,
+  Options<PatchApiBankDetailsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiBankDetailsByIdResponse,
-    PatchApiBankDetailsByIdError,
-    Options<PatchApiBankDetailsByIdData>
+    PatchApiBankDetailsIdResponse,
+    PatchApiBankDetailsIdError,
+    Options<PatchApiBankDetailsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiBankDetailsById({
+      const { data } = await patchApiBankDetailsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1007,20 +1007,20 @@ export const postApiCollectionsMutation = (
  * Delete Collection
  * Delete an existing collection from the system.
  */
-export const deleteApiCollectionsByIdMutation = (
-  options?: Partial<Options<DeleteApiCollectionsByIdData>>
+export const deleteApiCollectionsIdMutation = (
+  options?: Partial<Options<DeleteApiCollectionsIdData>>
 ): UseMutationOptions<
-  DeleteApiCollectionsByIdResponse,
-  DeleteApiCollectionsByIdError,
-  Options<DeleteApiCollectionsByIdData>
+  DeleteApiCollectionsIdResponse,
+  DeleteApiCollectionsIdError,
+  Options<DeleteApiCollectionsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiCollectionsByIdResponse,
-    DeleteApiCollectionsByIdError,
-    Options<DeleteApiCollectionsByIdData>
+    DeleteApiCollectionsIdResponse,
+    DeleteApiCollectionsIdError,
+    Options<DeleteApiCollectionsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiCollectionsById({
+      const { data } = await deleteApiCollectionsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1031,20 +1031,20 @@ export const deleteApiCollectionsByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiCollectionsByIdQueryKey = (
-  options: Options<GetApiCollectionsByIdData>
-) => createQueryKey('getApiCollectionsById', options);
+export const getApiCollectionsIdQueryKey = (
+  options: Options<GetApiCollectionsIdData>
+) => createQueryKey('getApiCollectionsId', options);
 
 /**
  * Find Collection
  * Find an existing collection in the system.
  */
-export const getApiCollectionsByIdOptions = (
-  options: Options<GetApiCollectionsByIdData>
+export const getApiCollectionsIdOptions = (
+  options: Options<GetApiCollectionsIdData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiCollectionsById({
+      const { data } = await getApiCollectionsId({
         ...options,
         ...queryKey[0],
         signal,
@@ -1052,7 +1052,7 @@ export const getApiCollectionsByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiCollectionsByIdQueryKey(options),
+    queryKey: getApiCollectionsIdQueryKey(options),
   });
 };
 
@@ -1060,20 +1060,20 @@ export const getApiCollectionsByIdOptions = (
  * Update Collection
  * Update an existing collection in the system.
  */
-export const patchApiCollectionsByIdMutation = (
-  options?: Partial<Options<PatchApiCollectionsByIdData>>
+export const patchApiCollectionsIdMutation = (
+  options?: Partial<Options<PatchApiCollectionsIdData>>
 ): UseMutationOptions<
-  PatchApiCollectionsByIdResponse,
-  PatchApiCollectionsByIdError,
-  Options<PatchApiCollectionsByIdData>
+  PatchApiCollectionsIdResponse,
+  PatchApiCollectionsIdError,
+  Options<PatchApiCollectionsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiCollectionsByIdResponse,
-    PatchApiCollectionsByIdError,
-    Options<PatchApiCollectionsByIdData>
+    PatchApiCollectionsIdResponse,
+    PatchApiCollectionsIdError,
+    Options<PatchApiCollectionsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiCollectionsById({
+      const { data } = await patchApiCollectionsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1218,20 +1218,20 @@ export const postApiMaterialsMutation = (
  * Delete Material
  * Delete an existing material from the system.
  */
-export const deleteApiMaterialsByIdMutation = (
-  options?: Partial<Options<DeleteApiMaterialsByIdData>>
+export const deleteApiMaterialsIdMutation = (
+  options?: Partial<Options<DeleteApiMaterialsIdData>>
 ): UseMutationOptions<
-  DeleteApiMaterialsByIdResponse,
-  DeleteApiMaterialsByIdError,
-  Options<DeleteApiMaterialsByIdData>
+  DeleteApiMaterialsIdResponse,
+  DeleteApiMaterialsIdError,
+  Options<DeleteApiMaterialsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiMaterialsByIdResponse,
-    DeleteApiMaterialsByIdError,
-    Options<DeleteApiMaterialsByIdData>
+    DeleteApiMaterialsIdResponse,
+    DeleteApiMaterialsIdError,
+    Options<DeleteApiMaterialsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiMaterialsById({
+      const { data } = await deleteApiMaterialsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1242,20 +1242,20 @@ export const deleteApiMaterialsByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiMaterialsByIdQueryKey = (
-  options: Options<GetApiMaterialsByIdData>
-) => createQueryKey('getApiMaterialsById', options);
+export const getApiMaterialsIdQueryKey = (
+  options: Options<GetApiMaterialsIdData>
+) => createQueryKey('getApiMaterialsId', options);
 
 /**
  * Find Material
  * Find an existing material in the system.
  */
-export const getApiMaterialsByIdOptions = (
-  options: Options<GetApiMaterialsByIdData>
+export const getApiMaterialsIdOptions = (
+  options: Options<GetApiMaterialsIdData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiMaterialsById({
+      const { data } = await getApiMaterialsId({
         ...options,
         ...queryKey[0],
         signal,
@@ -1263,7 +1263,7 @@ export const getApiMaterialsByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiMaterialsByIdQueryKey(options),
+    queryKey: getApiMaterialsIdQueryKey(options),
   });
 };
 
@@ -1271,20 +1271,20 @@ export const getApiMaterialsByIdOptions = (
  * Update Material
  * Update an existing material in the system.
  */
-export const patchApiMaterialsByIdMutation = (
-  options?: Partial<Options<PatchApiMaterialsByIdData>>
+export const patchApiMaterialsIdMutation = (
+  options?: Partial<Options<PatchApiMaterialsIdData>>
 ): UseMutationOptions<
-  PatchApiMaterialsByIdResponse,
-  PatchApiMaterialsByIdError,
-  Options<PatchApiMaterialsByIdData>
+  PatchApiMaterialsIdResponse,
+  PatchApiMaterialsIdError,
+  Options<PatchApiMaterialsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiMaterialsByIdResponse,
-    PatchApiMaterialsByIdError,
-    Options<PatchApiMaterialsByIdData>
+    PatchApiMaterialsIdResponse,
+    PatchApiMaterialsIdError,
+    Options<PatchApiMaterialsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiMaterialsById({
+      const { data } = await patchApiMaterialsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1429,20 +1429,20 @@ export const postApiOrganizationsMutation = (
  * Delete Organization
  * Delete an existing organization from the system.
  */
-export const deleteApiOrganizationsByIdMutation = (
-  options?: Partial<Options<DeleteApiOrganizationsByIdData>>
+export const deleteApiOrganizationsIdMutation = (
+  options?: Partial<Options<DeleteApiOrganizationsIdData>>
 ): UseMutationOptions<
-  DeleteApiOrganizationsByIdResponse,
-  DeleteApiOrganizationsByIdError,
-  Options<DeleteApiOrganizationsByIdData>
+  DeleteApiOrganizationsIdResponse,
+  DeleteApiOrganizationsIdError,
+  Options<DeleteApiOrganizationsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiOrganizationsByIdResponse,
-    DeleteApiOrganizationsByIdError,
-    Options<DeleteApiOrganizationsByIdData>
+    DeleteApiOrganizationsIdResponse,
+    DeleteApiOrganizationsIdError,
+    Options<DeleteApiOrganizationsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiOrganizationsById({
+      const { data } = await deleteApiOrganizationsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1453,20 +1453,20 @@ export const deleteApiOrganizationsByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiOrganizationsByIdQueryKey = (
-  options: Options<GetApiOrganizationsByIdData>
-) => createQueryKey('getApiOrganizationsById', options);
+export const getApiOrganizationsIdQueryKey = (
+  options: Options<GetApiOrganizationsIdData>
+) => createQueryKey('getApiOrganizationsId', options);
 
 /**
  * Find Organization
  * Find an existing organization in the system.
  */
-export const getApiOrganizationsByIdOptions = (
-  options: Options<GetApiOrganizationsByIdData>
+export const getApiOrganizationsIdOptions = (
+  options: Options<GetApiOrganizationsIdData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiOrganizationsById({
+      const { data } = await getApiOrganizationsId({
         ...options,
         ...queryKey[0],
         signal,
@@ -1474,7 +1474,7 @@ export const getApiOrganizationsByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiOrganizationsByIdQueryKey(options),
+    queryKey: getApiOrganizationsIdQueryKey(options),
   });
 };
 
@@ -1482,20 +1482,20 @@ export const getApiOrganizationsByIdOptions = (
  * Update Organization
  * Update an existing organization in the system.
  */
-export const patchApiOrganizationsByIdMutation = (
-  options?: Partial<Options<PatchApiOrganizationsByIdData>>
+export const patchApiOrganizationsIdMutation = (
+  options?: Partial<Options<PatchApiOrganizationsIdData>>
 ): UseMutationOptions<
-  PatchApiOrganizationsByIdResponse,
-  PatchApiOrganizationsByIdError,
-  Options<PatchApiOrganizationsByIdData>
+  PatchApiOrganizationsIdResponse,
+  PatchApiOrganizationsIdError,
+  Options<PatchApiOrganizationsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiOrganizationsByIdResponse,
-    PatchApiOrganizationsByIdError,
-    Options<PatchApiOrganizationsByIdData>
+    PatchApiOrganizationsIdResponse,
+    PatchApiOrganizationsIdError,
+    Options<PatchApiOrganizationsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiOrganizationsById({
+      const { data } = await patchApiOrganizationsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1634,20 +1634,20 @@ export const postApiRolesMutation = (
  * Delete Role
  * Delete an existing role from the system.
  */
-export const deleteApiRolesByIdMutation = (
-  options?: Partial<Options<DeleteApiRolesByIdData>>
+export const deleteApiRolesIdMutation = (
+  options?: Partial<Options<DeleteApiRolesIdData>>
 ): UseMutationOptions<
-  DeleteApiRolesByIdResponse,
-  DeleteApiRolesByIdError,
-  Options<DeleteApiRolesByIdData>
+  DeleteApiRolesIdResponse,
+  DeleteApiRolesIdError,
+  Options<DeleteApiRolesIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiRolesByIdResponse,
-    DeleteApiRolesByIdError,
-    Options<DeleteApiRolesByIdData>
+    DeleteApiRolesIdResponse,
+    DeleteApiRolesIdError,
+    Options<DeleteApiRolesIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiRolesById({
+      const { data } = await deleteApiRolesId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1658,20 +1658,17 @@ export const deleteApiRolesByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiRolesByIdQueryKey = (
-  options: Options<GetApiRolesByIdData>
-) => createQueryKey('getApiRolesById', options);
+export const getApiRolesIdQueryKey = (options: Options<GetApiRolesIdData>) =>
+  createQueryKey('getApiRolesId', options);
 
 /**
  * Find Role
  * Find an existing role in the system.
  */
-export const getApiRolesByIdOptions = (
-  options: Options<GetApiRolesByIdData>
-) => {
+export const getApiRolesIdOptions = (options: Options<GetApiRolesIdData>) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiRolesById({
+      const { data } = await getApiRolesId({
         ...options,
         ...queryKey[0],
         signal,
@@ -1679,7 +1676,7 @@ export const getApiRolesByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiRolesByIdQueryKey(options),
+    queryKey: getApiRolesIdQueryKey(options),
   });
 };
 
@@ -1687,20 +1684,20 @@ export const getApiRolesByIdOptions = (
  * Update Role
  * Update an existing role in the system.
  */
-export const patchApiRolesByIdMutation = (
-  options?: Partial<Options<PatchApiRolesByIdData>>
+export const patchApiRolesIdMutation = (
+  options?: Partial<Options<PatchApiRolesIdData>>
 ): UseMutationOptions<
-  PatchApiRolesByIdResponse,
-  PatchApiRolesByIdError,
-  Options<PatchApiRolesByIdData>
+  PatchApiRolesIdResponse,
+  PatchApiRolesIdError,
+  Options<PatchApiRolesIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiRolesByIdResponse,
-    PatchApiRolesByIdError,
-    Options<PatchApiRolesByIdData>
+    PatchApiRolesIdResponse,
+    PatchApiRolesIdError,
+    Options<PatchApiRolesIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiRolesById({
+      const { data } = await patchApiRolesId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1845,20 +1842,20 @@ export const postApiTransactionsMutation = (
  * Delete Transaction
  * Delete an existing transaction from the system.
  */
-export const deleteApiTransactionsByIdMutation = (
-  options?: Partial<Options<DeleteApiTransactionsByIdData>>
+export const deleteApiTransactionsIdMutation = (
+  options?: Partial<Options<DeleteApiTransactionsIdData>>
 ): UseMutationOptions<
-  DeleteApiTransactionsByIdResponse,
-  DeleteApiTransactionsByIdError,
-  Options<DeleteApiTransactionsByIdData>
+  DeleteApiTransactionsIdResponse,
+  DeleteApiTransactionsIdError,
+  Options<DeleteApiTransactionsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiTransactionsByIdResponse,
-    DeleteApiTransactionsByIdError,
-    Options<DeleteApiTransactionsByIdData>
+    DeleteApiTransactionsIdResponse,
+    DeleteApiTransactionsIdError,
+    Options<DeleteApiTransactionsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiTransactionsById({
+      const { data } = await deleteApiTransactionsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1869,20 +1866,20 @@ export const deleteApiTransactionsByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiTransactionsByIdQueryKey = (
-  options: Options<GetApiTransactionsByIdData>
-) => createQueryKey('getApiTransactionsById', options);
+export const getApiTransactionsIdQueryKey = (
+  options: Options<GetApiTransactionsIdData>
+) => createQueryKey('getApiTransactionsId', options);
 
 /**
  * Find Transaction
  * Find an existing transaction in the system.
  */
-export const getApiTransactionsByIdOptions = (
-  options: Options<GetApiTransactionsByIdData>
+export const getApiTransactionsIdOptions = (
+  options: Options<GetApiTransactionsIdData>
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiTransactionsById({
+      const { data } = await getApiTransactionsId({
         ...options,
         ...queryKey[0],
         signal,
@@ -1890,7 +1887,7 @@ export const getApiTransactionsByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiTransactionsByIdQueryKey(options),
+    queryKey: getApiTransactionsIdQueryKey(options),
   });
 };
 
@@ -1898,20 +1895,20 @@ export const getApiTransactionsByIdOptions = (
  * Update Transaction
  * Update an existing transaction in the system.
  */
-export const patchApiTransactionsByIdMutation = (
-  options?: Partial<Options<PatchApiTransactionsByIdData>>
+export const patchApiTransactionsIdMutation = (
+  options?: Partial<Options<PatchApiTransactionsIdData>>
 ): UseMutationOptions<
-  PatchApiTransactionsByIdResponse,
-  PatchApiTransactionsByIdError,
-  Options<PatchApiTransactionsByIdData>
+  PatchApiTransactionsIdResponse,
+  PatchApiTransactionsIdError,
+  Options<PatchApiTransactionsIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiTransactionsByIdResponse,
-    PatchApiTransactionsByIdError,
-    Options<PatchApiTransactionsByIdData>
+    PatchApiTransactionsIdResponse,
+    PatchApiTransactionsIdError,
+    Options<PatchApiTransactionsIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiTransactionsById({
+      const { data } = await patchApiTransactionsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -2050,20 +2047,20 @@ export const postApiUsersMutation = (
  * Delete User
  * Delete an existing user from the system.
  */
-export const deleteApiUsersByIdMutation = (
-  options?: Partial<Options<DeleteApiUsersByIdData>>
+export const deleteApiUsersIdMutation = (
+  options?: Partial<Options<DeleteApiUsersIdData>>
 ): UseMutationOptions<
-  DeleteApiUsersByIdResponse,
-  DeleteApiUsersByIdError,
-  Options<DeleteApiUsersByIdData>
+  DeleteApiUsersIdResponse,
+  DeleteApiUsersIdError,
+  Options<DeleteApiUsersIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    DeleteApiUsersByIdResponse,
-    DeleteApiUsersByIdError,
-    Options<DeleteApiUsersByIdData>
+    DeleteApiUsersIdResponse,
+    DeleteApiUsersIdError,
+    Options<DeleteApiUsersIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await deleteApiUsersById({
+      const { data } = await deleteApiUsersId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -2074,20 +2071,17 @@ export const deleteApiUsersByIdMutation = (
   return mutationOptions;
 };
 
-export const getApiUsersByIdQueryKey = (
-  options: Options<GetApiUsersByIdData>
-) => createQueryKey('getApiUsersById', options);
+export const getApiUsersIdQueryKey = (options: Options<GetApiUsersIdData>) =>
+  createQueryKey('getApiUsersId', options);
 
 /**
  * Find User
  * Find an existing user in the system.
  */
-export const getApiUsersByIdOptions = (
-  options: Options<GetApiUsersByIdData>
-) => {
+export const getApiUsersIdOptions = (options: Options<GetApiUsersIdData>) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await getApiUsersById({
+      const { data } = await getApiUsersId({
         ...options,
         ...queryKey[0],
         signal,
@@ -2095,7 +2089,7 @@ export const getApiUsersByIdOptions = (
       });
       return data;
     },
-    queryKey: getApiUsersByIdQueryKey(options),
+    queryKey: getApiUsersIdQueryKey(options),
   });
 };
 
@@ -2103,20 +2097,20 @@ export const getApiUsersByIdOptions = (
  * Update User
  * Update an existing user in the system.
  */
-export const patchApiUsersByIdMutation = (
-  options?: Partial<Options<PatchApiUsersByIdData>>
+export const patchApiUsersIdMutation = (
+  options?: Partial<Options<PatchApiUsersIdData>>
 ): UseMutationOptions<
-  PatchApiUsersByIdResponse,
-  PatchApiUsersByIdError,
-  Options<PatchApiUsersByIdData>
+  PatchApiUsersIdResponse,
+  PatchApiUsersIdError,
+  Options<PatchApiUsersIdData>
 > => {
   const mutationOptions: UseMutationOptions<
-    PatchApiUsersByIdResponse,
-    PatchApiUsersByIdError,
-    Options<PatchApiUsersByIdData>
+    PatchApiUsersIdResponse,
+    PatchApiUsersIdError,
+    Options<PatchApiUsersIdData>
   > = {
     mutationFn: async (localOptions) => {
-      const { data } = await patchApiUsersById({
+      const { data } = await patchApiUsersId({
         ...options,
         ...localOptions,
         throwOnError: true,

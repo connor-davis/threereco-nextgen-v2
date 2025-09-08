@@ -2,35 +2,35 @@
 import type { Client, Options as ClientOptions, TDataShape } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type {
-  DeleteApiAddressesByIdData,
-  DeleteApiAddressesByIdErrors,
-  DeleteApiAddressesByIdResponses,
-  DeleteApiBankDetailsByIdData,
-  DeleteApiBankDetailsByIdErrors,
-  DeleteApiBankDetailsByIdResponses,
-  DeleteApiCollectionsByIdData,
-  DeleteApiCollectionsByIdErrors,
-  DeleteApiCollectionsByIdResponses,
-  DeleteApiMaterialsByIdData,
-  DeleteApiMaterialsByIdErrors,
-  DeleteApiMaterialsByIdResponses,
-  DeleteApiOrganizationsByIdData,
-  DeleteApiOrganizationsByIdErrors,
-  DeleteApiOrganizationsByIdResponses,
-  DeleteApiRolesByIdData,
-  DeleteApiRolesByIdErrors,
-  DeleteApiRolesByIdResponses,
-  DeleteApiTransactionsByIdData,
-  DeleteApiTransactionsByIdErrors,
-  DeleteApiTransactionsByIdResponses,
-  DeleteApiUsersByIdData,
-  DeleteApiUsersByIdErrors,
-  DeleteApiUsersByIdResponses,
-  GetApiAddressesByIdData,
-  GetApiAddressesByIdErrors,
-  GetApiAddressesByIdResponses,
+  DeleteApiAddressesIdData,
+  DeleteApiAddressesIdErrors,
+  DeleteApiAddressesIdResponses,
+  DeleteApiBankDetailsIdData,
+  DeleteApiBankDetailsIdErrors,
+  DeleteApiBankDetailsIdResponses,
+  DeleteApiCollectionsIdData,
+  DeleteApiCollectionsIdErrors,
+  DeleteApiCollectionsIdResponses,
+  DeleteApiMaterialsIdData,
+  DeleteApiMaterialsIdErrors,
+  DeleteApiMaterialsIdResponses,
+  DeleteApiOrganizationsIdData,
+  DeleteApiOrganizationsIdErrors,
+  DeleteApiOrganizationsIdResponses,
+  DeleteApiRolesIdData,
+  DeleteApiRolesIdErrors,
+  DeleteApiRolesIdResponses,
+  DeleteApiTransactionsIdData,
+  DeleteApiTransactionsIdErrors,
+  DeleteApiTransactionsIdResponses,
+  DeleteApiUsersIdData,
+  DeleteApiUsersIdErrors,
+  DeleteApiUsersIdResponses,
   GetApiAddressesData,
   GetApiAddressesErrors,
+  GetApiAddressesIdData,
+  GetApiAddressesIdErrors,
+  GetApiAddressesIdResponses,
   GetApiAddressesResponses,
   GetApiAuthenticationCheckData,
   GetApiAuthenticationCheckErrors,
@@ -38,72 +38,72 @@ import type {
   GetApiAuthenticationMfaEnableData,
   GetApiAuthenticationMfaEnableErrors,
   GetApiAuthenticationMfaEnableResponses,
-  GetApiBankDetailsByIdData,
-  GetApiBankDetailsByIdErrors,
-  GetApiBankDetailsByIdResponses,
   GetApiBankDetailsData,
   GetApiBankDetailsErrors,
+  GetApiBankDetailsIdData,
+  GetApiBankDetailsIdErrors,
+  GetApiBankDetailsIdResponses,
   GetApiBankDetailsResponses,
-  GetApiCollectionsByIdData,
-  GetApiCollectionsByIdErrors,
-  GetApiCollectionsByIdResponses,
   GetApiCollectionsData,
   GetApiCollectionsErrors,
+  GetApiCollectionsIdData,
+  GetApiCollectionsIdErrors,
+  GetApiCollectionsIdResponses,
   GetApiCollectionsResponses,
-  GetApiMaterialsByIdData,
-  GetApiMaterialsByIdErrors,
-  GetApiMaterialsByIdResponses,
   GetApiMaterialsData,
   GetApiMaterialsErrors,
+  GetApiMaterialsIdData,
+  GetApiMaterialsIdErrors,
+  GetApiMaterialsIdResponses,
   GetApiMaterialsResponses,
-  GetApiOrganizationsByIdData,
-  GetApiOrganizationsByIdErrors,
-  GetApiOrganizationsByIdResponses,
   GetApiOrganizationsData,
   GetApiOrganizationsErrors,
+  GetApiOrganizationsIdData,
+  GetApiOrganizationsIdErrors,
+  GetApiOrganizationsIdResponses,
   GetApiOrganizationsResponses,
-  GetApiRolesByIdData,
-  GetApiRolesByIdErrors,
-  GetApiRolesByIdResponses,
   GetApiRolesData,
   GetApiRolesErrors,
+  GetApiRolesIdData,
+  GetApiRolesIdErrors,
+  GetApiRolesIdResponses,
   GetApiRolesResponses,
-  GetApiTransactionsByIdData,
-  GetApiTransactionsByIdErrors,
-  GetApiTransactionsByIdResponses,
   GetApiTransactionsData,
   GetApiTransactionsErrors,
+  GetApiTransactionsIdData,
+  GetApiTransactionsIdErrors,
+  GetApiTransactionsIdResponses,
   GetApiTransactionsResponses,
-  GetApiUsersByIdData,
-  GetApiUsersByIdErrors,
-  GetApiUsersByIdResponses,
   GetApiUsersData,
   GetApiUsersErrors,
+  GetApiUsersIdData,
+  GetApiUsersIdErrors,
+  GetApiUsersIdResponses,
   GetApiUsersResponses,
-  PatchApiAddressesByIdData,
-  PatchApiAddressesByIdErrors,
-  PatchApiAddressesByIdResponses,
-  PatchApiBankDetailsByIdData,
-  PatchApiBankDetailsByIdErrors,
-  PatchApiBankDetailsByIdResponses,
-  PatchApiCollectionsByIdData,
-  PatchApiCollectionsByIdErrors,
-  PatchApiCollectionsByIdResponses,
-  PatchApiMaterialsByIdData,
-  PatchApiMaterialsByIdErrors,
-  PatchApiMaterialsByIdResponses,
-  PatchApiOrganizationsByIdData,
-  PatchApiOrganizationsByIdErrors,
-  PatchApiOrganizationsByIdResponses,
-  PatchApiRolesByIdData,
-  PatchApiRolesByIdErrors,
-  PatchApiRolesByIdResponses,
-  PatchApiTransactionsByIdData,
-  PatchApiTransactionsByIdErrors,
-  PatchApiTransactionsByIdResponses,
-  PatchApiUsersByIdData,
-  PatchApiUsersByIdErrors,
-  PatchApiUsersByIdResponses,
+  PatchApiAddressesIdData,
+  PatchApiAddressesIdErrors,
+  PatchApiAddressesIdResponses,
+  PatchApiBankDetailsIdData,
+  PatchApiBankDetailsIdErrors,
+  PatchApiBankDetailsIdResponses,
+  PatchApiCollectionsIdData,
+  PatchApiCollectionsIdErrors,
+  PatchApiCollectionsIdResponses,
+  PatchApiMaterialsIdData,
+  PatchApiMaterialsIdErrors,
+  PatchApiMaterialsIdResponses,
+  PatchApiOrganizationsIdData,
+  PatchApiOrganizationsIdErrors,
+  PatchApiOrganizationsIdResponses,
+  PatchApiRolesIdData,
+  PatchApiRolesIdErrors,
+  PatchApiRolesIdResponses,
+  PatchApiTransactionsIdData,
+  PatchApiTransactionsIdErrors,
+  PatchApiTransactionsIdResponses,
+  PatchApiUsersIdData,
+  PatchApiUsersIdErrors,
+  PatchApiUsersIdResponses,
   PostApiAddressesData,
   PostApiAddressesErrors,
   PostApiAddressesResponses,
@@ -198,12 +198,12 @@ export const postApiAddresses = <ThrowOnError extends boolean = false>(
  * Delete Address
  * Delete an existing address from the system.
  */
-export const deleteApiAddressesById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiAddressesByIdData, ThrowOnError>
+export const deleteApiAddressesId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiAddressesIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiAddressesByIdResponses,
-    DeleteApiAddressesByIdErrors,
+    DeleteApiAddressesIdResponses,
+    DeleteApiAddressesIdErrors,
     ThrowOnError
   >({
     url: '/api/addresses/:id',
@@ -215,12 +215,12 @@ export const deleteApiAddressesById = <ThrowOnError extends boolean = false>(
  * Find Address
  * Find an existing address in the system.
  */
-export const getApiAddressesById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiAddressesByIdData, ThrowOnError>
+export const getApiAddressesId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiAddressesIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiAddressesByIdResponses,
-    GetApiAddressesByIdErrors,
+    GetApiAddressesIdResponses,
+    GetApiAddressesIdErrors,
     ThrowOnError
   >({
     url: '/api/addresses/:id',
@@ -232,12 +232,12 @@ export const getApiAddressesById = <ThrowOnError extends boolean = false>(
  * Update Address
  * Update an existing address in the system.
  */
-export const patchApiAddressesById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiAddressesByIdData, ThrowOnError>
+export const patchApiAddressesId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiAddressesIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiAddressesByIdResponses,
-    PatchApiAddressesByIdErrors,
+    PatchApiAddressesIdResponses,
+    PatchApiAddressesIdErrors,
     ThrowOnError
   >({
     url: '/api/addresses/:id',
@@ -392,12 +392,12 @@ export const postApiBankDetails = <ThrowOnError extends boolean = false>(
  * Delete Bank Details
  * Delete existing bank details from the system.
  */
-export const deleteApiBankDetailsById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiBankDetailsByIdData, ThrowOnError>
+export const deleteApiBankDetailsId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiBankDetailsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiBankDetailsByIdResponses,
-    DeleteApiBankDetailsByIdErrors,
+    DeleteApiBankDetailsIdResponses,
+    DeleteApiBankDetailsIdErrors,
     ThrowOnError
   >({
     url: '/api/bank-details/:id',
@@ -409,12 +409,12 @@ export const deleteApiBankDetailsById = <ThrowOnError extends boolean = false>(
  * Find Bank Detail
  * Find existing bank details in the system.
  */
-export const getApiBankDetailsById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiBankDetailsByIdData, ThrowOnError>
+export const getApiBankDetailsId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiBankDetailsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiBankDetailsByIdResponses,
-    GetApiBankDetailsByIdErrors,
+    GetApiBankDetailsIdResponses,
+    GetApiBankDetailsIdErrors,
     ThrowOnError
   >({
     url: '/api/bank-details/:id',
@@ -426,12 +426,12 @@ export const getApiBankDetailsById = <ThrowOnError extends boolean = false>(
  * Update Bank Details
  * Update existing bank details in the system.
  */
-export const patchApiBankDetailsById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiBankDetailsByIdData, ThrowOnError>
+export const patchApiBankDetailsId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiBankDetailsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiBankDetailsByIdResponses,
-    PatchApiBankDetailsByIdErrors,
+    PatchApiBankDetailsIdResponses,
+    PatchApiBankDetailsIdErrors,
     ThrowOnError
   >({
     url: '/api/bank-details/:id',
@@ -485,12 +485,12 @@ export const postApiCollections = <ThrowOnError extends boolean = false>(
  * Delete Collection
  * Delete an existing collection from the system.
  */
-export const deleteApiCollectionsById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiCollectionsByIdData, ThrowOnError>
+export const deleteApiCollectionsId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiCollectionsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiCollectionsByIdResponses,
-    DeleteApiCollectionsByIdErrors,
+    DeleteApiCollectionsIdResponses,
+    DeleteApiCollectionsIdErrors,
     ThrowOnError
   >({
     url: '/api/collections/:id',
@@ -502,12 +502,12 @@ export const deleteApiCollectionsById = <ThrowOnError extends boolean = false>(
  * Find Collection
  * Find an existing collection in the system.
  */
-export const getApiCollectionsById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiCollectionsByIdData, ThrowOnError>
+export const getApiCollectionsId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiCollectionsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiCollectionsByIdResponses,
-    GetApiCollectionsByIdErrors,
+    GetApiCollectionsIdResponses,
+    GetApiCollectionsIdErrors,
     ThrowOnError
   >({
     url: '/api/collections/:id',
@@ -519,12 +519,12 @@ export const getApiCollectionsById = <ThrowOnError extends boolean = false>(
  * Update Collection
  * Update an existing collection in the system.
  */
-export const patchApiCollectionsById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiCollectionsByIdData, ThrowOnError>
+export const patchApiCollectionsId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiCollectionsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiCollectionsByIdResponses,
-    PatchApiCollectionsByIdErrors,
+    PatchApiCollectionsIdResponses,
+    PatchApiCollectionsIdErrors,
     ThrowOnError
   >({
     url: '/api/collections/:id',
@@ -578,12 +578,12 @@ export const postApiMaterials = <ThrowOnError extends boolean = false>(
  * Delete Material
  * Delete an existing material from the system.
  */
-export const deleteApiMaterialsById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiMaterialsByIdData, ThrowOnError>
+export const deleteApiMaterialsId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiMaterialsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiMaterialsByIdResponses,
-    DeleteApiMaterialsByIdErrors,
+    DeleteApiMaterialsIdResponses,
+    DeleteApiMaterialsIdErrors,
     ThrowOnError
   >({
     url: '/api/materials/:id',
@@ -595,12 +595,12 @@ export const deleteApiMaterialsById = <ThrowOnError extends boolean = false>(
  * Find Material
  * Find an existing material in the system.
  */
-export const getApiMaterialsById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiMaterialsByIdData, ThrowOnError>
+export const getApiMaterialsId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiMaterialsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiMaterialsByIdResponses,
-    GetApiMaterialsByIdErrors,
+    GetApiMaterialsIdResponses,
+    GetApiMaterialsIdErrors,
     ThrowOnError
   >({
     url: '/api/materials/:id',
@@ -612,12 +612,12 @@ export const getApiMaterialsById = <ThrowOnError extends boolean = false>(
  * Update Material
  * Update an existing material in the system.
  */
-export const patchApiMaterialsById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiMaterialsByIdData, ThrowOnError>
+export const patchApiMaterialsId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiMaterialsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiMaterialsByIdResponses,
-    PatchApiMaterialsByIdErrors,
+    PatchApiMaterialsIdResponses,
+    PatchApiMaterialsIdErrors,
     ThrowOnError
   >({
     url: '/api/materials/:id',
@@ -671,14 +671,12 @@ export const postApiOrganizations = <ThrowOnError extends boolean = false>(
  * Delete Organization
  * Delete an existing organization from the system.
  */
-export const deleteApiOrganizationsById = <
-  ThrowOnError extends boolean = false,
->(
-  options: Options<DeleteApiOrganizationsByIdData, ThrowOnError>
+export const deleteApiOrganizationsId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiOrganizationsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiOrganizationsByIdResponses,
-    DeleteApiOrganizationsByIdErrors,
+    DeleteApiOrganizationsIdResponses,
+    DeleteApiOrganizationsIdErrors,
     ThrowOnError
   >({
     url: '/api/organizations/:id',
@@ -690,12 +688,12 @@ export const deleteApiOrganizationsById = <
  * Find Organization
  * Find an existing organization in the system.
  */
-export const getApiOrganizationsById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiOrganizationsByIdData, ThrowOnError>
+export const getApiOrganizationsId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiOrganizationsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiOrganizationsByIdResponses,
-    GetApiOrganizationsByIdErrors,
+    GetApiOrganizationsIdResponses,
+    GetApiOrganizationsIdErrors,
     ThrowOnError
   >({
     url: '/api/organizations/:id',
@@ -707,12 +705,12 @@ export const getApiOrganizationsById = <ThrowOnError extends boolean = false>(
  * Update Organization
  * Update an existing organization in the system.
  */
-export const patchApiOrganizationsById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiOrganizationsByIdData, ThrowOnError>
+export const patchApiOrganizationsId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiOrganizationsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiOrganizationsByIdResponses,
-    PatchApiOrganizationsByIdErrors,
+    PatchApiOrganizationsIdResponses,
+    PatchApiOrganizationsIdErrors,
     ThrowOnError
   >({
     url: '/api/organizations/:id',
@@ -766,12 +764,12 @@ export const postApiRoles = <ThrowOnError extends boolean = false>(
  * Delete Role
  * Delete an existing role from the system.
  */
-export const deleteApiRolesById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiRolesByIdData, ThrowOnError>
+export const deleteApiRolesId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiRolesIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiRolesByIdResponses,
-    DeleteApiRolesByIdErrors,
+    DeleteApiRolesIdResponses,
+    DeleteApiRolesIdErrors,
     ThrowOnError
   >({
     url: '/api/roles/:id',
@@ -783,12 +781,12 @@ export const deleteApiRolesById = <ThrowOnError extends boolean = false>(
  * Find Role
  * Find an existing role in the system.
  */
-export const getApiRolesById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiRolesByIdData, ThrowOnError>
+export const getApiRolesId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiRolesIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiRolesByIdResponses,
-    GetApiRolesByIdErrors,
+    GetApiRolesIdResponses,
+    GetApiRolesIdErrors,
     ThrowOnError
   >({
     url: '/api/roles/:id',
@@ -800,12 +798,12 @@ export const getApiRolesById = <ThrowOnError extends boolean = false>(
  * Update Role
  * Update an existing role in the system.
  */
-export const patchApiRolesById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiRolesByIdData, ThrowOnError>
+export const patchApiRolesId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiRolesIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiRolesByIdResponses,
-    PatchApiRolesByIdErrors,
+    PatchApiRolesIdResponses,
+    PatchApiRolesIdErrors,
     ThrowOnError
   >({
     url: '/api/roles/:id',
@@ -859,12 +857,12 @@ export const postApiTransactions = <ThrowOnError extends boolean = false>(
  * Delete Transaction
  * Delete an existing transaction from the system.
  */
-export const deleteApiTransactionsById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiTransactionsByIdData, ThrowOnError>
+export const deleteApiTransactionsId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiTransactionsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiTransactionsByIdResponses,
-    DeleteApiTransactionsByIdErrors,
+    DeleteApiTransactionsIdResponses,
+    DeleteApiTransactionsIdErrors,
     ThrowOnError
   >({
     url: '/api/transactions/:id',
@@ -876,12 +874,12 @@ export const deleteApiTransactionsById = <ThrowOnError extends boolean = false>(
  * Find Transaction
  * Find an existing transaction in the system.
  */
-export const getApiTransactionsById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiTransactionsByIdData, ThrowOnError>
+export const getApiTransactionsId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiTransactionsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiTransactionsByIdResponses,
-    GetApiTransactionsByIdErrors,
+    GetApiTransactionsIdResponses,
+    GetApiTransactionsIdErrors,
     ThrowOnError
   >({
     url: '/api/transactions/:id',
@@ -893,12 +891,12 @@ export const getApiTransactionsById = <ThrowOnError extends boolean = false>(
  * Update Transaction
  * Update an existing transaction in the system.
  */
-export const patchApiTransactionsById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiTransactionsByIdData, ThrowOnError>
+export const patchApiTransactionsId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiTransactionsIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiTransactionsByIdResponses,
-    PatchApiTransactionsByIdErrors,
+    PatchApiTransactionsIdResponses,
+    PatchApiTransactionsIdErrors,
     ThrowOnError
   >({
     url: '/api/transactions/:id',
@@ -952,12 +950,12 @@ export const postApiUsers = <ThrowOnError extends boolean = false>(
  * Delete User
  * Delete an existing user from the system.
  */
-export const deleteApiUsersById = <ThrowOnError extends boolean = false>(
-  options: Options<DeleteApiUsersByIdData, ThrowOnError>
+export const deleteApiUsersId = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiUsersIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).delete<
-    DeleteApiUsersByIdResponses,
-    DeleteApiUsersByIdErrors,
+    DeleteApiUsersIdResponses,
+    DeleteApiUsersIdErrors,
     ThrowOnError
   >({
     url: '/api/users/:id',
@@ -969,12 +967,12 @@ export const deleteApiUsersById = <ThrowOnError extends boolean = false>(
  * Find User
  * Find an existing user in the system.
  */
-export const getApiUsersById = <ThrowOnError extends boolean = false>(
-  options: Options<GetApiUsersByIdData, ThrowOnError>
+export const getApiUsersId = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiUsersIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).get<
-    GetApiUsersByIdResponses,
-    GetApiUsersByIdErrors,
+    GetApiUsersIdResponses,
+    GetApiUsersIdErrors,
     ThrowOnError
   >({
     url: '/api/users/:id',
@@ -986,12 +984,12 @@ export const getApiUsersById = <ThrowOnError extends boolean = false>(
  * Update User
  * Update an existing user in the system.
  */
-export const patchApiUsersById = <ThrowOnError extends boolean = false>(
-  options: Options<PatchApiUsersByIdData, ThrowOnError>
+export const patchApiUsersId = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiUsersIdData, ThrowOnError>
 ) => {
   return (options.client ?? _heyApiClient).patch<
-    PatchApiUsersByIdResponses,
-    PatchApiUsersByIdErrors,
+    PatchApiUsersIdResponses,
+    PatchApiUsersIdErrors,
     ThrowOnError
   >({
     url: '/api/users/:id',
