@@ -294,6 +294,13 @@ export const zCreateCollection = z.object({
   sellerId: z.uuid(),
 });
 
+export const zCreateCollectionMaterial = z.object({
+  collectionId: z.uuid(),
+  materialId: z.uuid(),
+  value: z.number(),
+  weight: z.number(),
+});
+
 export const zCreateMaterial = z.object({
   carbonFactor: z.number(),
   gwCode: z.string(),
@@ -379,6 +386,13 @@ export const zCreateRole = z.object({
 export const zCreateTransaction = z.object({
   buyerId: z.uuid(),
   sellerId: z.uuid(),
+});
+
+export const zCreateTransactionMaterial = z.object({
+  materialId: z.uuid(),
+  transactionId: z.uuid(),
+  value: z.number(),
+  weight: z.number(),
 });
 
 export const zCreateUser = z.object({
@@ -1404,6 +1418,13 @@ export const zUpdateCollection = z.object({
   sellerId: z.optional(z.union([z.uuid(), z.null()])),
 });
 
+export const zUpdateCollectionMaterial = z.object({
+  collectionId: z.optional(z.union([z.uuid(), z.null()])),
+  materialId: z.optional(z.union([z.uuid(), z.null()])),
+  value: z.optional(z.union([z.number(), z.null()])),
+  weight: z.optional(z.union([z.number(), z.null()])),
+});
+
 export const zUpdateMaterial = z.object({
   carbonFactor: z.optional(z.number()),
   gwCode: z.optional(z.string()),
@@ -1489,6 +1510,13 @@ export const zUpdateRole = z.object({
 export const zUpdateTransaction = z.object({
   buyerId: z.optional(z.union([z.uuid(), z.null()])),
   sellerId: z.optional(z.union([z.uuid(), z.null()])),
+});
+
+export const zUpdateTransactionMaterial = z.object({
+  materialId: z.optional(z.union([z.uuid(), z.null()])),
+  transactionId: z.optional(z.union([z.uuid(), z.null()])),
+  value: z.optional(z.union([z.number(), z.null()])),
+  weight: z.optional(z.union([z.number(), z.null()])),
 });
 
 export const zUpdateUser = z.object({

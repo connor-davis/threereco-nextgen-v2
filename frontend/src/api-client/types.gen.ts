@@ -243,6 +243,13 @@ export type CreateCollection = {
   sellerId: string;
 };
 
+export type CreateCollectionMaterial = {
+  collectionId: string;
+  materialId: string;
+  value: number;
+  weight: number;
+};
+
 export type CreateMaterial = {
   carbonFactor: number;
   gwCode: string;
@@ -312,6 +319,13 @@ export type CreateRole = {
 export type CreateTransaction = {
   buyerId: string;
   sellerId: string;
+};
+
+export type CreateTransactionMaterial = {
+  materialId: string;
+  transactionId: string;
+  value: number;
+  weight: number;
 };
 
 export type CreateUser = {
@@ -1156,6 +1170,13 @@ export type UpdateCollection = {
   sellerId?: string | null;
 };
 
+export type UpdateCollectionMaterial = {
+  collectionId?: string | null;
+  materialId?: string | null;
+  value?: number | null;
+  weight?: number | null;
+};
+
 export type UpdateMaterial = {
   carbonFactor?: number;
   gwCode?: string;
@@ -1225,6 +1246,13 @@ export type UpdateRole = {
 export type UpdateTransaction = {
   buyerId?: string | null;
   sellerId?: string | null;
+};
+
+export type UpdateTransactionMaterial = {
+  materialId?: string | null;
+  transactionId?: string | null;
+  value?: number | null;
+  weight?: number | null;
 };
 
 export type UpdateUser = {
