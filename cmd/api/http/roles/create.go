@@ -72,11 +72,7 @@ func (r *RolesRouter) CreateRoute() routing.Route {
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
 					WithSchema(schemas.CreateRoleSchema.Value).
-					WithExample("example", map[string]any{
-						"name":         "Role Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-					}),
+					WithExample("example", schemas.CreateRoleSchema.Value),
 			}),
 	}
 

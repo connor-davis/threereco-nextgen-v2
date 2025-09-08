@@ -72,11 +72,7 @@ func (r *OrganizationsRouter) CreateRoute() routing.Route {
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
 					WithSchema(schemas.CreateOrganizationSchema.Value).
-					WithExample("example", map[string]any{
-						"name":         "Organization Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-					}),
+					WithExample("example", schemas.CreateOrganizationSchema.Value),
 			}),
 	}
 

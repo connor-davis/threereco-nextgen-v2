@@ -72,11 +72,7 @@ func (r *UsersRouter) CreateRoute() routing.Route {
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
 					WithSchema(schemas.CreateUserSchema.Value).
-					WithExample("example", map[string]any{
-						"name":         "User Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-					}),
+					WithExample("example", schemas.CreateUserSchema.Value),
 			}),
 	}
 

@@ -4,21 +4,21 @@ import "github.com/google/uuid"
 
 type Collection struct {
 	Base
-	Materials      []CollectionMaterial `json:"materials" gorm:"foreignKey:CollectionId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CollectorId    uuid.UUID            `json:"-" gorm:"type:uuid;not null"`
-	Collector      User                 `json:"collector" gorm:"foreignKey:CollectorId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	OrganizationId uuid.UUID            `json:"-" gorm:"type:uuid;not null"`
-	Organization   Organization         `json:"organization" gorm:"foreignKey:OrganizationId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Materials []CollectionMaterial `json:"materials" gorm:"foreignKey:CollectionId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	SellerId  uuid.UUID            `json:"-" gorm:"type:uuid;not null"`
+	Seller    User                 `json:"seller" gorm:"foreignKey:SellerId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	BuyerId   uuid.UUID            `json:"-" gorm:"type:uuid;not null"`
+	Buyer     Organization         `json:"buyer" gorm:"foreignKey:OrganizationId;references:Id;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type CreateCollectionPayload struct {
-	CollectorId    uuid.UUID `json:"collectorId"`
-	OrganizationId uuid.UUID `json:"organizationId"`
+	SellerId uuid.UUID `json:"sellerId"`
+	BuyerId  uuid.UUID `json:"buyerId"`
 }
 
 type UpdateCollectionPayload struct {
-	CollectorId    *uuid.UUID `json:"collectorId"`
-	OrganizationId *uuid.UUID `json:"organizationId"`
+	SellerId *uuid.UUID `json:"sellerId"`
+	BuyerId  *uuid.UUID `json:"buyerId"`
 }
 
 type CollectionMaterial struct {

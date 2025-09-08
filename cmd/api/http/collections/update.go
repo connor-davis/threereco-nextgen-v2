@@ -86,11 +86,7 @@ func (r *CollectionsRouter) UpdateRoute() routing.Route {
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
 					WithSchema(schemas.UpdateCollectionSchema.Value).
-					WithExample("example", map[string]any{
-						"name":         "Collection Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-					}),
+					WithExample("example", schemas.UpdateCollectionSchema.Value),
 			}),
 	}
 

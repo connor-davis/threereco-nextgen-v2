@@ -38,8 +38,8 @@ func (s *collections) Materials() collectionMaterialsService {
 func (s *collections) Create(payload models.CreateCollectionPayload) error {
 	var collection models.Collection
 
-	collection.CollectorId = payload.CollectorId
-	collection.OrganizationId = payload.OrganizationId
+	collection.SellerId = payload.SellerId
+	collection.BuyerId = payload.BuyerId
 
 	if err := s.storage.Postgres.
 		Create(&collection).Error; err != nil {
@@ -56,20 +56,20 @@ func (s *collections) Update(collectionId uuid.UUID, payload models.UpdateCollec
 		return err
 	}
 
-	if payload.CollectorId != nil {
-		collection.CollectorId = *payload.CollectorId
+	if payload.SellerId != nil {
+		collection.SellerId = *payload.SellerId
 	}
 
-	if payload.OrganizationId != nil {
-		collection.OrganizationId = *payload.OrganizationId
+	if payload.BuyerId != nil {
+		collection.BuyerId = *payload.BuyerId
 	}
 
 	if err := s.storage.Postgres.
 		Model(&models.Collection{}).
 		Where("id = ?", collectionId).
 		Updates(&map[string]any{
-			"collector_id":    collection.CollectorId,
-			"organization_id": collection.OrganizationId,
+			"seller_id": collection.SellerId,
+			"buyer_id":  collection.BuyerId,
 		}).Error; err != nil {
 		return err
 	}
