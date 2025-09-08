@@ -1,30 +1,43 @@
-package collectionMaterials
+package transactionMaterials
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
-	"github.com/connor-davis/threereco-nextgen/internal/models"
 	"github.com/connor-davis/threereco-nextgen/internal/routing"
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
-type CreateParams struct {
-	CollectionId uuid.UUID `json:"collectionId"`
+type FindParams struct {
+	TransactionId uuid.UUID `json:"transactionId"`
+	Id            uuid.UUID `json:"id"`
 }
 
-func (r *CollectionMaterialsRouter) CreateRoute() routing.Route {
+func (r *TransactionMaterialsRouter) FindRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful collection material creation.").
+			WithDescription("Successful transaction material retrieval.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
-				"text/plain": openapi3.NewMediaType().
-					WithSchema(openapi3.NewStringSchema()).
-					WithExample("example", "OK"),
+				"application/json": openapi3.NewMediaType().
+					WithSchema(schemas.TransactionSchema.Value).
+					WithExample("example", map[string]any{
+						"id": uuid.New(),
+						"material": map[string]any{
+							"id":        uuid.New(),
+							"name":      "Material Name",
+							"createdAt": "2023-10-01T12:00:00Z",
+							"updatedAt": "2023-10-01T12:00:00Z",
+						},
+						"weight":    12.34,
+						"value":     56.78,
+						"createdAt": "2023-10-01T12:00:00Z",
+						"updatedAt": "2023-10-01T12:00:00Z",
+					}),
 			}),
 	})
 
@@ -72,40 +85,34 @@ func (r *CollectionMaterialsRouter) CreateRoute() routing.Route {
 
 	parameters := []*openapi3.ParameterRef{
 		{
-			Value: openapi3.NewPathParameter("collectionId").
+			Value: openapi3.NewPathParameter("transactionId").
+				WithRequired(true).
+				WithSchema(openapi3.NewUUIDSchema()),
+		},
+		{
+			Value: openapi3.NewPathParameter("id").
 				WithRequired(true).
 				WithSchema(openapi3.NewUUIDSchema()),
 		},
 	}
 
-	body := &openapi3.RequestBodyRef{
-		Value: openapi3.NewRequestBody().
-			WithRequired(true).
-			WithDescription("Payload to create a new collection material.").
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.CreateCollectionMaterialSchema.Value).
-					WithExample("example", schemas.CreateCollectionMaterialSchema.Value),
-			}),
-	}
-
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Create Collection Material",
-			Description: "Create a new collection material in the system.",
-			Tags:        []string{"Collection Materials"},
+			Summary:     "Find Transaction Material",
+			Description: "Find an existing transaction material in the system.",
+			Tags:        []string{"Transaction Materials"},
 			Responses:   responses,
 			Parameters:  parameters,
-			RequestBody: body,
+			RequestBody: nil,
 		},
-		Method: routing.PostMethod,
-		Path:   "/collections/:collectionId/materials",
+		Method: routing.GetMethod,
+		Path:   "/transactions/:transactionId/materials/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"collections.materials.create"}),
+			r.Middleware.Authorized([]string{"transactions.materials.view"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params CreateParams
+			var params FindParams
 
 			if err := c.ParamsParser(&params); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -114,23 +121,25 @@ func (r *CollectionMaterialsRouter) CreateRoute() routing.Route {
 				})
 			}
 
-			var payload models.CreateCollectionMaterialPayload
+			material, err := r.Services.Transactions().Materials().Find(params.Id)
 
-			if err := c.BodyParser(&payload); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-					"error":   constants.BadRequestError,
-					"message": constants.BadRequestErrorDetails,
-				})
-			}
+			if err != nil {
+				if err == gorm.ErrRecordNotFound {
+					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+						"error":   constants.NotFoundError,
+						"message": constants.NotFoundErrorDetails,
+					})
+				}
 
-			if err := r.Services.Collections().Materials().Create(params.CollectionId, payload); err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error":   constants.InternalServerError,
 					"message": constants.InternalServerErrorDetails,
 				})
 			}
 
-			return c.SendStatus(fiber.StatusOK)
+			return c.Status(fiber.StatusOK).JSON(fiber.Map{
+				"item": material,
+			})
 		},
 	}
 }

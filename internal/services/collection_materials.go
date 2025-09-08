@@ -8,8 +8,8 @@ import (
 )
 
 type collectionMaterialsService interface {
-	Create(collectionId uuid.UUID, payload models.CreateCollectionMaterialPayload) error
-	Update(collectionId uuid.UUID, collectionMaterialId uuid.UUID, payload models.UpdateCollectionMaterialPayload) error
+	Create(payload models.CreateCollectionMaterialPayload) error
+	Update(collectionMaterialId uuid.UUID, payload models.UpdateCollectionMaterialPayload) error
 	Delete(collectionMaterialId uuid.UUID) error
 	Find(collectionMaterialId uuid.UUID) (*models.CollectionMaterial, error)
 	List(clauses ...clause.Expression) ([]models.CollectionMaterial, error)
@@ -26,7 +26,7 @@ func newCollectionMaterialsService(storage storage.Storage) collectionMaterialsS
 	}
 }
 
-func (s *collectionMaterials) Create(collectionId uuid.UUID, payload models.CreateCollectionMaterialPayload) error {
+func (s *collectionMaterials) Create(payload models.CreateCollectionMaterialPayload) error {
 	if err := s.storage.Postgres.
 		Model(&models.CollectionMaterial{}).
 		Create(&payload).Error; err != nil {
@@ -36,7 +36,7 @@ func (s *collectionMaterials) Create(collectionId uuid.UUID, payload models.Crea
 	return nil
 }
 
-func (s *collectionMaterials) Update(collectionId uuid.UUID, collectionMaterialId uuid.UUID, payload models.UpdateCollectionMaterialPayload) error {
+func (s *collectionMaterials) Update(collectionMaterialId uuid.UUID, payload models.UpdateCollectionMaterialPayload) error {
 	var collectionMaterial models.CollectionMaterial
 
 	if err := s.storage.Postgres.

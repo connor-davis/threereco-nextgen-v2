@@ -1,4 +1,4 @@
-package collectionMaterials
+package transactionMaterials
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -12,16 +12,16 @@ import (
 )
 
 type UpdateParams struct {
-	CollectionId uuid.UUID `json:"collectionId"`
-	Id           uuid.UUID `json:"id"`
+	TransactionId uuid.UUID `json:"transactionId"`
+	Id            uuid.UUID `json:"id"`
 }
 
-func (r *CollectionMaterialsRouter) UpdateRoute() routing.Route {
+func (r *TransactionMaterialsRouter) UpdateRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful collection material update.").
+			WithDescription("Successful transaction material update.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"text/plain": openapi3.NewMediaType().
@@ -74,7 +74,7 @@ func (r *CollectionMaterialsRouter) UpdateRoute() routing.Route {
 
 	parameters := []*openapi3.ParameterRef{
 		{
-			Value: openapi3.NewPathParameter("collectionId").
+			Value: openapi3.NewPathParameter("transactionId").
 				WithRequired(true).
 				WithSchema(openapi3.NewUUIDSchema()),
 		},
@@ -88,28 +88,28 @@ func (r *CollectionMaterialsRouter) UpdateRoute() routing.Route {
 	body := &openapi3.RequestBodyRef{
 		Value: openapi3.NewRequestBody().
 			WithRequired(true).
-			WithDescription("Payload to update an existing collection material.").
+			WithDescription("Payload to update an existing transaction material.").
 			WithContent(openapi3.Content{
 				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.UpdateCollectionMaterialSchema.Value).
-					WithExample("example", schemas.UpdateCollectionMaterialSchema.Value),
+					WithSchema(schemas.UpdateTransactionMaterialSchema.Value).
+					WithExample("example", schemas.UpdateTransactionMaterialSchema.Value),
 			}),
 	}
 
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Update Collection Material",
-			Description: "Update an existing collection material in the system.",
-			Tags:        []string{"Collection Materials"},
+			Summary:     "Update Transaction Material",
+			Description: "Update an existing transaction material in the system.",
+			Tags:        []string{"Transaction Materials"},
 			Responses:   responses,
 			Parameters:  parameters,
 			RequestBody: body,
 		},
 		Method: routing.PatchMethod,
-		Path:   "/collections/:collectionId/materials/:id",
+		Path:   "/transactions/:transactionId/materials/:id",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"collections.materials.update"}),
+			r.Middleware.Authorized([]string{"transactions.materials.update"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
 			var params UpdateParams
@@ -121,7 +121,7 @@ func (r *CollectionMaterialsRouter) UpdateRoute() routing.Route {
 				})
 			}
 
-			var payload models.UpdateCollectionMaterialPayload
+			var payload models.UpdateTransactionMaterialPayload
 
 			if err := c.BodyParser(&payload); err != nil {
 				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -130,7 +130,7 @@ func (r *CollectionMaterialsRouter) UpdateRoute() routing.Route {
 				})
 			}
 
-			if err := r.Services.Collections().Materials().Update(params.CollectionId, params.Id, payload); err != nil {
+			if err := r.Services.Transactions().Materials().Update(params.Id, payload); err != nil {
 				if err == gorm.ErrRecordNotFound {
 					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 						"error":   constants.NotFoundError,
