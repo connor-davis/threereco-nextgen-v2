@@ -2,6 +2,12 @@
 import type { Client, Options as ClientOptions, TDataShape } from './client';
 import { client as _heyApiClient } from './client.gen';
 import type {
+  DeleteApiAddressesByIdData,
+  DeleteApiAddressesByIdErrors,
+  DeleteApiAddressesByIdResponses,
+  DeleteApiBankDetailsByIdData,
+  DeleteApiBankDetailsByIdErrors,
+  DeleteApiBankDetailsByIdResponses,
   DeleteApiCollectionsByIdData,
   DeleteApiCollectionsByIdErrors,
   DeleteApiCollectionsByIdResponses,
@@ -14,15 +20,30 @@ import type {
   DeleteApiRolesByIdData,
   DeleteApiRolesByIdErrors,
   DeleteApiRolesByIdResponses,
+  DeleteApiTransactionsByIdData,
+  DeleteApiTransactionsByIdErrors,
+  DeleteApiTransactionsByIdResponses,
   DeleteApiUsersByIdData,
   DeleteApiUsersByIdErrors,
   DeleteApiUsersByIdResponses,
+  GetApiAddressesByIdData,
+  GetApiAddressesByIdErrors,
+  GetApiAddressesByIdResponses,
+  GetApiAddressesData,
+  GetApiAddressesErrors,
+  GetApiAddressesResponses,
   GetApiAuthenticationCheckData,
   GetApiAuthenticationCheckErrors,
   GetApiAuthenticationCheckResponses,
   GetApiAuthenticationMfaEnableData,
   GetApiAuthenticationMfaEnableErrors,
   GetApiAuthenticationMfaEnableResponses,
+  GetApiBankDetailsByIdData,
+  GetApiBankDetailsByIdErrors,
+  GetApiBankDetailsByIdResponses,
+  GetApiBankDetailsData,
+  GetApiBankDetailsErrors,
+  GetApiBankDetailsResponses,
   GetApiCollectionsByIdData,
   GetApiCollectionsByIdErrors,
   GetApiCollectionsByIdResponses,
@@ -47,12 +68,24 @@ import type {
   GetApiRolesData,
   GetApiRolesErrors,
   GetApiRolesResponses,
+  GetApiTransactionsByIdData,
+  GetApiTransactionsByIdErrors,
+  GetApiTransactionsByIdResponses,
+  GetApiTransactionsData,
+  GetApiTransactionsErrors,
+  GetApiTransactionsResponses,
   GetApiUsersByIdData,
   GetApiUsersByIdErrors,
   GetApiUsersByIdResponses,
   GetApiUsersData,
   GetApiUsersErrors,
   GetApiUsersResponses,
+  PatchApiAddressesByIdData,
+  PatchApiAddressesByIdErrors,
+  PatchApiAddressesByIdResponses,
+  PatchApiBankDetailsByIdData,
+  PatchApiBankDetailsByIdErrors,
+  PatchApiBankDetailsByIdResponses,
   PatchApiCollectionsByIdData,
   PatchApiCollectionsByIdErrors,
   PatchApiCollectionsByIdResponses,
@@ -65,9 +98,15 @@ import type {
   PatchApiRolesByIdData,
   PatchApiRolesByIdErrors,
   PatchApiRolesByIdResponses,
+  PatchApiTransactionsByIdData,
+  PatchApiTransactionsByIdErrors,
+  PatchApiTransactionsByIdResponses,
   PatchApiUsersByIdData,
   PatchApiUsersByIdErrors,
   PatchApiUsersByIdResponses,
+  PostApiAddressesData,
+  PostApiAddressesErrors,
+  PostApiAddressesResponses,
   PostApiAuthenticationLoginData,
   PostApiAuthenticationLoginErrors,
   PostApiAuthenticationLoginResponses,
@@ -77,6 +116,9 @@ import type {
   PostApiAuthenticationMfaVerifyData,
   PostApiAuthenticationMfaVerifyErrors,
   PostApiAuthenticationMfaVerifyResponses,
+  PostApiBankDetailsData,
+  PostApiBankDetailsErrors,
+  PostApiBankDetailsResponses,
   PostApiCollectionsData,
   PostApiCollectionsErrors,
   PostApiCollectionsResponses,
@@ -89,6 +131,9 @@ import type {
   PostApiRolesData,
   PostApiRolesErrors,
   PostApiRolesResponses,
+  PostApiTransactionsData,
+  PostApiTransactionsErrors,
+  PostApiTransactionsResponses,
   PostApiUsersData,
   PostApiUsersErrors,
   PostApiUsersResponses,
@@ -109,6 +154,99 @@ export type Options<
    * used to access values that aren't defined as part of the SDK function.
    */
   meta?: Record<string, unknown>;
+};
+
+/**
+ * List Addresses
+ * List all addresses in the system.
+ */
+export const getApiAddresses = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiAddressesData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiAddressesResponses,
+    GetApiAddressesErrors,
+    ThrowOnError
+  >({
+    url: '/api/addresses',
+    ...options,
+  });
+};
+
+/**
+ * Create Address
+ * Create a new address in the system.
+ */
+export const postApiAddresses = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiAddressesData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiAddressesResponses,
+    PostApiAddressesErrors,
+    ThrowOnError
+  >({
+    url: '/api/addresses',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Address
+ * Delete an existing address from the system.
+ */
+export const deleteApiAddressesById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiAddressesByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiAddressesByIdResponses,
+    DeleteApiAddressesByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/addresses/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find Address
+ * Find an existing address in the system.
+ */
+export const getApiAddressesById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiAddressesByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiAddressesByIdResponses,
+    GetApiAddressesByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/addresses/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update Address
+ * Update an existing address in the system.
+ */
+export const patchApiAddressesById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiAddressesByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiAddressesByIdResponses,
+    PatchApiAddressesByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/addresses/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
 };
 
 /**
@@ -204,6 +342,99 @@ export const postApiAuthenticationMfaVerify = <
     ThrowOnError
   >({
     url: '/api/authentication/mfa/verify',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Bank Details
+ * List all bank details in the system.
+ */
+export const getApiBankDetails = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiBankDetailsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiBankDetailsResponses,
+    GetApiBankDetailsErrors,
+    ThrowOnError
+  >({
+    url: '/api/bank-details',
+    ...options,
+  });
+};
+
+/**
+ * Create Bank Details
+ * Create new bank details in the system.
+ */
+export const postApiBankDetails = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiBankDetailsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiBankDetailsResponses,
+    PostApiBankDetailsErrors,
+    ThrowOnError
+  >({
+    url: '/api/bank-details',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Bank Details
+ * Delete existing bank details from the system.
+ */
+export const deleteApiBankDetailsById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiBankDetailsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiBankDetailsByIdResponses,
+    DeleteApiBankDetailsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/bank-details/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find Bank Detail
+ * Find existing bank details in the system.
+ */
+export const getApiBankDetailsById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiBankDetailsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiBankDetailsByIdResponses,
+    GetApiBankDetailsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/bank-details/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update Bank Details
+ * Update existing bank details in the system.
+ */
+export const patchApiBankDetailsById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiBankDetailsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiBankDetailsByIdResponses,
+    PatchApiBankDetailsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/bank-details/{id}',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -578,6 +809,99 @@ export const patchApiRolesById = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/roles/{id}',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Transactions
+ * List all transactions in the system.
+ */
+export const getApiTransactions = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiTransactionsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiTransactionsResponses,
+    GetApiTransactionsErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions',
+    ...options,
+  });
+};
+
+/**
+ * Create Transaction
+ * Create a new transaction in the system.
+ */
+export const postApiTransactions = <ThrowOnError extends boolean = false>(
+  options: Options<PostApiTransactionsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiTransactionsResponses,
+    PostApiTransactionsErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Transaction
+ * Delete an existing transaction from the system.
+ */
+export const deleteApiTransactionsById = <ThrowOnError extends boolean = false>(
+  options: Options<DeleteApiTransactionsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiTransactionsByIdResponses,
+    DeleteApiTransactionsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Find Transaction
+ * Find an existing transaction in the system.
+ */
+export const getApiTransactionsById = <ThrowOnError extends boolean = false>(
+  options: Options<GetApiTransactionsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiTransactionsByIdResponses,
+    GetApiTransactionsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/{id}',
+    ...options,
+  });
+};
+
+/**
+ * Update Transaction
+ * Update an existing transaction in the system.
+ */
+export const patchApiTransactionsById = <ThrowOnError extends boolean = false>(
+  options: Options<PatchApiTransactionsByIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiTransactionsByIdResponses,
+    PatchApiTransactionsByIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/{id}',
     ...options,
     headers: {
       'Content-Type': 'application/json',

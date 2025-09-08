@@ -1643,6 +1643,113 @@ export const zUsers = z.array(
   })
 );
 
+export const zGetApiAddressesData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful addresses retrieval.
+ */
+export const zGetApiAddressesResponse = z.array(
+  z.union([
+    z.object({
+      city: z.string(),
+      country: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      lineOne: z.string(),
+      lineTwo: z.union([z.string(), z.null()]),
+      province: z.string(),
+      updatedAt: z.iso.datetime(),
+      zipCode: z.string(),
+    }),
+    z.null(),
+  ])
+);
+
+export const zPostApiAddressesData = z.object({
+  body: z.object({
+    city: z.string(),
+    country: z.string(),
+    lineOne: z.string(),
+    lineTwo: z.optional(z.union([z.string(), z.null()])),
+    province: z.string(),
+    zipCode: z.string(),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful address creation.
+ */
+export const zPostApiAddressesResponse = z.string();
+
+export const zDeleteApiAddressesByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful address deletion.
+ */
+export const zDeleteApiAddressesByIdResponse = z.string();
+
+export const zGetApiAddressesByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful address retrieval.
+ */
+export const zGetApiAddressesByIdResponse = z.union([
+  z.object({
+    city: z.string(),
+    country: z.string(),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    lineOne: z.string(),
+    lineTwo: z.union([z.string(), z.null()]),
+    province: z.string(),
+    updatedAt: z.iso.datetime(),
+    zipCode: z.string(),
+  }),
+  z.null(),
+]);
+
+export const zPatchApiAddressesByIdData = z.object({
+  body: z.object({
+    city: z.optional(z.union([z.string(), z.null()])),
+    country: z.optional(z.union([z.string(), z.null()])),
+    lineOne: z.optional(z.union([z.string(), z.null()])),
+    lineTwo: z.optional(z.union([z.string(), z.null()])),
+    province: z.optional(z.union([z.string(), z.null()])),
+    zipCode: z.optional(z.union([z.string(), z.null()])),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful address update.
+ */
+export const zPatchApiAddressesByIdResponse = z.string();
+
 export const zGetApiAuthenticationCheckData = z.object({
   body: z.optional(z.never()),
   path: z.optional(z.never()),
@@ -2351,6 +2458,105 @@ export const zPostApiAuthenticationMfaVerifyData = z.object({
   path: z.optional(z.never()),
   query: z.optional(z.never()),
 });
+
+export const zGetApiBankDetailsData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful bank details retrieval.
+ */
+export const zGetApiBankDetailsResponse = z.array(
+  z.union([
+    z.object({
+      accountHolder: z.string(),
+      accountNumber: z.string(),
+      bankName: z.string(),
+      branchName: z.string(),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      updatedAt: z.iso.datetime(),
+    }),
+    z.null(),
+  ])
+);
+
+export const zPostApiBankDetailsData = z.object({
+  body: z.object({
+    accountHolder: z.string(),
+    accountNumber: z.string(),
+    bankName: z.string(),
+    branchName: z.string(),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful bank details creation.
+ */
+export const zPostApiBankDetailsResponse = z.string();
+
+export const zDeleteApiBankDetailsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful bank details deletion.
+ */
+export const zDeleteApiBankDetailsByIdResponse = z.string();
+
+export const zGetApiBankDetailsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful bank details retrieval.
+ */
+export const zGetApiBankDetailsByIdResponse = z.union([
+  z.object({
+    accountHolder: z.string(),
+    accountNumber: z.string(),
+    bankName: z.string(),
+    branchName: z.string(),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    updatedAt: z.iso.datetime(),
+  }),
+  z.null(),
+]);
+
+export const zPatchApiBankDetailsByIdData = z.object({
+  body: z.object({
+    accountHolder: z.optional(z.union([z.string(), z.null()])),
+    accountNumber: z.optional(z.union([z.string(), z.null()])),
+    bankName: z.optional(z.union([z.string(), z.null()])),
+    branchName: z.optional(z.union([z.string(), z.null()])),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful bank details update.
+ */
+export const zPatchApiBankDetailsByIdResponse = z.string();
 
 export const zGetApiCollectionsData = z.object({
   body: z.optional(z.never()),
@@ -3075,6 +3281,251 @@ export const zPatchApiRolesByIdData = z.object({
  * Successful role update.
  */
 export const zPatchApiRolesByIdResponse = z.string();
+
+export const zGetApiTransactionsData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful transactions retrieval.
+ */
+export const zGetApiTransactionsResponse = z.array(
+  z.object({
+    buyer: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    materials: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        material: z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+          value: z.number(),
+        }),
+        updatedAt: z.iso.datetime(),
+        value: z.optional(z.number()),
+        weight: z.number(),
+      })
+    ),
+    seller: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    updatedAt: z.iso.datetime(),
+  })
+);
+
+export const zPostApiTransactionsData = z.object({
+  body: z.object({
+    buyerId: z.uuid(),
+    sellerId: z.uuid(),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction creation.
+ */
+export const zPostApiTransactionsResponse = z.string();
+
+export const zDeleteApiTransactionsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction deletion.
+ */
+export const zDeleteApiTransactionsByIdResponse = z.string();
+
+export const zGetApiTransactionsByIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction retrieval.
+ */
+export const zGetApiTransactionsByIdResponse = z.object({
+  buyer: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  materials: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      material: z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+        value: z.number(),
+      }),
+      updatedAt: z.iso.datetime(),
+      value: z.optional(z.number()),
+      weight: z.number(),
+    })
+  ),
+  seller: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiTransactionsByIdData = z.object({
+  body: z.object({
+    buyerId: z.optional(z.union([z.uuid(), z.null()])),
+    sellerId: z.optional(z.union([z.uuid(), z.null()])),
+  }),
+  path: z.object({
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction update.
+ */
+export const zPatchApiTransactionsByIdResponse = z.string();
 
 export const zGetApiUsersData = z.object({
   body: z.optional(z.never()),

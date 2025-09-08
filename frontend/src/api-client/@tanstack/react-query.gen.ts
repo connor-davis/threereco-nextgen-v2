@@ -9,13 +9,20 @@ import {
 import { client as _heyApiClient } from '../client.gen';
 import {
   type Options,
+  deleteApiAddressesById,
+  deleteApiBankDetailsById,
   deleteApiCollectionsById,
   deleteApiMaterialsById,
   deleteApiOrganizationsById,
   deleteApiRolesById,
+  deleteApiTransactionsById,
   deleteApiUsersById,
+  getApiAddresses,
+  getApiAddressesById,
   getApiAuthenticationCheck,
   getApiAuthenticationMfaEnable,
+  getApiBankDetails,
+  getApiBankDetailsById,
   getApiCollections,
   getApiCollectionsById,
   getApiMaterials,
@@ -24,23 +31,37 @@ import {
   getApiOrganizationsById,
   getApiRoles,
   getApiRolesById,
+  getApiTransactions,
+  getApiTransactionsById,
   getApiUsers,
   getApiUsersById,
+  patchApiAddressesById,
+  patchApiBankDetailsById,
   patchApiCollectionsById,
   patchApiMaterialsById,
   patchApiOrganizationsById,
   patchApiRolesById,
+  patchApiTransactionsById,
   patchApiUsersById,
+  postApiAddresses,
   postApiAuthenticationLogin,
   postApiAuthenticationLogout,
   postApiAuthenticationMfaVerify,
+  postApiBankDetails,
   postApiCollections,
   postApiMaterials,
   postApiOrganizations,
   postApiRoles,
+  postApiTransactions,
   postApiUsers,
 } from '../sdk.gen';
 import type {
+  DeleteApiAddressesByIdData,
+  DeleteApiAddressesByIdError,
+  DeleteApiAddressesByIdResponse,
+  DeleteApiBankDetailsByIdData,
+  DeleteApiBankDetailsByIdError,
+  DeleteApiBankDetailsByIdResponse,
   DeleteApiCollectionsByIdData,
   DeleteApiCollectionsByIdError,
   DeleteApiCollectionsByIdResponse,
@@ -53,11 +74,22 @@ import type {
   DeleteApiRolesByIdData,
   DeleteApiRolesByIdError,
   DeleteApiRolesByIdResponse,
+  DeleteApiTransactionsByIdData,
+  DeleteApiTransactionsByIdError,
+  DeleteApiTransactionsByIdResponse,
   DeleteApiUsersByIdData,
   DeleteApiUsersByIdError,
   DeleteApiUsersByIdResponse,
+  GetApiAddressesByIdData,
+  GetApiAddressesData,
+  GetApiAddressesError,
+  GetApiAddressesResponse,
   GetApiAuthenticationCheckData,
   GetApiAuthenticationMfaEnableData,
+  GetApiBankDetailsByIdData,
+  GetApiBankDetailsData,
+  GetApiBankDetailsError,
+  GetApiBankDetailsResponse,
   GetApiCollectionsByIdData,
   GetApiCollectionsData,
   GetApiCollectionsError,
@@ -74,10 +106,20 @@ import type {
   GetApiRolesData,
   GetApiRolesError,
   GetApiRolesResponse,
+  GetApiTransactionsByIdData,
+  GetApiTransactionsData,
+  GetApiTransactionsError,
+  GetApiTransactionsResponse,
   GetApiUsersByIdData,
   GetApiUsersData,
   GetApiUsersError,
   GetApiUsersResponse,
+  PatchApiAddressesByIdData,
+  PatchApiAddressesByIdError,
+  PatchApiAddressesByIdResponse,
+  PatchApiBankDetailsByIdData,
+  PatchApiBankDetailsByIdError,
+  PatchApiBankDetailsByIdResponse,
   PatchApiCollectionsByIdData,
   PatchApiCollectionsByIdError,
   PatchApiCollectionsByIdResponse,
@@ -90,15 +132,24 @@ import type {
   PatchApiRolesByIdData,
   PatchApiRolesByIdError,
   PatchApiRolesByIdResponse,
+  PatchApiTransactionsByIdData,
+  PatchApiTransactionsByIdError,
+  PatchApiTransactionsByIdResponse,
   PatchApiUsersByIdData,
   PatchApiUsersByIdError,
   PatchApiUsersByIdResponse,
+  PostApiAddressesData,
+  PostApiAddressesError,
+  PostApiAddressesResponse,
   PostApiAuthenticationLoginData,
   PostApiAuthenticationLoginError,
   PostApiAuthenticationLogoutData,
   PostApiAuthenticationLogoutError,
   PostApiAuthenticationMfaVerifyData,
   PostApiAuthenticationMfaVerifyError,
+  PostApiBankDetailsData,
+  PostApiBankDetailsError,
+  PostApiBankDetailsResponse,
   PostApiCollectionsData,
   PostApiCollectionsError,
   PostApiCollectionsResponse,
@@ -111,6 +162,9 @@ import type {
   PostApiRolesData,
   PostApiRolesError,
   PostApiRolesResponse,
+  PostApiTransactionsData,
+  PostApiTransactionsError,
+  PostApiTransactionsResponse,
   PostApiUsersData,
   PostApiUsersError,
   PostApiUsersResponse,
@@ -150,6 +204,253 @@ const createQueryKey = <TOptions extends Options>(
     params.query = options.query;
   }
   return [params];
+};
+
+export const getApiAddressesQueryKey = (
+  options: Options<GetApiAddressesData>
+) => createQueryKey('getApiAddresses', options);
+
+/**
+ * List Addresses
+ * List all addresses in the system.
+ */
+export const getApiAddressesOptions = (
+  options: Options<GetApiAddressesData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiAddresses({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiAddressesQueryKey(options),
+  });
+};
+
+const createInfiniteParams = <
+  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
+>(
+  queryKey: QueryKey<Options>,
+  page: K
+) => {
+  const params = {
+    ...queryKey[0],
+  };
+  if (page.body) {
+    params.body = {
+      ...(queryKey[0].body as any),
+      ...(page.body as any),
+    };
+  }
+  if (page.headers) {
+    params.headers = {
+      ...queryKey[0].headers,
+      ...page.headers,
+    };
+  }
+  if (page.path) {
+    params.path = {
+      ...(queryKey[0].path as any),
+      ...(page.path as any),
+    };
+  }
+  if (page.query) {
+    params.query = {
+      ...(queryKey[0].query as any),
+      ...(page.query as any),
+    };
+  }
+  return params as unknown as typeof page;
+};
+
+export const getApiAddressesInfiniteQueryKey = (
+  options: Options<GetApiAddressesData>
+): QueryKey<Options<GetApiAddressesData>> =>
+  createQueryKey('getApiAddresses', options, true);
+
+/**
+ * List Addresses
+ * List all addresses in the system.
+ */
+export const getApiAddressesInfiniteOptions = (
+  options: Options<GetApiAddressesData>
+) => {
+  return infiniteQueryOptions<
+    GetApiAddressesResponse,
+    GetApiAddressesError,
+    InfiniteData<GetApiAddressesResponse>,
+    QueryKey<Options<GetApiAddressesData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiAddressesData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiAddressesData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiAddresses({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiAddressesInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiAddressesQueryKey = (
+  options: Options<PostApiAddressesData>
+) => createQueryKey('postApiAddresses', options);
+
+/**
+ * Create Address
+ * Create a new address in the system.
+ */
+export const postApiAddressesOptions = (
+  options: Options<PostApiAddressesData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiAddresses({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiAddressesQueryKey(options),
+  });
+};
+
+/**
+ * Create Address
+ * Create a new address in the system.
+ */
+export const postApiAddressesMutation = (
+  options?: Partial<Options<PostApiAddressesData>>
+): UseMutationOptions<
+  PostApiAddressesResponse,
+  PostApiAddressesError,
+  Options<PostApiAddressesData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiAddressesResponse,
+    PostApiAddressesError,
+    Options<PostApiAddressesData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiAddresses({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Address
+ * Delete an existing address from the system.
+ */
+export const deleteApiAddressesByIdMutation = (
+  options?: Partial<Options<DeleteApiAddressesByIdData>>
+): UseMutationOptions<
+  DeleteApiAddressesByIdResponse,
+  DeleteApiAddressesByIdError,
+  Options<DeleteApiAddressesByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiAddressesByIdResponse,
+    DeleteApiAddressesByIdError,
+    Options<DeleteApiAddressesByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiAddressesById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiAddressesByIdQueryKey = (
+  options: Options<GetApiAddressesByIdData>
+) => createQueryKey('getApiAddressesById', options);
+
+/**
+ * Find Address
+ * Find an existing address in the system.
+ */
+export const getApiAddressesByIdOptions = (
+  options: Options<GetApiAddressesByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiAddressesById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiAddressesByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Address
+ * Update an existing address in the system.
+ */
+export const patchApiAddressesByIdMutation = (
+  options?: Partial<Options<PatchApiAddressesByIdData>>
+): UseMutationOptions<
+  PatchApiAddressesByIdResponse,
+  PatchApiAddressesByIdError,
+  Options<PatchApiAddressesByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiAddressesByIdResponse,
+    PatchApiAddressesByIdError,
+    Options<PatchApiAddressesByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiAddressesById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
 };
 
 export const getApiAuthenticationCheckQueryKey = (
@@ -361,6 +662,217 @@ export const postApiAuthenticationMfaVerifyMutation = (
   return mutationOptions;
 };
 
+export const getApiBankDetailsQueryKey = (
+  options: Options<GetApiBankDetailsData>
+) => createQueryKey('getApiBankDetails', options);
+
+/**
+ * List Bank Details
+ * List all bank details in the system.
+ */
+export const getApiBankDetailsOptions = (
+  options: Options<GetApiBankDetailsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiBankDetails({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiBankDetailsQueryKey(options),
+  });
+};
+
+export const getApiBankDetailsInfiniteQueryKey = (
+  options: Options<GetApiBankDetailsData>
+): QueryKey<Options<GetApiBankDetailsData>> =>
+  createQueryKey('getApiBankDetails', options, true);
+
+/**
+ * List Bank Details
+ * List all bank details in the system.
+ */
+export const getApiBankDetailsInfiniteOptions = (
+  options: Options<GetApiBankDetailsData>
+) => {
+  return infiniteQueryOptions<
+    GetApiBankDetailsResponse,
+    GetApiBankDetailsError,
+    InfiniteData<GetApiBankDetailsResponse>,
+    QueryKey<Options<GetApiBankDetailsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiBankDetailsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiBankDetailsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiBankDetails({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiBankDetailsInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiBankDetailsQueryKey = (
+  options: Options<PostApiBankDetailsData>
+) => createQueryKey('postApiBankDetails', options);
+
+/**
+ * Create Bank Details
+ * Create new bank details in the system.
+ */
+export const postApiBankDetailsOptions = (
+  options: Options<PostApiBankDetailsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiBankDetails({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiBankDetailsQueryKey(options),
+  });
+};
+
+/**
+ * Create Bank Details
+ * Create new bank details in the system.
+ */
+export const postApiBankDetailsMutation = (
+  options?: Partial<Options<PostApiBankDetailsData>>
+): UseMutationOptions<
+  PostApiBankDetailsResponse,
+  PostApiBankDetailsError,
+  Options<PostApiBankDetailsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiBankDetailsResponse,
+    PostApiBankDetailsError,
+    Options<PostApiBankDetailsData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiBankDetails({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Bank Details
+ * Delete existing bank details from the system.
+ */
+export const deleteApiBankDetailsByIdMutation = (
+  options?: Partial<Options<DeleteApiBankDetailsByIdData>>
+): UseMutationOptions<
+  DeleteApiBankDetailsByIdResponse,
+  DeleteApiBankDetailsByIdError,
+  Options<DeleteApiBankDetailsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiBankDetailsByIdResponse,
+    DeleteApiBankDetailsByIdError,
+    Options<DeleteApiBankDetailsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiBankDetailsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiBankDetailsByIdQueryKey = (
+  options: Options<GetApiBankDetailsByIdData>
+) => createQueryKey('getApiBankDetailsById', options);
+
+/**
+ * Find Bank Detail
+ * Find existing bank details in the system.
+ */
+export const getApiBankDetailsByIdOptions = (
+  options: Options<GetApiBankDetailsByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiBankDetailsById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiBankDetailsByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Bank Details
+ * Update existing bank details in the system.
+ */
+export const patchApiBankDetailsByIdMutation = (
+  options?: Partial<Options<PatchApiBankDetailsByIdData>>
+): UseMutationOptions<
+  PatchApiBankDetailsByIdResponse,
+  PatchApiBankDetailsByIdError,
+  Options<PatchApiBankDetailsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiBankDetailsByIdResponse,
+    PatchApiBankDetailsByIdError,
+    Options<PatchApiBankDetailsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiBankDetailsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
 export const getApiCollectionsQueryKey = (
   options: Options<GetApiCollectionsData>
 ) => createQueryKey('getApiCollections', options);
@@ -384,42 +896,6 @@ export const getApiCollectionsOptions = (
     },
     queryKey: getApiCollectionsQueryKey(options),
   });
-};
-
-const createInfiniteParams = <
-  K extends Pick<QueryKey<Options>[0], 'body' | 'headers' | 'path' | 'query'>,
->(
-  queryKey: QueryKey<Options>,
-  page: K
-) => {
-  const params = {
-    ...queryKey[0],
-  };
-  if (page.body) {
-    params.body = {
-      ...(queryKey[0].body as any),
-      ...(page.body as any),
-    };
-  }
-  if (page.headers) {
-    params.headers = {
-      ...queryKey[0].headers,
-      ...page.headers,
-    };
-  }
-  if (page.path) {
-    params.path = {
-      ...(queryKey[0].path as any),
-      ...(page.path as any),
-    };
-  }
-  if (page.query) {
-    params.query = {
-      ...(queryKey[0].query as any),
-      ...(page.query as any),
-    };
-  }
-  return params as unknown as typeof page;
 };
 
 export const getApiCollectionsInfiniteQueryKey = (
@@ -1225,6 +1701,217 @@ export const patchApiRolesByIdMutation = (
   > = {
     mutationFn: async (localOptions) => {
       const { data } = await patchApiRolesById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiTransactionsQueryKey = (
+  options: Options<GetApiTransactionsData>
+) => createQueryKey('getApiTransactions', options);
+
+/**
+ * List Transactions
+ * List all transactions in the system.
+ */
+export const getApiTransactionsOptions = (
+  options: Options<GetApiTransactionsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiTransactions({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiTransactionsQueryKey(options),
+  });
+};
+
+export const getApiTransactionsInfiniteQueryKey = (
+  options: Options<GetApiTransactionsData>
+): QueryKey<Options<GetApiTransactionsData>> =>
+  createQueryKey('getApiTransactions', options, true);
+
+/**
+ * List Transactions
+ * List all transactions in the system.
+ */
+export const getApiTransactionsInfiniteOptions = (
+  options: Options<GetApiTransactionsData>
+) => {
+  return infiniteQueryOptions<
+    GetApiTransactionsResponse,
+    GetApiTransactionsError,
+    InfiniteData<GetApiTransactionsResponse>,
+    QueryKey<Options<GetApiTransactionsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiTransactionsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiTransactionsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiTransactions({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiTransactionsInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiTransactionsQueryKey = (
+  options: Options<PostApiTransactionsData>
+) => createQueryKey('postApiTransactions', options);
+
+/**
+ * Create Transaction
+ * Create a new transaction in the system.
+ */
+export const postApiTransactionsOptions = (
+  options: Options<PostApiTransactionsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiTransactions({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiTransactionsQueryKey(options),
+  });
+};
+
+/**
+ * Create Transaction
+ * Create a new transaction in the system.
+ */
+export const postApiTransactionsMutation = (
+  options?: Partial<Options<PostApiTransactionsData>>
+): UseMutationOptions<
+  PostApiTransactionsResponse,
+  PostApiTransactionsError,
+  Options<PostApiTransactionsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiTransactionsResponse,
+    PostApiTransactionsError,
+    Options<PostApiTransactionsData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiTransactions({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Transaction
+ * Delete an existing transaction from the system.
+ */
+export const deleteApiTransactionsByIdMutation = (
+  options?: Partial<Options<DeleteApiTransactionsByIdData>>
+): UseMutationOptions<
+  DeleteApiTransactionsByIdResponse,
+  DeleteApiTransactionsByIdError,
+  Options<DeleteApiTransactionsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiTransactionsByIdResponse,
+    DeleteApiTransactionsByIdError,
+    Options<DeleteApiTransactionsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiTransactionsById({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiTransactionsByIdQueryKey = (
+  options: Options<GetApiTransactionsByIdData>
+) => createQueryKey('getApiTransactionsById', options);
+
+/**
+ * Find Transaction
+ * Find an existing transaction in the system.
+ */
+export const getApiTransactionsByIdOptions = (
+  options: Options<GetApiTransactionsByIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiTransactionsById({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiTransactionsByIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Transaction
+ * Update an existing transaction in the system.
+ */
+export const patchApiTransactionsByIdMutation = (
+  options?: Partial<Options<PatchApiTransactionsByIdData>>
+): UseMutationOptions<
+  PatchApiTransactionsByIdResponse,
+  PatchApiTransactionsByIdError,
+  Options<PatchApiTransactionsByIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiTransactionsByIdResponse,
+    PatchApiTransactionsByIdError,
+    Options<PatchApiTransactionsByIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiTransactionsById({
         ...options,
         ...localOptions,
         throwOnError: true,

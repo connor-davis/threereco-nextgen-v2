@@ -1357,6 +1357,290 @@ export type Users = Array<{
   updatedAt: string;
 }>;
 
+export type GetApiAddressesData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering addresses.
+     */
+    search: string;
+  };
+  url: '/api/addresses';
+};
+
+export type GetApiAddressesErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiAddressesError =
+  GetApiAddressesErrors[keyof GetApiAddressesErrors];
+
+export type GetApiAddressesResponses = {
+  /**
+   * Successful addresses retrieval.
+   */
+  200: Array<{
+    city: string;
+    country: string;
+    createdAt: string;
+    id: string;
+    lineOne: string;
+    lineTwo: string | null;
+    province: string;
+    updatedAt: string;
+    zipCode: string;
+  } | null>;
+};
+
+export type GetApiAddressesResponse =
+  GetApiAddressesResponses[keyof GetApiAddressesResponses];
+
+export type PostApiAddressesData = {
+  /**
+   * Payload to create a new address.
+   */
+  body: {
+    city: string;
+    country: string;
+    lineOne: string;
+    lineTwo?: string | null;
+    province: string;
+    zipCode: string;
+  };
+  path?: never;
+  query?: never;
+  url: '/api/addresses';
+};
+
+export type PostApiAddressesErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiAddressesError =
+  PostApiAddressesErrors[keyof PostApiAddressesErrors];
+
+export type PostApiAddressesResponses = {
+  /**
+   * Successful address creation.
+   */
+  200: string;
+};
+
+export type PostApiAddressesResponse =
+  PostApiAddressesResponses[keyof PostApiAddressesResponses];
+
+export type DeleteApiAddressesByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/addresses/{id}';
+};
+
+export type DeleteApiAddressesByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiAddressesByIdError =
+  DeleteApiAddressesByIdErrors[keyof DeleteApiAddressesByIdErrors];
+
+export type DeleteApiAddressesByIdResponses = {
+  /**
+   * Successful address deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiAddressesByIdResponse =
+  DeleteApiAddressesByIdResponses[keyof DeleteApiAddressesByIdResponses];
+
+export type GetApiAddressesByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/addresses/{id}';
+};
+
+export type GetApiAddressesByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiAddressesByIdError =
+  GetApiAddressesByIdErrors[keyof GetApiAddressesByIdErrors];
+
+export type GetApiAddressesByIdResponses = {
+  /**
+   * Successful address retrieval.
+   */
+  200: {
+    city: string;
+    country: string;
+    createdAt: string;
+    id: string;
+    lineOne: string;
+    lineTwo: string | null;
+    province: string;
+    updatedAt: string;
+    zipCode: string;
+  } | null;
+};
+
+export type GetApiAddressesByIdResponse =
+  GetApiAddressesByIdResponses[keyof GetApiAddressesByIdResponses];
+
+export type PatchApiAddressesByIdData = {
+  /**
+   * Payload to update an existing address.
+   */
+  body: {
+    city?: string | null;
+    country?: string | null;
+    lineOne?: string | null;
+    lineTwo?: string | null;
+    province?: string | null;
+    zipCode?: string | null;
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/addresses/{id}';
+};
+
+export type PatchApiAddressesByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiAddressesByIdError =
+  PatchApiAddressesByIdErrors[keyof PatchApiAddressesByIdErrors];
+
+export type PatchApiAddressesByIdResponses = {
+  /**
+   * Successful address update.
+   */
+  200: string;
+};
+
+export type PatchApiAddressesByIdResponse =
+  PatchApiAddressesByIdResponses[keyof PatchApiAddressesByIdResponses];
+
 export type GetApiAuthenticationCheckData = {
   body?: never;
   path?: never;
@@ -2095,6 +2379,282 @@ export type PostApiAuthenticationMfaVerifyResponses = {
    */
   200: unknown;
 };
+
+export type GetApiBankDetailsData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering transactions.
+     */
+    search: string;
+  };
+  url: '/api/bank-details';
+};
+
+export type GetApiBankDetailsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiBankDetailsError =
+  GetApiBankDetailsErrors[keyof GetApiBankDetailsErrors];
+
+export type GetApiBankDetailsResponses = {
+  /**
+   * Successful bank details retrieval.
+   */
+  200: Array<{
+    accountHolder: string;
+    accountNumber: string;
+    bankName: string;
+    branchName: string;
+    createdAt: string;
+    id: string;
+    updatedAt: string;
+  } | null>;
+};
+
+export type GetApiBankDetailsResponse =
+  GetApiBankDetailsResponses[keyof GetApiBankDetailsResponses];
+
+export type PostApiBankDetailsData = {
+  /**
+   * Payload to create new bank details.
+   */
+  body: {
+    accountHolder: string;
+    accountNumber: string;
+    bankName: string;
+    branchName: string;
+  };
+  path?: never;
+  query?: never;
+  url: '/api/bank-details';
+};
+
+export type PostApiBankDetailsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiBankDetailsError =
+  PostApiBankDetailsErrors[keyof PostApiBankDetailsErrors];
+
+export type PostApiBankDetailsResponses = {
+  /**
+   * Successful bank details creation.
+   */
+  200: string;
+};
+
+export type PostApiBankDetailsResponse =
+  PostApiBankDetailsResponses[keyof PostApiBankDetailsResponses];
+
+export type DeleteApiBankDetailsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/bank-details/{id}';
+};
+
+export type DeleteApiBankDetailsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiBankDetailsByIdError =
+  DeleteApiBankDetailsByIdErrors[keyof DeleteApiBankDetailsByIdErrors];
+
+export type DeleteApiBankDetailsByIdResponses = {
+  /**
+   * Successful bank details deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiBankDetailsByIdResponse =
+  DeleteApiBankDetailsByIdResponses[keyof DeleteApiBankDetailsByIdResponses];
+
+export type GetApiBankDetailsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/bank-details/{id}';
+};
+
+export type GetApiBankDetailsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiBankDetailsByIdError =
+  GetApiBankDetailsByIdErrors[keyof GetApiBankDetailsByIdErrors];
+
+export type GetApiBankDetailsByIdResponses = {
+  /**
+   * Successful bank details retrieval.
+   */
+  200: {
+    accountHolder: string;
+    accountNumber: string;
+    bankName: string;
+    branchName: string;
+    createdAt: string;
+    id: string;
+    updatedAt: string;
+  } | null;
+};
+
+export type GetApiBankDetailsByIdResponse =
+  GetApiBankDetailsByIdResponses[keyof GetApiBankDetailsByIdResponses];
+
+export type PatchApiBankDetailsByIdData = {
+  /**
+   * Payload to update existing bank details.
+   */
+  body: {
+    accountHolder?: string | null;
+    accountNumber?: string | null;
+    bankName?: string | null;
+    branchName?: string | null;
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/bank-details/{id}';
+};
+
+export type PatchApiBankDetailsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiBankDetailsByIdError =
+  PatchApiBankDetailsByIdErrors[keyof PatchApiBankDetailsByIdErrors];
+
+export type PatchApiBankDetailsByIdResponses = {
+  /**
+   * Successful bank details update.
+   */
+  200: string;
+};
+
+export type PatchApiBankDetailsByIdResponse =
+  PatchApiBankDetailsByIdResponses[keyof PatchApiBankDetailsByIdResponses];
 
 export type GetApiCollectionsData = {
   body?: never;
@@ -3473,6 +4033,406 @@ export type PatchApiRolesByIdResponses = {
 
 export type PatchApiRolesByIdResponse =
   PatchApiRolesByIdResponses[keyof PatchApiRolesByIdResponses];
+
+export type GetApiTransactionsData = {
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering transactions.
+     */
+    search: string;
+  };
+  url: '/api/transactions';
+};
+
+export type GetApiTransactionsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiTransactionsError =
+  GetApiTransactionsErrors[keyof GetApiTransactionsErrors];
+
+export type GetApiTransactionsResponses = {
+  /**
+   * Successful transactions retrieval.
+   */
+  200: Array<{
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      value?: number;
+      weight: number;
+    }>;
+    seller: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    updatedAt: string;
+  }>;
+};
+
+export type GetApiTransactionsResponse =
+  GetApiTransactionsResponses[keyof GetApiTransactionsResponses];
+
+export type PostApiTransactionsData = {
+  /**
+   * Payload to create a new transaction.
+   */
+  body: {
+    buyerId: string;
+    sellerId: string;
+  };
+  path?: never;
+  query?: never;
+  url: '/api/transactions';
+};
+
+export type PostApiTransactionsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiTransactionsError =
+  PostApiTransactionsErrors[keyof PostApiTransactionsErrors];
+
+export type PostApiTransactionsResponses = {
+  /**
+   * Successful transaction creation.
+   */
+  200: string;
+};
+
+export type PostApiTransactionsResponse =
+  PostApiTransactionsResponses[keyof PostApiTransactionsResponses];
+
+export type DeleteApiTransactionsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/transactions/{id}';
+};
+
+export type DeleteApiTransactionsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiTransactionsByIdError =
+  DeleteApiTransactionsByIdErrors[keyof DeleteApiTransactionsByIdErrors];
+
+export type DeleteApiTransactionsByIdResponses = {
+  /**
+   * Successful transaction deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiTransactionsByIdResponse =
+  DeleteApiTransactionsByIdResponses[keyof DeleteApiTransactionsByIdResponses];
+
+export type GetApiTransactionsByIdData = {
+  body?: never;
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/transactions/{id}';
+};
+
+export type GetApiTransactionsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiTransactionsByIdError =
+  GetApiTransactionsByIdErrors[keyof GetApiTransactionsByIdErrors];
+
+export type GetApiTransactionsByIdResponses = {
+  /**
+   * Successful transaction retrieval.
+   */
+  200: {
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      value?: number;
+      weight: number;
+    }>;
+    seller: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    updatedAt: string;
+  };
+};
+
+export type GetApiTransactionsByIdResponse =
+  GetApiTransactionsByIdResponses[keyof GetApiTransactionsByIdResponses];
+
+export type PatchApiTransactionsByIdData = {
+  /**
+   * Payload to update an existing transaction.
+   */
+  body: {
+    buyerId?: string | null;
+    sellerId?: string | null;
+  };
+  path: {
+    id: string;
+  };
+  query?: never;
+  url: '/api/transactions/{id}';
+};
+
+export type PatchApiTransactionsByIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiTransactionsByIdError =
+  PatchApiTransactionsByIdErrors[keyof PatchApiTransactionsByIdErrors];
+
+export type PatchApiTransactionsByIdResponses = {
+  /**
+   * Successful transaction update.
+   */
+  200: string;
+};
+
+export type PatchApiTransactionsByIdResponse =
+  PatchApiTransactionsByIdResponses[keyof PatchApiTransactionsByIdResponses];
 
 export type GetApiUsersData = {
   body?: never;
