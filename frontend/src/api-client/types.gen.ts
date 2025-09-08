@@ -2852,6 +2852,447 @@ export type PostApiCollectionsResponses = {
 export type PostApiCollectionsResponse =
   PostApiCollectionsResponses[keyof PostApiCollectionsResponses];
 
+export type GetApiCollectionsCollectionIdMaterialsData = {
+  body?: never;
+  path: {
+    collectionId: string;
+  };
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering collections.
+     */
+    search: string;
+  };
+  url: '/api/collections/:collectionId/materials';
+};
+
+export type GetApiCollectionsCollectionIdMaterialsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiCollectionsCollectionIdMaterialsError =
+  GetApiCollectionsCollectionIdMaterialsErrors[keyof GetApiCollectionsCollectionIdMaterialsErrors];
+
+export type GetApiCollectionsCollectionIdMaterialsResponses = {
+  /**
+   * Successful collection materials retrieval.
+   */
+  200: Array<{
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      weight: number;
+    }>;
+    seller: {
+      activeOrganization: string;
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      banReason: string | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      banned: boolean;
+      createdAt: string;
+      email: string;
+      id: string;
+      mfaEnabled: boolean;
+      mfaVerified: boolean;
+      name: string;
+      phone: string;
+      roles: Array<{
+        createdAt: string;
+        description: string | null;
+        id: string;
+        name: string;
+        permissions: Array<string>;
+        updatedAt: string;
+      }>;
+      type: 'standard' | 'collector' | 'business' | 'system';
+      updatedAt: string;
+    };
+    updatedAt: string;
+  }>;
+};
+
+export type GetApiCollectionsCollectionIdMaterialsResponse =
+  GetApiCollectionsCollectionIdMaterialsResponses[keyof GetApiCollectionsCollectionIdMaterialsResponses];
+
+export type PostApiCollectionsCollectionIdMaterialsData = {
+  /**
+   * Payload to create a new collection material.
+   */
+  body: {
+    collectionId: string;
+    materialId: string;
+    value: number;
+    weight: number;
+  };
+  path: {
+    collectionId: string;
+  };
+  query?: never;
+  url: '/api/collections/:collectionId/materials';
+};
+
+export type PostApiCollectionsCollectionIdMaterialsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiCollectionsCollectionIdMaterialsError =
+  PostApiCollectionsCollectionIdMaterialsErrors[keyof PostApiCollectionsCollectionIdMaterialsErrors];
+
+export type PostApiCollectionsCollectionIdMaterialsResponses = {
+  /**
+   * Successful collection material creation.
+   */
+  200: string;
+};
+
+export type PostApiCollectionsCollectionIdMaterialsResponse =
+  PostApiCollectionsCollectionIdMaterialsResponses[keyof PostApiCollectionsCollectionIdMaterialsResponses];
+
+export type DeleteApiCollectionsCollectionIdMaterialsIdData = {
+  body?: never;
+  path: {
+    collectionId: string;
+    id: string;
+  };
+  query?: never;
+  url: '/api/collections/:collectionId/materials/:id';
+};
+
+export type DeleteApiCollectionsCollectionIdMaterialsIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiCollectionsCollectionIdMaterialsIdError =
+  DeleteApiCollectionsCollectionIdMaterialsIdErrors[keyof DeleteApiCollectionsCollectionIdMaterialsIdErrors];
+
+export type DeleteApiCollectionsCollectionIdMaterialsIdResponses = {
+  /**
+   * Successful collection material deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiCollectionsCollectionIdMaterialsIdResponse =
+  DeleteApiCollectionsCollectionIdMaterialsIdResponses[keyof DeleteApiCollectionsCollectionIdMaterialsIdResponses];
+
+export type GetApiCollectionsCollectionIdMaterialsIdData = {
+  body?: never;
+  path: {
+    collectionId: string;
+    id: string;
+  };
+  query?: never;
+  url: '/api/collections/:collectionId/materials/:id';
+};
+
+export type GetApiCollectionsCollectionIdMaterialsIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiCollectionsCollectionIdMaterialsIdError =
+  GetApiCollectionsCollectionIdMaterialsIdErrors[keyof GetApiCollectionsCollectionIdMaterialsIdErrors];
+
+export type GetApiCollectionsCollectionIdMaterialsIdResponses = {
+  /**
+   * Successful collection material retrieval.
+   */
+  200: {
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      weight: number;
+    }>;
+    seller: {
+      activeOrganization: string;
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      banReason: string | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      banned: boolean;
+      createdAt: string;
+      email: string;
+      id: string;
+      mfaEnabled: boolean;
+      mfaVerified: boolean;
+      name: string;
+      phone: string;
+      roles: Array<{
+        createdAt: string;
+        description: string | null;
+        id: string;
+        name: string;
+        permissions: Array<string>;
+        updatedAt: string;
+      }>;
+      type: 'standard' | 'collector' | 'business' | 'system';
+      updatedAt: string;
+    };
+    updatedAt: string;
+  };
+};
+
+export type GetApiCollectionsCollectionIdMaterialsIdResponse =
+  GetApiCollectionsCollectionIdMaterialsIdResponses[keyof GetApiCollectionsCollectionIdMaterialsIdResponses];
+
+export type PatchApiCollectionsCollectionIdMaterialsIdData = {
+  /**
+   * Payload to update an existing collection material.
+   */
+  body: {
+    collectionId?: string | null;
+    materialId?: string | null;
+    value?: number | null;
+    weight?: number | null;
+  };
+  path: {
+    collectionId: string;
+    id: string;
+  };
+  query?: never;
+  url: '/api/collections/:collectionId/materials/:id';
+};
+
+export type PatchApiCollectionsCollectionIdMaterialsIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiCollectionsCollectionIdMaterialsIdError =
+  PatchApiCollectionsCollectionIdMaterialsIdErrors[keyof PatchApiCollectionsCollectionIdMaterialsIdErrors];
+
+export type PatchApiCollectionsCollectionIdMaterialsIdResponses = {
+  /**
+   * Successful collection material update.
+   */
+  200: string;
+};
+
+export type PatchApiCollectionsCollectionIdMaterialsIdResponse =
+  PatchApiCollectionsCollectionIdMaterialsIdResponses[keyof PatchApiCollectionsCollectionIdMaterialsIdResponses];
+
 export type DeleteApiCollectionsIdData = {
   body?: never;
   path: {
@@ -4432,6 +4873,417 @@ export type PatchApiTransactionsIdResponses = {
 
 export type PatchApiTransactionsIdResponse =
   PatchApiTransactionsIdResponses[keyof PatchApiTransactionsIdResponses];
+
+export type GetApiTransactionsTransactionIdMaterialsData = {
+  body?: never;
+  path: {
+    transactionId: string;
+  };
+  query: {
+    /**
+     * Page number for pagination. Defaults to 1.
+     */
+    page: number;
+    /**
+     * Number of items per page. Defaults to 10.
+     */
+    limit: number;
+    /**
+     * Search term for filtering transactions.
+     */
+    search: string;
+  };
+  url: '/api/transactions/:transactionId/materials';
+};
+
+export type GetApiTransactionsTransactionIdMaterialsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiTransactionsTransactionIdMaterialsError =
+  GetApiTransactionsTransactionIdMaterialsErrors[keyof GetApiTransactionsTransactionIdMaterialsErrors];
+
+export type GetApiTransactionsTransactionIdMaterialsResponses = {
+  /**
+   * Successful transaction materials retrieval.
+   */
+  200: Array<{
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      value?: number;
+      weight: number;
+    }>;
+    seller: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    updatedAt: string;
+  }>;
+};
+
+export type GetApiTransactionsTransactionIdMaterialsResponse =
+  GetApiTransactionsTransactionIdMaterialsResponses[keyof GetApiTransactionsTransactionIdMaterialsResponses];
+
+export type PostApiTransactionsTransactionIdMaterialsData = {
+  /**
+   * Payload to create a new transaction material.
+   */
+  body: {
+    materialId: string;
+    transactionId: string;
+    value: number;
+    weight: number;
+  };
+  path: {
+    transactionId: string;
+  };
+  query?: never;
+  url: '/api/transactions/:transactionId/materials';
+};
+
+export type PostApiTransactionsTransactionIdMaterialsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiTransactionsTransactionIdMaterialsError =
+  PostApiTransactionsTransactionIdMaterialsErrors[keyof PostApiTransactionsTransactionIdMaterialsErrors];
+
+export type PostApiTransactionsTransactionIdMaterialsResponses = {
+  /**
+   * Successful transaction material creation.
+   */
+  200: string;
+};
+
+export type PostApiTransactionsTransactionIdMaterialsResponse =
+  PostApiTransactionsTransactionIdMaterialsResponses[keyof PostApiTransactionsTransactionIdMaterialsResponses];
+
+export type DeleteApiTransactionsTransactionIdMaterialsIdData = {
+  body?: never;
+  path: {
+    transactionId: string;
+    id: string;
+  };
+  query?: never;
+  url: '/api/transactions/:transactionId/materials/:id';
+};
+
+export type DeleteApiTransactionsTransactionIdMaterialsIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type DeleteApiTransactionsTransactionIdMaterialsIdError =
+  DeleteApiTransactionsTransactionIdMaterialsIdErrors[keyof DeleteApiTransactionsTransactionIdMaterialsIdErrors];
+
+export type DeleteApiTransactionsTransactionIdMaterialsIdResponses = {
+  /**
+   * Successful transaction material deletion.
+   */
+  200: string;
+};
+
+export type DeleteApiTransactionsTransactionIdMaterialsIdResponse =
+  DeleteApiTransactionsTransactionIdMaterialsIdResponses[keyof DeleteApiTransactionsTransactionIdMaterialsIdResponses];
+
+export type GetApiTransactionsTransactionIdMaterialsIdData = {
+  body?: never;
+  path: {
+    transactionId: string;
+    id: string;
+  };
+  query?: never;
+  url: '/api/transactions/:transactionId/materials/:id';
+};
+
+export type GetApiTransactionsTransactionIdMaterialsIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiTransactionsTransactionIdMaterialsIdError =
+  GetApiTransactionsTransactionIdMaterialsIdErrors[keyof GetApiTransactionsTransactionIdMaterialsIdErrors];
+
+export type GetApiTransactionsTransactionIdMaterialsIdResponses = {
+  /**
+   * Successful transaction material retrieval.
+   */
+  200: {
+    buyer: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    id: string;
+    materials: Array<{
+      createdAt: string;
+      id: string;
+      material: {
+        carbonFactor: string;
+        createdAt: string;
+        gwCode: string;
+        id: string;
+        name: string;
+        updatedAt: string;
+        value: number;
+      };
+      updatedAt: string;
+      value?: number;
+      weight: number;
+    }>;
+    seller: {
+      address: {
+        city: string;
+        country: string;
+        createdAt: string;
+        id: string;
+        lineOne: string;
+        lineTwo: string | null;
+        province: string;
+        updatedAt: string;
+        zipCode: string;
+      } | null;
+      bankDetails: {
+        accountHolder: string;
+        accountNumber: string;
+        bankName: string;
+        branchName: string;
+        createdAt: string;
+        id: string;
+        updatedAt: string;
+      } | null;
+      createdAt: string;
+      id: string;
+      name: string;
+      updatedAt: string;
+    };
+    updatedAt: string;
+  };
+};
+
+export type GetApiTransactionsTransactionIdMaterialsIdResponse =
+  GetApiTransactionsTransactionIdMaterialsIdResponses[keyof GetApiTransactionsTransactionIdMaterialsIdResponses];
+
+export type PatchApiTransactionsTransactionIdMaterialsIdData = {
+  /**
+   * Payload to update an existing transaction material.
+   */
+  body: {
+    materialId?: string | null;
+    transactionId?: string | null;
+    value?: number | null;
+    weight?: number | null;
+  };
+  path: {
+    transactionId: string;
+    id: string;
+  };
+  query?: never;
+  url: '/api/transactions/:transactionId/materials/:id';
+};
+
+export type PatchApiTransactionsTransactionIdMaterialsIdErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PatchApiTransactionsTransactionIdMaterialsIdError =
+  PatchApiTransactionsTransactionIdMaterialsIdErrors[keyof PatchApiTransactionsTransactionIdMaterialsIdErrors];
+
+export type PatchApiTransactionsTransactionIdMaterialsIdResponses = {
+  /**
+   * Successful transaction material update.
+   */
+  200: string;
+};
+
+export type PatchApiTransactionsTransactionIdMaterialsIdResponse =
+  PatchApiTransactionsTransactionIdMaterialsIdResponses[keyof PatchApiTransactionsTransactionIdMaterialsIdResponses];
 
 export type GetApiUsersData = {
   body?: never;

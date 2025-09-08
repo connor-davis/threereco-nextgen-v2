@@ -2692,6 +2692,296 @@ export const zPostApiCollectionsData = z.object({
  */
 export const zPostApiCollectionsResponse = z.string();
 
+export const zGetApiCollectionsCollectionIdMaterialsData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    collectionId: z.uuid(),
+  }),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful collection materials retrieval.
+ */
+export const zGetApiCollectionsCollectionIdMaterialsResponse = z.array(
+  z.object({
+    buyer: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    materials: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        material: z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+          value: z.number(),
+        }),
+        updatedAt: z.iso.datetime(),
+        weight: z.number(),
+      })
+    ),
+    seller: z.object({
+      activeOrganization: z.uuid(),
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      banReason: z.union([z.string(), z.null()]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      banned: z.boolean(),
+      createdAt: z.iso.datetime(),
+      email: z.string(),
+      id: z.uuid(),
+      mfaEnabled: z.boolean(),
+      mfaVerified: z.boolean(),
+      name: z.string(),
+      phone: z.string(),
+      roles: z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      type: z.enum(['standard', 'collector', 'business', 'system']),
+      updatedAt: z.iso.datetime(),
+    }),
+    updatedAt: z.iso.datetime(),
+  })
+);
+
+export const zPostApiCollectionsCollectionIdMaterialsData = z.object({
+  body: z.object({
+    collectionId: z.uuid(),
+    materialId: z.uuid(),
+    value: z.number(),
+    weight: z.number(),
+  }),
+  path: z.object({
+    collectionId: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection material creation.
+ */
+export const zPostApiCollectionsCollectionIdMaterialsResponse = z.string();
+
+export const zDeleteApiCollectionsCollectionIdMaterialsIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    collectionId: z.uuid(),
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection material deletion.
+ */
+export const zDeleteApiCollectionsCollectionIdMaterialsIdResponse = z.string();
+
+export const zGetApiCollectionsCollectionIdMaterialsIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    collectionId: z.uuid(),
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection material retrieval.
+ */
+export const zGetApiCollectionsCollectionIdMaterialsIdResponse = z.object({
+  buyer: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  materials: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      material: z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+        value: z.number(),
+      }),
+      updatedAt: z.iso.datetime(),
+      weight: z.number(),
+    })
+  ),
+  seller: z.object({
+    activeOrganization: z.uuid(),
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    banReason: z.union([z.string(), z.null()]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    banned: z.boolean(),
+    createdAt: z.iso.datetime(),
+    email: z.string(),
+    id: z.uuid(),
+    mfaEnabled: z.boolean(),
+    mfaVerified: z.boolean(),
+    name: z.string(),
+    phone: z.string(),
+    roles: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      })
+    ),
+    type: z.enum(['standard', 'collector', 'business', 'system']),
+    updatedAt: z.iso.datetime(),
+  }),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiCollectionsCollectionIdMaterialsIdData = z.object({
+  body: z.object({
+    collectionId: z.optional(z.union([z.uuid(), z.null()])),
+    materialId: z.optional(z.union([z.uuid(), z.null()])),
+    value: z.optional(z.union([z.number(), z.null()])),
+    weight: z.optional(z.union([z.number(), z.null()])),
+  }),
+  path: z.object({
+    collectionId: z.uuid(),
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful collection material update.
+ */
+export const zPatchApiCollectionsCollectionIdMaterialsIdResponse = z.string();
+
 export const zDeleteApiCollectionsIdData = z.object({
   body: z.optional(z.never()),
   path: z.object({
@@ -3526,6 +3816,263 @@ export const zPatchApiTransactionsIdData = z.object({
  * Successful transaction update.
  */
 export const zPatchApiTransactionsIdResponse = z.string();
+
+export const zGetApiTransactionsTransactionIdMaterialsData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    transactionId: z.uuid(),
+  }),
+  query: z.object({
+    page: z.coerce.bigint().gte(BigInt(1)).default(BigInt(1)),
+    limit: z.coerce.bigint().gte(BigInt(10)).default(BigInt(10)),
+    search: z.string(),
+  }),
+});
+
+/**
+ * Successful transaction materials retrieval.
+ */
+export const zGetApiTransactionsTransactionIdMaterialsResponse = z.array(
+  z.object({
+    buyer: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    materials: z.array(
+      z.object({
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        material: z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+          value: z.number(),
+        }),
+        updatedAt: z.iso.datetime(),
+        value: z.optional(z.number()),
+        weight: z.number(),
+      })
+    ),
+    seller: z.object({
+      address: z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      bankDetails: z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchName: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      name: z.string(),
+      updatedAt: z.iso.datetime(),
+    }),
+    updatedAt: z.iso.datetime(),
+  })
+);
+
+export const zPostApiTransactionsTransactionIdMaterialsData = z.object({
+  body: z.object({
+    materialId: z.uuid(),
+    transactionId: z.uuid(),
+    value: z.number(),
+    weight: z.number(),
+  }),
+  path: z.object({
+    transactionId: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction material creation.
+ */
+export const zPostApiTransactionsTransactionIdMaterialsResponse = z.string();
+
+export const zDeleteApiTransactionsTransactionIdMaterialsIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    transactionId: z.uuid(),
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction material deletion.
+ */
+export const zDeleteApiTransactionsTransactionIdMaterialsIdResponse =
+  z.string();
+
+export const zGetApiTransactionsTransactionIdMaterialsIdData = z.object({
+  body: z.optional(z.never()),
+  path: z.object({
+    transactionId: z.uuid(),
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction material retrieval.
+ */
+export const zGetApiTransactionsTransactionIdMaterialsIdResponse = z.object({
+  buyer: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  createdAt: z.iso.datetime(),
+  id: z.uuid(),
+  materials: z.array(
+    z.object({
+      createdAt: z.iso.datetime(),
+      id: z.uuid(),
+      material: z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+        value: z.number(),
+      }),
+      updatedAt: z.iso.datetime(),
+      value: z.optional(z.number()),
+      weight: z.number(),
+    })
+  ),
+  seller: z.object({
+    address: z.union([
+      z.object({
+        city: z.string(),
+        country: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        lineOne: z.string(),
+        lineTwo: z.union([z.string(), z.null()]),
+        province: z.string(),
+        updatedAt: z.iso.datetime(),
+        zipCode: z.string(),
+      }),
+      z.null(),
+    ]),
+    bankDetails: z.union([
+      z.object({
+        accountHolder: z.string(),
+        accountNumber: z.string(),
+        bankName: z.string(),
+        branchName: z.string(),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.null(),
+    ]),
+    createdAt: z.iso.datetime(),
+    id: z.uuid(),
+    name: z.string(),
+    updatedAt: z.iso.datetime(),
+  }),
+  updatedAt: z.iso.datetime(),
+});
+
+export const zPatchApiTransactionsTransactionIdMaterialsIdData = z.object({
+  body: z.object({
+    materialId: z.optional(z.union([z.uuid(), z.null()])),
+    transactionId: z.optional(z.union([z.uuid(), z.null()])),
+    value: z.optional(z.union([z.number(), z.null()])),
+    weight: z.optional(z.union([z.number(), z.null()])),
+  }),
+  path: z.object({
+    transactionId: z.uuid(),
+    id: z.uuid(),
+  }),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful transaction material update.
+ */
+export const zPatchApiTransactionsTransactionIdMaterialsIdResponse = z.string();
 
 export const zGetApiUsersData = z.object({
   body: z.optional(z.never()),

@@ -11,11 +11,13 @@ import {
   type Options,
   deleteApiAddressesId,
   deleteApiBankDetailsId,
+  deleteApiCollectionsCollectionIdMaterialsId,
   deleteApiCollectionsId,
   deleteApiMaterialsId,
   deleteApiOrganizationsId,
   deleteApiRolesId,
   deleteApiTransactionsId,
+  deleteApiTransactionsTransactionIdMaterialsId,
   deleteApiUsersId,
   getApiAddresses,
   getApiAddressesId,
@@ -24,6 +26,8 @@ import {
   getApiBankDetails,
   getApiBankDetailsId,
   getApiCollections,
+  getApiCollectionsCollectionIdMaterials,
+  getApiCollectionsCollectionIdMaterialsId,
   getApiCollectionsId,
   getApiMaterials,
   getApiMaterialsId,
@@ -33,15 +37,19 @@ import {
   getApiRolesId,
   getApiTransactions,
   getApiTransactionsId,
+  getApiTransactionsTransactionIdMaterials,
+  getApiTransactionsTransactionIdMaterialsId,
   getApiUsers,
   getApiUsersId,
   patchApiAddressesId,
   patchApiBankDetailsId,
+  patchApiCollectionsCollectionIdMaterialsId,
   patchApiCollectionsId,
   patchApiMaterialsId,
   patchApiOrganizationsId,
   patchApiRolesId,
   patchApiTransactionsId,
+  patchApiTransactionsTransactionIdMaterialsId,
   patchApiUsersId,
   postApiAddresses,
   postApiAuthenticationLogin,
@@ -49,10 +57,12 @@ import {
   postApiAuthenticationMfaVerify,
   postApiBankDetails,
   postApiCollections,
+  postApiCollectionsCollectionIdMaterials,
   postApiMaterials,
   postApiOrganizations,
   postApiRoles,
   postApiTransactions,
+  postApiTransactionsTransactionIdMaterials,
   postApiUsers,
 } from '../sdk.gen';
 import type {
@@ -62,6 +72,9 @@ import type {
   DeleteApiBankDetailsIdData,
   DeleteApiBankDetailsIdError,
   DeleteApiBankDetailsIdResponse,
+  DeleteApiCollectionsCollectionIdMaterialsIdData,
+  DeleteApiCollectionsCollectionIdMaterialsIdError,
+  DeleteApiCollectionsCollectionIdMaterialsIdResponse,
   DeleteApiCollectionsIdData,
   DeleteApiCollectionsIdError,
   DeleteApiCollectionsIdResponse,
@@ -77,6 +90,9 @@ import type {
   DeleteApiTransactionsIdData,
   DeleteApiTransactionsIdError,
   DeleteApiTransactionsIdResponse,
+  DeleteApiTransactionsTransactionIdMaterialsIdData,
+  DeleteApiTransactionsTransactionIdMaterialsIdError,
+  DeleteApiTransactionsTransactionIdMaterialsIdResponse,
   DeleteApiUsersIdData,
   DeleteApiUsersIdError,
   DeleteApiUsersIdResponse,
@@ -90,6 +106,10 @@ import type {
   GetApiBankDetailsError,
   GetApiBankDetailsIdData,
   GetApiBankDetailsResponse,
+  GetApiCollectionsCollectionIdMaterialsData,
+  GetApiCollectionsCollectionIdMaterialsError,
+  GetApiCollectionsCollectionIdMaterialsIdData,
+  GetApiCollectionsCollectionIdMaterialsResponse,
   GetApiCollectionsData,
   GetApiCollectionsError,
   GetApiCollectionsIdData,
@@ -110,6 +130,10 @@ import type {
   GetApiTransactionsError,
   GetApiTransactionsIdData,
   GetApiTransactionsResponse,
+  GetApiTransactionsTransactionIdMaterialsData,
+  GetApiTransactionsTransactionIdMaterialsError,
+  GetApiTransactionsTransactionIdMaterialsIdData,
+  GetApiTransactionsTransactionIdMaterialsResponse,
   GetApiUsersData,
   GetApiUsersError,
   GetApiUsersIdData,
@@ -120,6 +144,9 @@ import type {
   PatchApiBankDetailsIdData,
   PatchApiBankDetailsIdError,
   PatchApiBankDetailsIdResponse,
+  PatchApiCollectionsCollectionIdMaterialsIdData,
+  PatchApiCollectionsCollectionIdMaterialsIdError,
+  PatchApiCollectionsCollectionIdMaterialsIdResponse,
   PatchApiCollectionsIdData,
   PatchApiCollectionsIdError,
   PatchApiCollectionsIdResponse,
@@ -135,6 +162,9 @@ import type {
   PatchApiTransactionsIdData,
   PatchApiTransactionsIdError,
   PatchApiTransactionsIdResponse,
+  PatchApiTransactionsTransactionIdMaterialsIdData,
+  PatchApiTransactionsTransactionIdMaterialsIdError,
+  PatchApiTransactionsTransactionIdMaterialsIdResponse,
   PatchApiUsersIdData,
   PatchApiUsersIdError,
   PatchApiUsersIdResponse,
@@ -150,6 +180,9 @@ import type {
   PostApiBankDetailsData,
   PostApiBankDetailsError,
   PostApiBankDetailsResponse,
+  PostApiCollectionsCollectionIdMaterialsData,
+  PostApiCollectionsCollectionIdMaterialsError,
+  PostApiCollectionsCollectionIdMaterialsResponse,
   PostApiCollectionsData,
   PostApiCollectionsError,
   PostApiCollectionsResponse,
@@ -165,6 +198,9 @@ import type {
   PostApiTransactionsData,
   PostApiTransactionsError,
   PostApiTransactionsResponse,
+  PostApiTransactionsTransactionIdMaterialsData,
+  PostApiTransactionsTransactionIdMaterialsError,
+  PostApiTransactionsTransactionIdMaterialsResponse,
   PostApiUsersData,
   PostApiUsersError,
   PostApiUsersResponse,
@@ -993,6 +1029,217 @@ export const postApiCollectionsMutation = (
   > = {
     mutationFn: async (localOptions) => {
       const { data } = await postApiCollections({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiCollectionsCollectionIdMaterialsQueryKey = (
+  options: Options<GetApiCollectionsCollectionIdMaterialsData>
+) => createQueryKey('getApiCollectionsCollectionIdMaterials', options);
+
+/**
+ * List Collection Materials
+ * List all collection materials in the system.
+ */
+export const getApiCollectionsCollectionIdMaterialsOptions = (
+  options: Options<GetApiCollectionsCollectionIdMaterialsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiCollectionsCollectionIdMaterials({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiCollectionsCollectionIdMaterialsQueryKey(options),
+  });
+};
+
+export const getApiCollectionsCollectionIdMaterialsInfiniteQueryKey = (
+  options: Options<GetApiCollectionsCollectionIdMaterialsData>
+): QueryKey<Options<GetApiCollectionsCollectionIdMaterialsData>> =>
+  createQueryKey('getApiCollectionsCollectionIdMaterials', options, true);
+
+/**
+ * List Collection Materials
+ * List all collection materials in the system.
+ */
+export const getApiCollectionsCollectionIdMaterialsInfiniteOptions = (
+  options: Options<GetApiCollectionsCollectionIdMaterialsData>
+) => {
+  return infiniteQueryOptions<
+    GetApiCollectionsCollectionIdMaterialsResponse,
+    GetApiCollectionsCollectionIdMaterialsError,
+    InfiniteData<GetApiCollectionsCollectionIdMaterialsResponse>,
+    QueryKey<Options<GetApiCollectionsCollectionIdMaterialsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiCollectionsCollectionIdMaterialsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiCollectionsCollectionIdMaterialsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiCollectionsCollectionIdMaterials({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey: getApiCollectionsCollectionIdMaterialsInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiCollectionsCollectionIdMaterialsQueryKey = (
+  options: Options<PostApiCollectionsCollectionIdMaterialsData>
+) => createQueryKey('postApiCollectionsCollectionIdMaterials', options);
+
+/**
+ * Create Collection Material
+ * Create a new collection material in the system.
+ */
+export const postApiCollectionsCollectionIdMaterialsOptions = (
+  options: Options<PostApiCollectionsCollectionIdMaterialsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiCollectionsCollectionIdMaterials({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiCollectionsCollectionIdMaterialsQueryKey(options),
+  });
+};
+
+/**
+ * Create Collection Material
+ * Create a new collection material in the system.
+ */
+export const postApiCollectionsCollectionIdMaterialsMutation = (
+  options?: Partial<Options<PostApiCollectionsCollectionIdMaterialsData>>
+): UseMutationOptions<
+  PostApiCollectionsCollectionIdMaterialsResponse,
+  PostApiCollectionsCollectionIdMaterialsError,
+  Options<PostApiCollectionsCollectionIdMaterialsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiCollectionsCollectionIdMaterialsResponse,
+    PostApiCollectionsCollectionIdMaterialsError,
+    Options<PostApiCollectionsCollectionIdMaterialsData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiCollectionsCollectionIdMaterials({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Collection Material
+ * Delete an existing collection material from the system.
+ */
+export const deleteApiCollectionsCollectionIdMaterialsIdMutation = (
+  options?: Partial<Options<DeleteApiCollectionsCollectionIdMaterialsIdData>>
+): UseMutationOptions<
+  DeleteApiCollectionsCollectionIdMaterialsIdResponse,
+  DeleteApiCollectionsCollectionIdMaterialsIdError,
+  Options<DeleteApiCollectionsCollectionIdMaterialsIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiCollectionsCollectionIdMaterialsIdResponse,
+    DeleteApiCollectionsCollectionIdMaterialsIdError,
+    Options<DeleteApiCollectionsCollectionIdMaterialsIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiCollectionsCollectionIdMaterialsId({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiCollectionsCollectionIdMaterialsIdQueryKey = (
+  options: Options<GetApiCollectionsCollectionIdMaterialsIdData>
+) => createQueryKey('getApiCollectionsCollectionIdMaterialsId', options);
+
+/**
+ * Find Collection Material
+ * Find an existing collection material in the system.
+ */
+export const getApiCollectionsCollectionIdMaterialsIdOptions = (
+  options: Options<GetApiCollectionsCollectionIdMaterialsIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiCollectionsCollectionIdMaterialsId({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiCollectionsCollectionIdMaterialsIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Collection Material
+ * Update an existing collection material in the system.
+ */
+export const patchApiCollectionsCollectionIdMaterialsIdMutation = (
+  options?: Partial<Options<PatchApiCollectionsCollectionIdMaterialsIdData>>
+): UseMutationOptions<
+  PatchApiCollectionsCollectionIdMaterialsIdResponse,
+  PatchApiCollectionsCollectionIdMaterialsIdError,
+  Options<PatchApiCollectionsCollectionIdMaterialsIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiCollectionsCollectionIdMaterialsIdResponse,
+    PatchApiCollectionsCollectionIdMaterialsIdError,
+    Options<PatchApiCollectionsCollectionIdMaterialsIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiCollectionsCollectionIdMaterialsId({
         ...options,
         ...localOptions,
         throwOnError: true,
@@ -1909,6 +2156,218 @@ export const patchApiTransactionsIdMutation = (
   > = {
     mutationFn: async (localOptions) => {
       const { data } = await patchApiTransactionsId({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiTransactionsTransactionIdMaterialsQueryKey = (
+  options: Options<GetApiTransactionsTransactionIdMaterialsData>
+) => createQueryKey('getApiTransactionsTransactionIdMaterials', options);
+
+/**
+ * List Transaction Materials
+ * List all transaction materials in the system.
+ */
+export const getApiTransactionsTransactionIdMaterialsOptions = (
+  options: Options<GetApiTransactionsTransactionIdMaterialsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiTransactionsTransactionIdMaterials({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiTransactionsTransactionIdMaterialsQueryKey(options),
+  });
+};
+
+export const getApiTransactionsTransactionIdMaterialsInfiniteQueryKey = (
+  options: Options<GetApiTransactionsTransactionIdMaterialsData>
+): QueryKey<Options<GetApiTransactionsTransactionIdMaterialsData>> =>
+  createQueryKey('getApiTransactionsTransactionIdMaterials', options, true);
+
+/**
+ * List Transaction Materials
+ * List all transaction materials in the system.
+ */
+export const getApiTransactionsTransactionIdMaterialsInfiniteOptions = (
+  options: Options<GetApiTransactionsTransactionIdMaterialsData>
+) => {
+  return infiniteQueryOptions<
+    GetApiTransactionsTransactionIdMaterialsResponse,
+    GetApiTransactionsTransactionIdMaterialsError,
+    InfiniteData<GetApiTransactionsTransactionIdMaterialsResponse>,
+    QueryKey<Options<GetApiTransactionsTransactionIdMaterialsData>>,
+    | number
+    | Pick<
+        QueryKey<Options<GetApiTransactionsTransactionIdMaterialsData>>[0],
+        'body' | 'headers' | 'path' | 'query'
+      >
+  >(
+    // @ts-ignore
+    {
+      queryFn: async ({ pageParam, queryKey, signal }) => {
+        // @ts-ignore
+        const page: Pick<
+          QueryKey<Options<GetApiTransactionsTransactionIdMaterialsData>>[0],
+          'body' | 'headers' | 'path' | 'query'
+        > =
+          typeof pageParam === 'object'
+            ? pageParam
+            : {
+                query: {
+                  page: pageParam,
+                },
+              };
+        const params = createInfiniteParams(queryKey, page);
+        const { data } = await getApiTransactionsTransactionIdMaterials({
+          ...options,
+          ...params,
+          signal,
+          throwOnError: true,
+        });
+        return data;
+      },
+      queryKey:
+        getApiTransactionsTransactionIdMaterialsInfiniteQueryKey(options),
+    }
+  );
+};
+
+export const postApiTransactionsTransactionIdMaterialsQueryKey = (
+  options: Options<PostApiTransactionsTransactionIdMaterialsData>
+) => createQueryKey('postApiTransactionsTransactionIdMaterials', options);
+
+/**
+ * Create Transaction Material
+ * Create a new transaction material in the system.
+ */
+export const postApiTransactionsTransactionIdMaterialsOptions = (
+  options: Options<PostApiTransactionsTransactionIdMaterialsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await postApiTransactionsTransactionIdMaterials({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: postApiTransactionsTransactionIdMaterialsQueryKey(options),
+  });
+};
+
+/**
+ * Create Transaction Material
+ * Create a new transaction material in the system.
+ */
+export const postApiTransactionsTransactionIdMaterialsMutation = (
+  options?: Partial<Options<PostApiTransactionsTransactionIdMaterialsData>>
+): UseMutationOptions<
+  PostApiTransactionsTransactionIdMaterialsResponse,
+  PostApiTransactionsTransactionIdMaterialsError,
+  Options<PostApiTransactionsTransactionIdMaterialsData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PostApiTransactionsTransactionIdMaterialsResponse,
+    PostApiTransactionsTransactionIdMaterialsError,
+    Options<PostApiTransactionsTransactionIdMaterialsData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await postApiTransactionsTransactionIdMaterials({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+/**
+ * Delete Transaction Material
+ * Delete an existing transaction material from the system.
+ */
+export const deleteApiTransactionsTransactionIdMaterialsIdMutation = (
+  options?: Partial<Options<DeleteApiTransactionsTransactionIdMaterialsIdData>>
+): UseMutationOptions<
+  DeleteApiTransactionsTransactionIdMaterialsIdResponse,
+  DeleteApiTransactionsTransactionIdMaterialsIdError,
+  Options<DeleteApiTransactionsTransactionIdMaterialsIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    DeleteApiTransactionsTransactionIdMaterialsIdResponse,
+    DeleteApiTransactionsTransactionIdMaterialsIdError,
+    Options<DeleteApiTransactionsTransactionIdMaterialsIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await deleteApiTransactionsTransactionIdMaterialsId({
+        ...options,
+        ...localOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const getApiTransactionsTransactionIdMaterialsIdQueryKey = (
+  options: Options<GetApiTransactionsTransactionIdMaterialsIdData>
+) => createQueryKey('getApiTransactionsTransactionIdMaterialsId', options);
+
+/**
+ * Find Transaction Material
+ * Find an existing transaction material in the system.
+ */
+export const getApiTransactionsTransactionIdMaterialsIdOptions = (
+  options: Options<GetApiTransactionsTransactionIdMaterialsIdData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiTransactionsTransactionIdMaterialsId({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiTransactionsTransactionIdMaterialsIdQueryKey(options),
+  });
+};
+
+/**
+ * Update Transaction Material
+ * Update an existing transaction material in the system.
+ */
+export const patchApiTransactionsTransactionIdMaterialsIdMutation = (
+  options?: Partial<Options<PatchApiTransactionsTransactionIdMaterialsIdData>>
+): UseMutationOptions<
+  PatchApiTransactionsTransactionIdMaterialsIdResponse,
+  PatchApiTransactionsTransactionIdMaterialsIdError,
+  Options<PatchApiTransactionsTransactionIdMaterialsIdData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    PatchApiTransactionsTransactionIdMaterialsIdResponse,
+    PatchApiTransactionsTransactionIdMaterialsIdError,
+    Options<PatchApiTransactionsTransactionIdMaterialsIdData>
+  > = {
+    mutationFn: async (localOptions) => {
+      const { data } = await patchApiTransactionsTransactionIdMaterialsId({
         ...options,
         ...localOptions,
         throwOnError: true,

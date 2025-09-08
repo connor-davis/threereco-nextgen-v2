@@ -8,6 +8,9 @@ import type {
   DeleteApiBankDetailsIdData,
   DeleteApiBankDetailsIdErrors,
   DeleteApiBankDetailsIdResponses,
+  DeleteApiCollectionsCollectionIdMaterialsIdData,
+  DeleteApiCollectionsCollectionIdMaterialsIdErrors,
+  DeleteApiCollectionsCollectionIdMaterialsIdResponses,
   DeleteApiCollectionsIdData,
   DeleteApiCollectionsIdErrors,
   DeleteApiCollectionsIdResponses,
@@ -23,6 +26,9 @@ import type {
   DeleteApiTransactionsIdData,
   DeleteApiTransactionsIdErrors,
   DeleteApiTransactionsIdResponses,
+  DeleteApiTransactionsTransactionIdMaterialsIdData,
+  DeleteApiTransactionsTransactionIdMaterialsIdErrors,
+  DeleteApiTransactionsTransactionIdMaterialsIdResponses,
   DeleteApiUsersIdData,
   DeleteApiUsersIdErrors,
   DeleteApiUsersIdResponses,
@@ -44,6 +50,12 @@ import type {
   GetApiBankDetailsIdErrors,
   GetApiBankDetailsIdResponses,
   GetApiBankDetailsResponses,
+  GetApiCollectionsCollectionIdMaterialsData,
+  GetApiCollectionsCollectionIdMaterialsErrors,
+  GetApiCollectionsCollectionIdMaterialsIdData,
+  GetApiCollectionsCollectionIdMaterialsIdErrors,
+  GetApiCollectionsCollectionIdMaterialsIdResponses,
+  GetApiCollectionsCollectionIdMaterialsResponses,
   GetApiCollectionsData,
   GetApiCollectionsErrors,
   GetApiCollectionsIdData,
@@ -74,6 +86,12 @@ import type {
   GetApiTransactionsIdErrors,
   GetApiTransactionsIdResponses,
   GetApiTransactionsResponses,
+  GetApiTransactionsTransactionIdMaterialsData,
+  GetApiTransactionsTransactionIdMaterialsErrors,
+  GetApiTransactionsTransactionIdMaterialsIdData,
+  GetApiTransactionsTransactionIdMaterialsIdErrors,
+  GetApiTransactionsTransactionIdMaterialsIdResponses,
+  GetApiTransactionsTransactionIdMaterialsResponses,
   GetApiUsersData,
   GetApiUsersErrors,
   GetApiUsersIdData,
@@ -86,6 +104,9 @@ import type {
   PatchApiBankDetailsIdData,
   PatchApiBankDetailsIdErrors,
   PatchApiBankDetailsIdResponses,
+  PatchApiCollectionsCollectionIdMaterialsIdData,
+  PatchApiCollectionsCollectionIdMaterialsIdErrors,
+  PatchApiCollectionsCollectionIdMaterialsIdResponses,
   PatchApiCollectionsIdData,
   PatchApiCollectionsIdErrors,
   PatchApiCollectionsIdResponses,
@@ -101,6 +122,9 @@ import type {
   PatchApiTransactionsIdData,
   PatchApiTransactionsIdErrors,
   PatchApiTransactionsIdResponses,
+  PatchApiTransactionsTransactionIdMaterialsIdData,
+  PatchApiTransactionsTransactionIdMaterialsIdErrors,
+  PatchApiTransactionsTransactionIdMaterialsIdResponses,
   PatchApiUsersIdData,
   PatchApiUsersIdErrors,
   PatchApiUsersIdResponses,
@@ -119,6 +143,9 @@ import type {
   PostApiBankDetailsData,
   PostApiBankDetailsErrors,
   PostApiBankDetailsResponses,
+  PostApiCollectionsCollectionIdMaterialsData,
+  PostApiCollectionsCollectionIdMaterialsErrors,
+  PostApiCollectionsCollectionIdMaterialsResponses,
   PostApiCollectionsData,
   PostApiCollectionsErrors,
   PostApiCollectionsResponses,
@@ -134,6 +161,9 @@ import type {
   PostApiTransactionsData,
   PostApiTransactionsErrors,
   PostApiTransactionsResponses,
+  PostApiTransactionsTransactionIdMaterialsData,
+  PostApiTransactionsTransactionIdMaterialsErrors,
+  PostApiTransactionsTransactionIdMaterialsResponses,
   PostApiUsersData,
   PostApiUsersErrors,
   PostApiUsersResponses,
@@ -473,6 +503,112 @@ export const postApiCollections = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/collections',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Collection Materials
+ * List all collection materials in the system.
+ */
+export const getApiCollectionsCollectionIdMaterials = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetApiCollectionsCollectionIdMaterialsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiCollectionsCollectionIdMaterialsResponses,
+    GetApiCollectionsCollectionIdMaterialsErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/:collectionId/materials',
+    ...options,
+  });
+};
+
+/**
+ * Create Collection Material
+ * Create a new collection material in the system.
+ */
+export const postApiCollectionsCollectionIdMaterials = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiCollectionsCollectionIdMaterialsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiCollectionsCollectionIdMaterialsResponses,
+    PostApiCollectionsCollectionIdMaterialsErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/:collectionId/materials',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Collection Material
+ * Delete an existing collection material from the system.
+ */
+export const deleteApiCollectionsCollectionIdMaterialsId = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    DeleteApiCollectionsCollectionIdMaterialsIdData,
+    ThrowOnError
+  >
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiCollectionsCollectionIdMaterialsIdResponses,
+    DeleteApiCollectionsCollectionIdMaterialsIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/:collectionId/materials/:id',
+    ...options,
+  });
+};
+
+/**
+ * Find Collection Material
+ * Find an existing collection material in the system.
+ */
+export const getApiCollectionsCollectionIdMaterialsId = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetApiCollectionsCollectionIdMaterialsIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiCollectionsCollectionIdMaterialsIdResponses,
+    GetApiCollectionsCollectionIdMaterialsIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/:collectionId/materials/:id',
+    ...options,
+  });
+};
+
+/**
+ * Update Collection Material
+ * Update an existing collection material in the system.
+ */
+export const patchApiCollectionsCollectionIdMaterialsId = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PatchApiCollectionsCollectionIdMaterialsIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiCollectionsCollectionIdMaterialsIdResponses,
+    PatchApiCollectionsCollectionIdMaterialsIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/collections/:collectionId/materials/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -900,6 +1036,115 @@ export const patchApiTransactionsId = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     url: '/api/transactions/:id',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * List Transaction Materials
+ * List all transaction materials in the system.
+ */
+export const getApiTransactionsTransactionIdMaterials = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetApiTransactionsTransactionIdMaterialsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiTransactionsTransactionIdMaterialsResponses,
+    GetApiTransactionsTransactionIdMaterialsErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/:transactionId/materials',
+    ...options,
+  });
+};
+
+/**
+ * Create Transaction Material
+ * Create a new transaction material in the system.
+ */
+export const postApiTransactionsTransactionIdMaterials = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiTransactionsTransactionIdMaterialsData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiTransactionsTransactionIdMaterialsResponses,
+    PostApiTransactionsTransactionIdMaterialsErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/:transactionId/materials',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Delete Transaction Material
+ * Delete an existing transaction material from the system.
+ */
+export const deleteApiTransactionsTransactionIdMaterialsId = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    DeleteApiTransactionsTransactionIdMaterialsIdData,
+    ThrowOnError
+  >
+) => {
+  return (options.client ?? _heyApiClient).delete<
+    DeleteApiTransactionsTransactionIdMaterialsIdResponses,
+    DeleteApiTransactionsTransactionIdMaterialsIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/:transactionId/materials/:id',
+    ...options,
+  });
+};
+
+/**
+ * Find Transaction Material
+ * Find an existing transaction material in the system.
+ */
+export const getApiTransactionsTransactionIdMaterialsId = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<GetApiTransactionsTransactionIdMaterialsIdData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).get<
+    GetApiTransactionsTransactionIdMaterialsIdResponses,
+    GetApiTransactionsTransactionIdMaterialsIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/:transactionId/materials/:id',
+    ...options,
+  });
+};
+
+/**
+ * Update Transaction Material
+ * Update an existing transaction material in the system.
+ */
+export const patchApiTransactionsTransactionIdMaterialsId = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<
+    PatchApiTransactionsTransactionIdMaterialsIdData,
+    ThrowOnError
+  >
+) => {
+  return (options.client ?? _heyApiClient).patch<
+    PatchApiTransactionsTransactionIdMaterialsIdResponses,
+    PatchApiTransactionsTransactionIdMaterialsIdErrors,
+    ThrowOnError
+  >({
+    url: '/api/transactions/:transactionId/materials/:id',
     ...options,
     headers: {
       'Content-Type': 'application/json',
