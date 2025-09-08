@@ -222,6 +222,22 @@ export type Collections = Array<{
   updatedAt: string;
 }>;
 
+export type CreateAddress = {
+  city: string;
+  country: string;
+  lineOne: string;
+  lineTwo?: string | null;
+  province: string;
+  zipCode: string;
+};
+
+export type CreateBankDetail = {
+  accountHolder: string;
+  accountNumber: string;
+  bankName: string;
+  branchName: string;
+};
+
 export type CreateCollection = {
   buyerId: string;
   sellerId: string;
@@ -291,6 +307,11 @@ export type CreateRole = {
   description?: string | null;
   name: string;
   permissions: Array<string>;
+};
+
+export type CreateTransaction = {
+  buyerId: string;
+  sellerId: string;
 };
 
 export type CreateUser = {
@@ -1114,6 +1135,22 @@ export type Transactions = Array<{
   updatedAt: string;
 }>;
 
+export type UpdateAddress = {
+  city?: string | null;
+  country?: string | null;
+  lineOne?: string | null;
+  lineTwo?: string | null;
+  province?: string | null;
+  zipCode?: string | null;
+};
+
+export type UpdateBankDetail = {
+  accountHolder?: string | null;
+  accountNumber?: string | null;
+  bankName?: string | null;
+  branchName?: string | null;
+};
+
 export type UpdateCollection = {
   buyerId?: string | null;
   sellerId?: string | null;
@@ -1183,6 +1220,11 @@ export type UpdateRole = {
   description?: string | null;
   name?: string | null;
   permissions?: Array<string> | null;
+};
+
+export type UpdateTransaction = {
+  buyerId?: string | null;
+  sellerId?: string | null;
 };
 
 export type UpdateUser = {

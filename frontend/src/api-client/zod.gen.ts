@@ -273,6 +273,22 @@ export const zCollections = z.array(
   })
 );
 
+export const zCreateAddress = z.object({
+  city: z.string(),
+  country: z.string(),
+  lineOne: z.string(),
+  lineTwo: z.optional(z.union([z.string(), z.null()])),
+  province: z.string(),
+  zipCode: z.string(),
+});
+
+export const zCreateBankDetail = z.object({
+  accountHolder: z.string(),
+  accountNumber: z.string(),
+  bankName: z.string(),
+  branchName: z.string(),
+});
+
 export const zCreateCollection = z.object({
   buyerId: z.uuid(),
   sellerId: z.uuid(),
@@ -358,6 +374,11 @@ export const zCreateRole = z.object({
   description: z.optional(z.union([z.string(), z.null()])),
   name: z.string(),
   permissions: z.array(z.string()),
+});
+
+export const zCreateTransaction = z.object({
+  buyerId: z.uuid(),
+  sellerId: z.uuid(),
 });
 
 export const zCreateUser = z.object({
@@ -1362,6 +1383,22 @@ export const zTransactions = z.array(
   })
 );
 
+export const zUpdateAddress = z.object({
+  city: z.optional(z.union([z.string(), z.null()])),
+  country: z.optional(z.union([z.string(), z.null()])),
+  lineOne: z.optional(z.union([z.string(), z.null()])),
+  lineTwo: z.optional(z.union([z.string(), z.null()])),
+  province: z.optional(z.union([z.string(), z.null()])),
+  zipCode: z.optional(z.union([z.string(), z.null()])),
+});
+
+export const zUpdateBankDetail = z.object({
+  accountHolder: z.optional(z.union([z.string(), z.null()])),
+  accountNumber: z.optional(z.union([z.string(), z.null()])),
+  bankName: z.optional(z.union([z.string(), z.null()])),
+  branchName: z.optional(z.union([z.string(), z.null()])),
+});
+
 export const zUpdateCollection = z.object({
   buyerId: z.optional(z.union([z.uuid(), z.null()])),
   sellerId: z.optional(z.union([z.uuid(), z.null()])),
@@ -1447,6 +1484,11 @@ export const zUpdateRole = z.object({
   description: z.optional(z.union([z.string(), z.null()])),
   name: z.optional(z.union([z.string(), z.null()])),
   permissions: z.optional(z.union([z.array(z.string()), z.null()])),
+});
+
+export const zUpdateTransaction = z.object({
+  buyerId: z.optional(z.union([z.uuid(), z.null()])),
+  sellerId: z.optional(z.union([z.uuid(), z.null()])),
 });
 
 export const zUpdateUser = z.object({
