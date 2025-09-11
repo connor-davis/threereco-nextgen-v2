@@ -47,6 +47,7 @@ func (r *AuthenticationRouter) InitializeRoutes() []routing.Route {
 	checkRoute := r.CheckRoute()
 	logoutRoute := r.LogoutRoute()
 	loginRoute := r.LoginRoute()
+	signUpRoute := r.SignUpRoute()
 
 	// MFA routes
 	mfaEnableRoute := r.MfaEnableRoute()
@@ -56,6 +57,7 @@ func (r *AuthenticationRouter) InitializeRoutes() []routing.Route {
 		checkRoute,
 		logoutRoute,
 		loginRoute,
+		signUpRoute,
 		mfaEnableRoute,
 		mfaVerifyRoute,
 	}

@@ -140,6 +140,9 @@ import type {
   PostApiAuthenticationMfaVerifyData,
   PostApiAuthenticationMfaVerifyErrors,
   PostApiAuthenticationMfaVerifyResponses,
+  PostApiAuthenticationSignUpData,
+  PostApiAuthenticationSignUpErrors,
+  PostApiAuthenticationSignUpResponses,
   PostApiBankDetailsData,
   PostApiBankDetailsErrors,
   PostApiBankDetailsResponses,
@@ -372,6 +375,29 @@ export const postApiAuthenticationMfaVerify = <
     ThrowOnError
   >({
     url: '/api/authentication/mfa/verify',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};
+
+/**
+ * Sign Up
+ * Signs up a new user with email or phone and password.
+ */
+export const postApiAuthenticationSignUp = <
+  ThrowOnError extends boolean = false,
+>(
+  options: Options<PostApiAuthenticationSignUpData, ThrowOnError>
+) => {
+  return (options.client ?? _heyApiClient).post<
+    PostApiAuthenticationSignUpResponses,
+    PostApiAuthenticationSignUpErrors,
+    ThrowOnError
+  >({
+    url: '/api/authentication/sign-up',
     ...options,
     headers: {
       'Content-Type': 'application/json',

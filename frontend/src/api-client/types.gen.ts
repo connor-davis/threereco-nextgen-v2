@@ -2381,6 +2381,47 @@ export type PostApiAuthenticationMfaVerifyResponses = {
   200: unknown;
 };
 
+export type PostApiAuthenticationSignUpData = {
+  body: {
+    email?: string;
+    name: string;
+    password: string;
+    phone?: string;
+    type?: 'standard' | 'collector' | 'business' | 'system';
+  };
+  path?: never;
+  query?: never;
+  url: '/api/authentication/sign-up';
+};
+
+export type PostApiAuthenticationSignUpErrors = {
+  /**
+   * Invalid request.
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal Server Error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type PostApiAuthenticationSignUpError =
+  PostApiAuthenticationSignUpErrors[keyof PostApiAuthenticationSignUpErrors];
+
+export type PostApiAuthenticationSignUpResponses = {
+  /**
+   * The user has been successfully signed up.
+   */
+  200: unknown;
+};
+
 export type GetApiBankDetailsData = {
   body?: never;
   path?: never;

@@ -1,6 +1,7 @@
 import { postApiAuthenticationSignUpMutation } from '@/api-client/@tanstack/react-query.gen';
 import { useMutation } from '@tanstack/react-query';
 import { Link, createFileRoute, useRouter } from '@tanstack/react-router';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,9 +32,12 @@ export const Route = createFileRoute('/sign-up')({
 function RouteComponent() {
   const router = useRouter();
 
+  const [mode, setMode] = useState<'email' | 'phone'>('email');
+
   const signUpForm = useForm<z.infer<typeof zSignUpPayload>>({
     resolver: zodResolver(zSignUpPayload),
     defaultValues: {
+      type: 'business',
       name: '',
       password: '',
     },
@@ -95,44 +99,46 @@ function RouteComponent() {
               )}
             />
 
-            <FormField
-              control={signUpForm.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Email" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Please enter your email (optional).
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {mode === 'email' && (
+              <FormField
+                control={signUpForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="Email" {...field} />
+                    </FormControl>
+                    <FormDescription>Please enter your email.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
-            <FormField
-              control={signUpForm.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <PhoneInput
-                      defaultCountry="ZA"
-                      type="text"
-                      placeholder="Phone"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Please enter your phone number (optional).
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {mode === 'phone' && (
+              <FormField
+                control={signUpForm.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <PhoneInput
+                        defaultCountry="ZA"
+                        type="text"
+                        placeholder="Phone"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Please enter your phone number.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
 
             <FormField
               control={signUpForm.control}
@@ -151,6 +157,15 @@ function RouteComponent() {
 
             <Button type="submit" className="w-full">
               Continue
+            </Button>
+
+            <Button type="button" variant="ghost" className="w-full">
+              {mode === 'email' && (
+                <span onClick={() => setMode('phone')}>Use Phone Number</span>
+              )}
+              {mode === 'phone' && (
+                <span onClick={() => setMode('email')}>Use Email</span>
+              )}
             </Button>
 
             <div className="flex flex-col w-full h-auto gap-3 items-center justify-center">

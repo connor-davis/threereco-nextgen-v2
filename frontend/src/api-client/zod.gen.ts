@@ -2460,6 +2460,18 @@ export const zPostApiAuthenticationMfaVerifyData = z.object({
   query: z.optional(z.never()),
 });
 
+export const zPostApiAuthenticationSignUpData = z.object({
+  body: z.object({
+    email: z.optional(z.email()),
+    name: z.string().min(2).max(100),
+    password: z.string().min(6).max(100),
+    phone: z.optional(z.string().min(10).max(15)),
+    type: z.optional(z.enum(['standard', 'collector', 'business', 'system'])),
+  }),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
 export const zGetApiBankDetailsData = z.object({
   body: z.optional(z.never()),
   path: z.optional(z.never()),
