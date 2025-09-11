@@ -12,4 +12,5 @@ var SignUpPayloadProperties = map[string]*openapi3.Schema{
 	"email":    openapi3.NewStringSchema().WithFormat("email"),
 	"phone":    openapi3.NewStringSchema().WithMinLength(10).WithMaxLength(15),
 	"password": openapi3.NewStringSchema().WithMinLength(6).WithMaxLength(100),
+	"type":     openapi3.NewStringSchema().WithEnum("standard", "collector", "business", "system").WithDefault("standard"),
 }
