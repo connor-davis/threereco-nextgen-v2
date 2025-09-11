@@ -455,6 +455,7 @@ export type SignUpPayload = {
   name: string;
   password: string;
   phone?: string;
+  type?: 'standard' | 'collector' | 'business' | 'system';
 };
 
 export type SuccessResponse = {
