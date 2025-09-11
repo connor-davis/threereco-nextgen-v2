@@ -8,7 +8,7 @@ import (
 )
 
 type bankDetailsService interface {
-	Create(payload models.CreateBankDetailsPayload) error
+	Create(payload models.CreateBankDetailsPayload) (uuid.UUID, error)
 	Update(bankDetailsId uuid.UUID, payload models.UpdateBankDetailsPayload) error
 	Delete(bankDetailsId uuid.UUID) error
 	Find(bankDetailsId uuid.UUID) (*models.BankDetails, error)
@@ -26,14 +26,20 @@ func newBankDetailsService(storage storage.Storage) bankDetailsService {
 	}
 }
 
-func (s *bankDetails) Create(payload models.CreateBankDetailsPayload) error {
+func (s *bankDetails) Create(payload models.CreateBankDetailsPayload) (uuid.UUID, error) {
+	var bankDetails models.BankDetails
+
+	bankDetails.AccountHolder = payload.AccountHolder
+	bankDetails.AccountNumber = payload.AccountNumber
+	bankDetails.BankName = payload.BankName
+	bankDetails.BranchCode = payload.BranchCode
+
 	if err := s.storage.Postgres.
-		Model(&models.BankDetails{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&bankDetails).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return bankDetails.Id, nil
 }
 
 func (s *bankDetails) Update(bankDetailsId uuid.UUID, payload models.UpdateBankDetailsPayload) error {

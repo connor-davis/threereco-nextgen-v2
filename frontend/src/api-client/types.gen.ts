@@ -24,11 +24,19 @@ export type Addresses = Array<{
   zipCode: string;
 } | null>;
 
+export type AvailablePermissions = Array<{
+  name: string;
+  permissions: Array<{
+    description: string;
+    value: string;
+  }>;
+}>;
+
 export type BankDetail = {
   accountHolder: string;
   accountNumber: string;
   bankName: string;
-  branchName: string;
+  branchCode?: string;
   createdAt: string;
   id: string;
   updatedAt: string;
@@ -38,7 +46,7 @@ export type BankDetails = Array<{
   accountHolder: string;
   accountNumber: string;
   bankName: string;
-  branchName: string;
+  branchCode?: string;
   createdAt: string;
   id: string;
   updatedAt: string;
@@ -61,7 +69,7 @@ export type Collection = {
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -71,6 +79,7 @@ export type Collection = {
     name: string;
     updatedAt: string;
   };
+  buyerId?: string;
   createdAt: string;
   id: string;
   materials: Array<{
@@ -83,9 +92,9 @@ export type Collection = {
       id: string;
       name: string;
       updatedAt: string;
-      value: number;
     };
     updatedAt: string;
+    value: number;
     weight: number;
   }>;
   seller: {
@@ -106,7 +115,7 @@ export type Collection = {
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -130,6 +139,7 @@ export type Collection = {
     type: 'standard' | 'collector' | 'business' | 'system';
     updatedAt: string;
   };
+  sellerId?: string;
   updatedAt: string;
 };
 
@@ -150,7 +160,7 @@ export type Collections = Array<{
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -160,6 +170,7 @@ export type Collections = Array<{
     name: string;
     updatedAt: string;
   };
+  buyerId?: string;
   createdAt: string;
   id: string;
   materials: Array<{
@@ -172,9 +183,9 @@ export type Collections = Array<{
       id: string;
       name: string;
       updatedAt: string;
-      value: number;
     };
     updatedAt: string;
+    value: number;
     weight: number;
   }>;
   seller: {
@@ -195,7 +206,7 @@ export type Collections = Array<{
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -219,6 +230,7 @@ export type Collections = Array<{
     type: 'standard' | 'collector' | 'business' | 'system';
     updatedAt: string;
   };
+  sellerId?: string;
   updatedAt: string;
 }>;
 
@@ -235,23 +247,27 @@ export type CreateBankDetail = {
   accountHolder: string;
   accountNumber: string;
   bankName: string;
-  branchName: string;
+  branchCode?: string;
 };
 
 export type CreateCollection = {
   buyerId: string;
+  materials?: Array<{
+    materialId: string;
+    value: number;
+    weight: number;
+  }>;
   sellerId: string;
 };
 
 export type CreateCollectionMaterial = {
-  collectionId: string;
   materialId: string;
   value: number;
   weight: number;
 };
 
 export type CreateMaterial = {
-  carbonFactor: number;
+  carbonFactor: string;
   gwCode: string;
   name: string;
 };
@@ -284,7 +300,7 @@ export type CreateOrganization = {
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -318,17 +334,23 @@ export type CreateRole = {
 
 export type CreateTransaction = {
   buyerId: string;
+  materials?: Array<{
+    materialId: string;
+    value: number;
+    weight: number;
+  }>;
   sellerId: string;
 };
 
 export type CreateTransactionMaterial = {
   materialId: string;
-  transactionId: string;
   value: number;
   weight: number;
 };
 
 export type CreateUser = {
+  addressId?: string | null;
+  bankDetailsId?: string | null;
   email: string;
   name: string;
   password: string;
@@ -361,7 +383,6 @@ export type Material = {
   id: string;
   name: string;
   updatedAt: string;
-  value: number;
 };
 
 export type Materials = Array<{
@@ -371,7 +392,6 @@ export type Materials = Array<{
   id: string;
   name: string;
   updatedAt: string;
-  value: number;
 }>;
 
 export type MfaVerifyPayload = {
@@ -394,7 +414,7 @@ export type Organization = {
     accountHolder: string;
     accountNumber: string;
     bankName: string;
-    branchName: string;
+    branchCode?: string;
     createdAt: string;
     id: string;
     updatedAt: string;
@@ -421,7 +441,7 @@ export type Organizations = Array<{
     accountHolder: string;
     accountNumber: string;
     bankName: string;
-    branchName: string;
+    branchCode?: string;
     createdAt: string;
     id: string;
     updatedAt: string;
@@ -478,7 +498,7 @@ export type SuccessResponse = {
           accountHolder: string;
           accountNumber: string;
           bankName: string;
-          branchName: string;
+          branchCode?: string;
           createdAt: string;
           id: string;
           updatedAt: string;
@@ -526,7 +546,7 @@ export type SuccessResponse = {
           accountHolder: string;
           accountNumber: string;
           bankName: string;
-          branchName: string;
+          branchCode?: string;
           createdAt: string;
           id: string;
           updatedAt: string;
@@ -551,7 +571,7 @@ export type SuccessResponse = {
         accountHolder: string;
         accountNumber: string;
         bankName: string;
-        branchName: string;
+        branchCode?: string;
         createdAt: string;
         id: string;
         updatedAt: string;
@@ -563,7 +583,6 @@ export type SuccessResponse = {
         id: string;
         name: string;
         updatedAt: string;
-        value: number;
       }
     | {
         buyer: {
@@ -582,7 +601,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -592,6 +611,7 @@ export type SuccessResponse = {
           name: string;
           updatedAt: string;
         };
+        buyerId?: string;
         createdAt: string;
         id: string;
         materials: Array<{
@@ -604,9 +624,9 @@ export type SuccessResponse = {
             id: string;
             name: string;
             updatedAt: string;
-            value: number;
           };
           updatedAt: string;
+          value: number;
           weight: number;
         }>;
         seller: {
@@ -627,7 +647,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -651,6 +671,7 @@ export type SuccessResponse = {
           type: 'standard' | 'collector' | 'business' | 'system';
           updatedAt: string;
         };
+        sellerId?: string;
         updatedAt: string;
       }
     | {
@@ -670,7 +691,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -680,6 +701,7 @@ export type SuccessResponse = {
           name: string;
           updatedAt: string;
         };
+        buyerId?: string;
         createdAt: string;
         id: string;
         materials: Array<{
@@ -692,10 +714,9 @@ export type SuccessResponse = {
             id: string;
             name: string;
             updatedAt: string;
-            value: number;
           };
           updatedAt: string;
-          value?: number;
+          value: number;
           weight: number;
         }>;
         seller: {
@@ -714,7 +735,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -724,6 +745,7 @@ export type SuccessResponse = {
           name: string;
           updatedAt: string;
         };
+        sellerId?: string;
         updatedAt: string;
       };
   items?:
@@ -745,7 +767,7 @@ export type SuccessResponse = {
           accountHolder: string;
           accountNumber: string;
           bankName: string;
-          branchName: string;
+          branchCode?: string;
           createdAt: string;
           id: string;
           updatedAt: string;
@@ -793,7 +815,7 @@ export type SuccessResponse = {
           accountHolder: string;
           accountNumber: string;
           bankName: string;
-          branchName: string;
+          branchCode?: string;
           createdAt: string;
           id: string;
           updatedAt: string;
@@ -818,7 +840,7 @@ export type SuccessResponse = {
         accountHolder: string;
         accountNumber: string;
         bankName: string;
-        branchName: string;
+        branchCode?: string;
         createdAt: string;
         id: string;
         updatedAt: string;
@@ -830,7 +852,6 @@ export type SuccessResponse = {
         id: string;
         name: string;
         updatedAt: string;
-        value: number;
       }>
     | Array<{
         buyer: {
@@ -849,7 +870,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -859,6 +880,7 @@ export type SuccessResponse = {
           name: string;
           updatedAt: string;
         };
+        buyerId?: string;
         createdAt: string;
         id: string;
         materials: Array<{
@@ -871,9 +893,9 @@ export type SuccessResponse = {
             id: string;
             name: string;
             updatedAt: string;
-            value: number;
           };
           updatedAt: string;
+          value: number;
           weight: number;
         }>;
         seller: {
@@ -894,7 +916,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -918,6 +940,7 @@ export type SuccessResponse = {
           type: 'standard' | 'collector' | 'business' | 'system';
           updatedAt: string;
         };
+        sellerId?: string;
         updatedAt: string;
       }>
     | Array<{
@@ -937,7 +960,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -947,6 +970,7 @@ export type SuccessResponse = {
           name: string;
           updatedAt: string;
         };
+        buyerId?: string;
         createdAt: string;
         id: string;
         materials: Array<{
@@ -959,10 +983,9 @@ export type SuccessResponse = {
             id: string;
             name: string;
             updatedAt: string;
-            value: number;
           };
           updatedAt: string;
-          value?: number;
+          value: number;
           weight: number;
         }>;
         seller: {
@@ -981,7 +1004,7 @@ export type SuccessResponse = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -991,7 +1014,15 @@ export type SuccessResponse = {
           name: string;
           updatedAt: string;
         };
+        sellerId?: string;
         updatedAt: string;
+      }>
+    | Array<{
+        name: string;
+        permissions: Array<{
+          description: string;
+          value: string;
+        }>;
       }>;
   pageDetails?: {
     count?: number;
@@ -1019,7 +1050,7 @@ export type Transaction = {
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -1029,6 +1060,7 @@ export type Transaction = {
     name: string;
     updatedAt: string;
   };
+  buyerId?: string;
   createdAt: string;
   id: string;
   materials: Array<{
@@ -1041,10 +1073,9 @@ export type Transaction = {
       id: string;
       name: string;
       updatedAt: string;
-      value: number;
     };
     updatedAt: string;
-    value?: number;
+    value: number;
     weight: number;
   }>;
   seller: {
@@ -1063,7 +1094,7 @@ export type Transaction = {
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -1073,6 +1104,7 @@ export type Transaction = {
     name: string;
     updatedAt: string;
   };
+  sellerId?: string;
   updatedAt: string;
 };
 
@@ -1093,7 +1125,7 @@ export type Transactions = Array<{
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -1103,6 +1135,7 @@ export type Transactions = Array<{
     name: string;
     updatedAt: string;
   };
+  buyerId?: string;
   createdAt: string;
   id: string;
   materials: Array<{
@@ -1115,10 +1148,9 @@ export type Transactions = Array<{
       id: string;
       name: string;
       updatedAt: string;
-      value: number;
     };
     updatedAt: string;
-    value?: number;
+    value: number;
     weight: number;
   }>;
   seller: {
@@ -1137,7 +1169,7 @@ export type Transactions = Array<{
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -1147,6 +1179,7 @@ export type Transactions = Array<{
     name: string;
     updatedAt: string;
   };
+  sellerId?: string;
   updatedAt: string;
 }>;
 
@@ -1163,23 +1196,27 @@ export type UpdateBankDetail = {
   accountHolder?: string | null;
   accountNumber?: string | null;
   bankName?: string | null;
-  branchName?: string | null;
+  branchCode?: string | null;
 };
 
 export type UpdateCollection = {
   buyerId?: string | null;
+  materials?: Array<{
+    materialId?: string | null;
+    value?: number | null;
+    weight?: number | null;
+  }>;
   sellerId?: string | null;
 };
 
 export type UpdateCollectionMaterial = {
-  collectionId?: string | null;
   materialId?: string | null;
   value?: number | null;
   weight?: number | null;
 };
 
 export type UpdateMaterial = {
-  carbonFactor?: number;
+  carbonFactor?: string;
   gwCode?: string;
   name?: string;
 };
@@ -1212,7 +1249,7 @@ export type UpdateOrganization = {
       accountHolder: string;
       accountNumber: string;
       bankName: string;
-      branchName: string;
+      branchCode?: string;
       createdAt: string;
       id: string;
       updatedAt: string;
@@ -1246,17 +1283,26 @@ export type UpdateRole = {
 
 export type UpdateTransaction = {
   buyerId?: string | null;
+  materials?: Array<{
+    materialId?: string | null;
+    value?: number | null;
+    weight?: number | null;
+  }>;
   sellerId?: string | null;
 };
 
 export type UpdateTransactionMaterial = {
   materialId?: string | null;
-  transactionId?: string | null;
   value?: number | null;
   weight?: number | null;
 };
 
 export type UpdateUser = {
+  activeOrganization?: string | null;
+  addressId?: string | null;
+  banReason?: string | null;
+  bankDetailsId?: string | null;
+  banned?: boolean | null;
   email?: string | null;
   name?: string | null;
   password?: string | null;
@@ -1290,7 +1336,7 @@ export type User = {
     accountHolder: string;
     accountNumber: string;
     bankName: string;
-    branchName: string;
+    branchCode?: string;
     createdAt: string;
     id: string;
     updatedAt: string;
@@ -1333,7 +1379,7 @@ export type Users = Array<{
     accountHolder: string;
     accountNumber: string;
     bankName: string;
-    branchName: string;
+    branchCode?: string;
     createdAt: string;
     id: string;
     updatedAt: string;
@@ -1410,17 +1456,560 @@ export type GetApiAddressesResponses = {
   /**
    * Successful addresses retrieval.
    */
-  200: Array<{
-    city: string;
-    country: string;
-    createdAt: string;
-    id: string;
-    lineOne: string;
-    lineTwo: string | null;
-    province: string;
-    updatedAt: string;
-    zipCode: string;
-  } | null>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiAddressesResponse =
@@ -1570,16 +2159,559 @@ export type GetApiAddressesIdResponses = {
    * Successful address retrieval.
    */
   200: {
-    city: string;
-    country: string;
-    createdAt: string;
-    id: string;
-    lineOne: string;
-    lineTwo: string | null;
-    province: string;
-    updatedAt: string;
-    zipCode: string;
-  } | null;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiAddressesIdResponse =
@@ -1694,7 +2826,7 @@ export type GetApiAuthenticationCheckResponses = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -1742,7 +2874,7 @@ export type GetApiAuthenticationCheckResponses = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -1767,7 +2899,7 @@ export type GetApiAuthenticationCheckResponses = {
           accountHolder: string;
           accountNumber: string;
           bankName: string;
-          branchName: string;
+          branchCode?: string;
           createdAt: string;
           id: string;
           updatedAt: string;
@@ -1779,7 +2911,6 @@ export type GetApiAuthenticationCheckResponses = {
           id: string;
           name: string;
           updatedAt: string;
-          value: number;
         }
       | {
           buyer: {
@@ -1798,7 +2929,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -1808,6 +2939,7 @@ export type GetApiAuthenticationCheckResponses = {
             name: string;
             updatedAt: string;
           };
+          buyerId?: string;
           createdAt: string;
           id: string;
           materials: Array<{
@@ -1820,9 +2952,9 @@ export type GetApiAuthenticationCheckResponses = {
               id: string;
               name: string;
               updatedAt: string;
-              value: number;
             };
             updatedAt: string;
+            value: number;
             weight: number;
           }>;
           seller: {
@@ -1843,7 +2975,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -1867,6 +2999,7 @@ export type GetApiAuthenticationCheckResponses = {
             type: 'standard' | 'collector' | 'business' | 'system';
             updatedAt: string;
           };
+          sellerId?: string;
           updatedAt: string;
         }
       | {
@@ -1886,7 +3019,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -1896,6 +3029,7 @@ export type GetApiAuthenticationCheckResponses = {
             name: string;
             updatedAt: string;
           };
+          buyerId?: string;
           createdAt: string;
           id: string;
           materials: Array<{
@@ -1908,10 +3042,9 @@ export type GetApiAuthenticationCheckResponses = {
               id: string;
               name: string;
               updatedAt: string;
-              value: number;
             };
             updatedAt: string;
-            value?: number;
+            value: number;
             weight: number;
           }>;
           seller: {
@@ -1930,7 +3063,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -1940,6 +3073,7 @@ export type GetApiAuthenticationCheckResponses = {
             name: string;
             updatedAt: string;
           };
+          sellerId?: string;
           updatedAt: string;
         };
     items?:
@@ -1961,7 +3095,7 @@ export type GetApiAuthenticationCheckResponses = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -2009,7 +3143,7 @@ export type GetApiAuthenticationCheckResponses = {
             accountHolder: string;
             accountNumber: string;
             bankName: string;
-            branchName: string;
+            branchCode?: string;
             createdAt: string;
             id: string;
             updatedAt: string;
@@ -2034,7 +3168,7 @@ export type GetApiAuthenticationCheckResponses = {
           accountHolder: string;
           accountNumber: string;
           bankName: string;
-          branchName: string;
+          branchCode?: string;
           createdAt: string;
           id: string;
           updatedAt: string;
@@ -2046,7 +3180,6 @@ export type GetApiAuthenticationCheckResponses = {
           id: string;
           name: string;
           updatedAt: string;
-          value: number;
         }>
       | Array<{
           buyer: {
@@ -2065,7 +3198,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -2075,6 +3208,7 @@ export type GetApiAuthenticationCheckResponses = {
             name: string;
             updatedAt: string;
           };
+          buyerId?: string;
           createdAt: string;
           id: string;
           materials: Array<{
@@ -2087,9 +3221,9 @@ export type GetApiAuthenticationCheckResponses = {
               id: string;
               name: string;
               updatedAt: string;
-              value: number;
             };
             updatedAt: string;
+            value: number;
             weight: number;
           }>;
           seller: {
@@ -2110,7 +3244,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -2134,6 +3268,7 @@ export type GetApiAuthenticationCheckResponses = {
             type: 'standard' | 'collector' | 'business' | 'system';
             updatedAt: string;
           };
+          sellerId?: string;
           updatedAt: string;
         }>
       | Array<{
@@ -2153,7 +3288,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -2163,6 +3298,7 @@ export type GetApiAuthenticationCheckResponses = {
             name: string;
             updatedAt: string;
           };
+          buyerId?: string;
           createdAt: string;
           id: string;
           materials: Array<{
@@ -2175,10 +3311,9 @@ export type GetApiAuthenticationCheckResponses = {
               id: string;
               name: string;
               updatedAt: string;
-              value: number;
             };
             updatedAt: string;
-            value?: number;
+            value: number;
             weight: number;
           }>;
           seller: {
@@ -2197,7 +3332,7 @@ export type GetApiAuthenticationCheckResponses = {
               accountHolder: string;
               accountNumber: string;
               bankName: string;
-              branchName: string;
+              branchCode?: string;
               createdAt: string;
               id: string;
               updatedAt: string;
@@ -2207,7 +3342,15 @@ export type GetApiAuthenticationCheckResponses = {
             name: string;
             updatedAt: string;
           };
+          sellerId?: string;
           updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
         }>;
     pageDetails?: {
       count?: number;
@@ -2474,15 +3617,560 @@ export type GetApiBankDetailsResponses = {
   /**
    * Successful bank details retrieval.
    */
-  200: Array<{
-    accountHolder: string;
-    accountNumber: string;
-    bankName: string;
-    branchName: string;
-    createdAt: string;
-    id: string;
-    updatedAt: string;
-  } | null>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiBankDetailsResponse =
@@ -2496,7 +4184,7 @@ export type PostApiBankDetailsData = {
     accountHolder: string;
     accountNumber: string;
     bankName: string;
-    branchName: string;
+    branchCode?: string;
   };
   path?: never;
   query?: never;
@@ -2630,14 +4318,559 @@ export type GetApiBankDetailsIdResponses = {
    * Successful bank details retrieval.
    */
   200: {
-    accountHolder: string;
-    accountNumber: string;
-    bankName: string;
-    branchName: string;
-    createdAt: string;
-    id: string;
-    updatedAt: string;
-  } | null;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiBankDetailsIdResponse =
@@ -2651,7 +4884,7 @@ export type PatchApiBankDetailsIdData = {
     accountHolder?: string | null;
     accountNumber?: string | null;
     bankName?: string | null;
-    branchName?: string | null;
+    branchCode?: string | null;
   };
   path: {
     id: string;
@@ -2750,94 +4983,560 @@ export type GetApiCollectionsResponses = {
   /**
    * Successful collections retrieval.
    */
-  200: Array<{
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      weight: number;
-    }>;
-    seller: {
-      activeOrganization: string;
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      banReason: string | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      banned: boolean;
-      createdAt: string;
-      email: string;
-      id: string;
-      mfaEnabled: boolean;
-      mfaVerified: boolean;
-      name: string;
-      phone: string;
-      roles: Array<{
-        createdAt: string;
-        description: string | null;
-        id: string;
-        name: string;
-        permissions: Array<string>;
-        updatedAt: string;
-      }>;
-      type: 'standard' | 'collector' | 'business' | 'system';
-      updatedAt: string;
-    };
-    updatedAt: string;
-  }>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiCollectionsResponse =
@@ -2849,6 +5548,11 @@ export type PostApiCollectionsData = {
    */
   body: {
     buyerId: string;
+    materials?: Array<{
+      materialId: string;
+      value: number;
+      weight: number;
+    }>;
     sellerId: string;
   };
   path?: never;
@@ -2948,94 +5652,560 @@ export type GetApiCollectionsCollectionIdMaterialsResponses = {
   /**
    * Successful collection materials retrieval.
    */
-  200: Array<{
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      weight: number;
-    }>;
-    seller: {
-      activeOrganization: string;
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      banReason: string | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      banned: boolean;
-      createdAt: string;
-      email: string;
-      id: string;
-      mfaEnabled: boolean;
-      mfaVerified: boolean;
-      name: string;
-      phone: string;
-      roles: Array<{
-        createdAt: string;
-        description: string | null;
-        id: string;
-        name: string;
-        permissions: Array<string>;
-        updatedAt: string;
-      }>;
-      type: 'standard' | 'collector' | 'business' | 'system';
-      updatedAt: string;
-    };
-    updatedAt: string;
-  }>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiCollectionsCollectionIdMaterialsResponse =
@@ -3046,7 +6216,6 @@ export type PostApiCollectionsCollectionIdMaterialsData = {
    * Payload to create a new collection material.
    */
   body: {
-    collectionId: string;
     materialId: string;
     value: number;
     weight: number;
@@ -3187,92 +6356,558 @@ export type GetApiCollectionsCollectionIdMaterialsIdResponses = {
    * Successful collection material retrieval.
    */
   200: {
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      weight: number;
-    }>;
-    seller: {
-      activeOrganization: string;
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      banReason: string | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      banned: boolean;
-      createdAt: string;
-      email: string;
-      id: string;
-      mfaEnabled: boolean;
-      mfaVerified: boolean;
-      name: string;
-      phone: string;
-      roles: Array<{
-        createdAt: string;
-        description: string | null;
-        id: string;
-        name: string;
-        permissions: Array<string>;
-        updatedAt: string;
-      }>;
-      type: 'standard' | 'collector' | 'business' | 'system';
-      updatedAt: string;
-    };
-    updatedAt: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
   };
 };
 
@@ -3284,7 +6919,6 @@ export type PatchApiCollectionsCollectionIdMaterialsIdData = {
    * Payload to update an existing collection material.
    */
   body: {
-    collectionId?: string | null;
     materialId?: string | null;
     value?: number | null;
     weight?: number | null;
@@ -3424,92 +7058,558 @@ export type GetApiCollectionsIdResponses = {
    * Successful collection retrieval.
    */
   200: {
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      weight: number;
-    }>;
-    seller: {
-      activeOrganization: string;
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      banReason: string | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      banned: boolean;
-      createdAt: string;
-      email: string;
-      id: string;
-      mfaEnabled: boolean;
-      mfaVerified: boolean;
-      name: string;
-      phone: string;
-      roles: Array<{
-        createdAt: string;
-        description: string | null;
-        id: string;
-        name: string;
-        permissions: Array<string>;
-        updatedAt: string;
-      }>;
-      type: 'standard' | 'collector' | 'business' | 'system';
-      updatedAt: string;
-    };
-    updatedAt: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
   };
 };
 
@@ -3522,6 +7622,11 @@ export type PatchApiCollectionsIdData = {
    */
   body: {
     buyerId?: string | null;
+    materials?: Array<{
+      materialId?: string | null;
+      value?: number | null;
+      weight?: number | null;
+    }>;
     sellerId?: string | null;
   };
   path: {
@@ -3621,15 +7726,560 @@ export type GetApiMaterialsResponses = {
   /**
    * Successful materials retrieval.
    */
-  200: Array<{
-    carbonFactor: string;
-    createdAt: string;
-    gwCode: string;
-    id: string;
-    name: string;
-    updatedAt: string;
-    value: number;
-  }>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiMaterialsResponse =
@@ -3640,7 +8290,7 @@ export type PostApiMaterialsData = {
    * Payload to create a new material.
    */
   body: {
-    carbonFactor: number;
+    carbonFactor: string;
     gwCode: string;
     name: string;
   };
@@ -3776,13 +8426,558 @@ export type GetApiMaterialsIdResponses = {
    * Successful material retrieval.
    */
   200: {
-    carbonFactor: string;
-    createdAt: string;
-    gwCode: string;
-    id: string;
-    name: string;
-    updatedAt: string;
-    value: number;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
   };
 };
 
@@ -3794,7 +8989,7 @@ export type PatchApiMaterialsIdData = {
    * Payload to update an existing material.
    */
   body: {
-    carbonFactor?: number;
+    carbonFactor?: string;
     gwCode?: string;
     name?: string;
   };
@@ -3895,32 +9090,560 @@ export type GetApiOrganizationsResponses = {
   /**
    * Successful organizations retrieval.
    */
-  200: Array<{
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
     } | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
-    createdAt: string;
-    id: string;
-    name: string;
-    updatedAt: string;
-  }>;
+  };
 };
 
 export type GetApiOrganizationsResponse =
@@ -3958,7 +9681,7 @@ export type PostApiOrganizationsData = {
         accountHolder: string;
         accountNumber: string;
         bankName: string;
-        branchName: string;
+        branchCode?: string;
         createdAt: string;
         id: string;
         updatedAt: string;
@@ -4115,30 +9838,558 @@ export type GetApiOrganizationsIdResponses = {
    * Successful organization retrieval.
    */
   200: {
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
     } | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
-    createdAt: string;
-    id: string;
-    name: string;
-    updatedAt: string;
   };
 };
 
@@ -4177,7 +10428,7 @@ export type PatchApiOrganizationsIdData = {
         accountHolder: string;
         accountNumber: string;
         bankName: string;
-        branchName: string;
+        branchCode?: string;
         createdAt: string;
         id: string;
         updatedAt: string;
@@ -4247,6 +10498,604 @@ export type PatchApiOrganizationsIdResponses = {
 export type PatchApiOrganizationsIdResponse =
   PatchApiOrganizationsIdResponses[keyof PatchApiOrganizationsIdResponses];
 
+export type GetApiPermissionsData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: '/api/permissions';
+};
+
+export type GetApiPermissionsErrors = {
+  /**
+   * Bad Request
+   */
+  400: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Unauthorized
+   */
+  401: {
+    error?: string;
+    message?: string;
+  };
+  /**
+   * Internal server error.
+   */
+  500: {
+    error?: string;
+    message?: string;
+  };
+  default: unknown;
+};
+
+export type GetApiPermissionsError =
+  GetApiPermissionsErrors[keyof GetApiPermissionsErrors];
+
+export type GetApiPermissionsResponses = {
+  /**
+   * Successful permissions retrieval.
+   */
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
+};
+
+export type GetApiPermissionsResponse =
+  GetApiPermissionsResponses[keyof GetApiPermissionsResponses];
+
 export type GetApiRolesData = {
   body?: never;
   path?: never;
@@ -4298,14 +11147,560 @@ export type GetApiRolesResponses = {
   /**
    * Successful roles retrieval.
    */
-  200: Array<{
-    createdAt: string;
-    description: string | null;
-    id: string;
-    name: string;
-    permissions: Array<string>;
-    updatedAt: string;
-  }>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiRolesResponse =
@@ -4450,12 +11845,558 @@ export type GetApiRolesIdResponses = {
    * Successful role retrieval.
    */
   200: {
-    createdAt: string;
-    description: string | null;
-    id: string;
-    name: string;
-    permissions: Array<string>;
-    updatedAt: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
   };
 };
 
@@ -4568,79 +12509,560 @@ export type GetApiTransactionsResponses = {
   /**
    * Successful transactions retrieval.
    */
-  200: Array<{
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      value?: number;
-      weight: number;
-    }>;
-    seller: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    updatedAt: string;
-  }>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiTransactionsResponse =
@@ -4652,6 +13074,11 @@ export type PostApiTransactionsData = {
    */
   body: {
     buyerId: string;
+    materials?: Array<{
+      materialId: string;
+      value: number;
+      weight: number;
+    }>;
     sellerId: string;
   };
   path?: never;
@@ -4786,77 +13213,558 @@ export type GetApiTransactionsIdResponses = {
    * Successful transaction retrieval.
    */
   200: {
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      value?: number;
-      weight: number;
-    }>;
-    seller: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    updatedAt: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
   };
 };
 
@@ -4869,6 +13777,11 @@ export type PatchApiTransactionsIdData = {
    */
   body: {
     buyerId?: string | null;
+    materials?: Array<{
+      materialId?: string | null;
+      value?: number | null;
+      weight?: number | null;
+    }>;
     sellerId?: string | null;
   };
   path: {
@@ -4970,79 +13883,560 @@ export type GetApiTransactionsTransactionIdMaterialsResponses = {
   /**
    * Successful transaction materials retrieval.
    */
-  200: Array<{
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      value?: number;
-      weight: number;
-    }>;
-    seller: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    updatedAt: string;
-  }>;
+  200: {
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
+  };
 };
 
 export type GetApiTransactionsTransactionIdMaterialsResponse =
@@ -5054,7 +14448,6 @@ export type PostApiTransactionsTransactionIdMaterialsData = {
    */
   body: {
     materialId: string;
-    transactionId: string;
     value: number;
     weight: number;
   };
@@ -5194,77 +14587,558 @@ export type GetApiTransactionsTransactionIdMaterialsIdResponses = {
    * Successful transaction material retrieval.
    */
   200: {
-    buyer: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    createdAt: string;
-    id: string;
-    materials: Array<{
-      createdAt: string;
-      id: string;
-      material: {
-        carbonFactor: string;
-        createdAt: string;
-        gwCode: string;
-        id: string;
-        name: string;
-        updatedAt: string;
-        value: number;
-      };
-      updatedAt: string;
-      value?: number;
-      weight: number;
-    }>;
-    seller: {
-      address: {
-        city: string;
-        country: string;
-        createdAt: string;
-        id: string;
-        lineOne: string;
-        lineTwo: string | null;
-        province: string;
-        updatedAt: string;
-        zipCode: string;
-      } | null;
-      bankDetails: {
-        accountHolder: string;
-        accountNumber: string;
-        bankName: string;
-        branchName: string;
-        createdAt: string;
-        id: string;
-        updatedAt: string;
-      } | null;
-      createdAt: string;
-      id: string;
-      name: string;
-      updatedAt: string;
-    };
-    updatedAt: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
+    } | null;
   };
 };
 
@@ -5277,7 +15151,6 @@ export type PatchApiTransactionsTransactionIdMaterialsIdData = {
    */
   body: {
     materialId?: string | null;
-    transactionId?: string | null;
     value?: number | null;
     weight?: number | null;
   };
@@ -5383,46 +15256,558 @@ export type GetApiUsersResponses = {
    * Successful users retrieval.
    */
   200: {
-    activeOrganization: string;
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
     } | null;
-    banReason: string | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
-    banned: boolean;
-    createdAt: string;
-    email: string;
-    id: string;
-    mfaEnabled: boolean;
-    mfaVerified: boolean;
-    name: string;
-    phone: string;
-    roles: Array<{
-      createdAt: string;
-      description: string | null;
-      id: string;
-      name: string;
-      permissions: Array<string>;
-      updatedAt: string;
-    }>;
-    type: 'standard' | 'collector' | 'business' | 'system';
-    updatedAt: string;
   };
 };
 
@@ -5434,6 +15819,8 @@ export type PostApiUsersData = {
    * Payload to create a new user.
    */
   body: {
+    addressId?: string | null;
+    bankDetailsId?: string | null;
     email: string;
     name: string;
     password: string;
@@ -5578,46 +15965,558 @@ export type GetApiUsersIdResponses = {
    * Successful user retrieval.
    */
   200: {
-    activeOrganization: string;
-    address: {
-      city: string;
-      country: string;
-      createdAt: string;
-      id: string;
-      lineOne: string;
-      lineTwo: string | null;
-      province: string;
-      updatedAt: string;
-      zipCode: string;
+    item?:
+      | {
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }
+      | {
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }
+      | {
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | ({
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null)
+      | ({
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null)
+      | {
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }
+      | {
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        };
+    items?:
+      | Array<{
+          activeOrganization: string;
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          banReason: string | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          banned: boolean;
+          createdAt: string;
+          email: string;
+          id: string;
+          mfaEnabled: boolean;
+          mfaVerified: boolean;
+          name: string;
+          phone: string;
+          roles: Array<{
+            createdAt: string;
+            description: string | null;
+            id: string;
+            name: string;
+            permissions: Array<string>;
+            updatedAt: string;
+          }>;
+          type: 'standard' | 'collector' | 'business' | 'system';
+          updatedAt: string;
+        }>
+      | Array<{
+          createdAt: string;
+          description: string | null;
+          id: string;
+          name: string;
+          permissions: Array<string>;
+          updatedAt: string;
+        }>
+      | Array<{
+          address: {
+            city: string;
+            country: string;
+            createdAt: string;
+            id: string;
+            lineOne: string;
+            lineTwo: string | null;
+            province: string;
+            updatedAt: string;
+            zipCode: string;
+          } | null;
+          bankDetails: {
+            accountHolder: string;
+            accountNumber: string;
+            bankName: string;
+            branchCode?: string;
+            createdAt: string;
+            id: string;
+            updatedAt: string;
+          } | null;
+          createdAt: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          city: string;
+          country: string;
+          createdAt: string;
+          id: string;
+          lineOne: string;
+          lineTwo: string | null;
+          province: string;
+          updatedAt: string;
+          zipCode: string;
+        } | null>
+      | Array<{
+          accountHolder: string;
+          accountNumber: string;
+          bankName: string;
+          branchCode?: string;
+          createdAt: string;
+          id: string;
+          updatedAt: string;
+        } | null>
+      | Array<{
+          carbonFactor: string;
+          createdAt: string;
+          gwCode: string;
+          id: string;
+          name: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            activeOrganization: string;
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            banReason: string | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            banned: boolean;
+            createdAt: string;
+            email: string;
+            id: string;
+            mfaEnabled: boolean;
+            mfaVerified: boolean;
+            name: string;
+            phone: string;
+            roles: Array<{
+              createdAt: string;
+              description: string | null;
+              id: string;
+              name: string;
+              permissions: Array<string>;
+              updatedAt: string;
+            }>;
+            type: 'standard' | 'collector' | 'business' | 'system';
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          buyer: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          buyerId?: string;
+          createdAt: string;
+          id: string;
+          materials: Array<{
+            createdAt: string;
+            id: string;
+            material: {
+              carbonFactor: string;
+              createdAt: string;
+              gwCode: string;
+              id: string;
+              name: string;
+              updatedAt: string;
+            };
+            updatedAt: string;
+            value: number;
+            weight: number;
+          }>;
+          seller: {
+            address: {
+              city: string;
+              country: string;
+              createdAt: string;
+              id: string;
+              lineOne: string;
+              lineTwo: string | null;
+              province: string;
+              updatedAt: string;
+              zipCode: string;
+            } | null;
+            bankDetails: {
+              accountHolder: string;
+              accountNumber: string;
+              bankName: string;
+              branchCode?: string;
+              createdAt: string;
+              id: string;
+              updatedAt: string;
+            } | null;
+            createdAt: string;
+            id: string;
+            name: string;
+            updatedAt: string;
+          };
+          sellerId?: string;
+          updatedAt: string;
+        }>
+      | Array<{
+          name: string;
+          permissions: Array<{
+            description: string;
+            value: string;
+          }>;
+        }>;
+    pageDetails?: {
+      count?: number;
+      currentPage?: number;
+      nextPage?: number;
+      pages?: number;
+      previousPage?: number;
     } | null;
-    banReason: string | null;
-    bankDetails: {
-      accountHolder: string;
-      accountNumber: string;
-      bankName: string;
-      branchName: string;
-      createdAt: string;
-      id: string;
-      updatedAt: string;
-    } | null;
-    banned: boolean;
-    createdAt: string;
-    email: string;
-    id: string;
-    mfaEnabled: boolean;
-    mfaVerified: boolean;
-    name: string;
-    phone: string;
-    roles: Array<{
-      createdAt: string;
-      description: string | null;
-      id: string;
-      name: string;
-      permissions: Array<string>;
-      updatedAt: string;
-    }>;
-    type: 'standard' | 'collector' | 'business' | 'system';
-    updatedAt: string;
   };
 };
 
@@ -5629,6 +16528,11 @@ export type PatchApiUsersIdData = {
    * Payload to update an existing user.
    */
   body: {
+    activeOrganization?: string | null;
+    addressId?: string | null;
+    banReason?: string | null;
+    bankDetailsId?: string | null;
+    banned?: boolean | null;
     email?: string | null;
     name?: string | null;
     password?: string | null;

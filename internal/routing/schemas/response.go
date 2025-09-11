@@ -17,6 +17,7 @@ var SuccessResponseSchema = openapi3.NewSchema().WithProperties(map[string]*open
 		MaterialsSchema.Value,
 		CollectionsSchema.Value,
 		TransactionsSchema.Value,
+		AvailablePermissionsSchema.Value,
 	),
 	"item": openapi3.NewAnyOfSchema(
 		UserSchema.Value,

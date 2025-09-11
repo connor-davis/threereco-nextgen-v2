@@ -33,12 +33,24 @@ export const zAddresses = z.array(
   ])
 );
 
+export const zAvailablePermissions = z.array(
+  z.object({
+    name: z.string(),
+    permissions: z.array(
+      z.object({
+        description: z.string(),
+        value: z.string(),
+      })
+    ),
+  })
+);
+
 export const zBankDetail = z.union([
   z.object({
     accountHolder: z.string(),
     accountNumber: z.string(),
     bankName: z.string(),
-    branchName: z.string(),
+    branchCode: z.optional(z.string()),
     createdAt: z.iso.datetime(),
     id: z.uuid(),
     updatedAt: z.iso.datetime(),
@@ -52,7 +64,7 @@ export const zBankDetails = z.array(
       accountHolder: z.string(),
       accountNumber: z.string(),
       bankName: z.string(),
-      branchName: z.string(),
+      branchCode: z.optional(z.string()),
       createdAt: z.iso.datetime(),
       id: z.uuid(),
       updatedAt: z.iso.datetime(),
@@ -82,7 +94,7 @@ export const zCollection = z.object({
         accountHolder: z.string(),
         accountNumber: z.string(),
         bankName: z.string(),
-        branchName: z.string(),
+        branchCode: z.optional(z.string()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         updatedAt: z.iso.datetime(),
@@ -94,6 +106,7 @@ export const zCollection = z.object({
     name: z.string(),
     updatedAt: z.iso.datetime(),
   }),
+  buyerId: z.optional(z.uuid()),
   createdAt: z.iso.datetime(),
   id: z.uuid(),
   materials: z.array(
@@ -107,9 +120,9 @@ export const zCollection = z.object({
         id: z.uuid(),
         name: z.string(),
         updatedAt: z.iso.datetime(),
-        value: z.number(),
       }),
       updatedAt: z.iso.datetime(),
+      value: z.number(),
       weight: z.number(),
     })
   ),
@@ -135,7 +148,7 @@ export const zCollection = z.object({
         accountHolder: z.string(),
         accountNumber: z.string(),
         bankName: z.string(),
-        branchName: z.string(),
+        branchCode: z.optional(z.string()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         updatedAt: z.iso.datetime(),
@@ -163,6 +176,7 @@ export const zCollection = z.object({
     type: z.enum(['standard', 'collector', 'business', 'system']),
     updatedAt: z.iso.datetime(),
   }),
+  sellerId: z.optional(z.uuid()),
   updatedAt: z.iso.datetime(),
 });
 
@@ -188,7 +202,7 @@ export const zCollections = z.array(
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
@@ -200,6 +214,7 @@ export const zCollections = z.array(
       name: z.string(),
       updatedAt: z.iso.datetime(),
     }),
+    buyerId: z.optional(z.uuid()),
     createdAt: z.iso.datetime(),
     id: z.uuid(),
     materials: z.array(
@@ -213,9 +228,9 @@ export const zCollections = z.array(
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
         }),
         updatedAt: z.iso.datetime(),
+        value: z.number(),
         weight: z.number(),
       })
     ),
@@ -241,7 +256,7 @@ export const zCollections = z.array(
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
@@ -269,6 +284,7 @@ export const zCollections = z.array(
       type: z.enum(['standard', 'collector', 'business', 'system']),
       updatedAt: z.iso.datetime(),
     }),
+    sellerId: z.optional(z.uuid()),
     updatedAt: z.iso.datetime(),
   })
 );
@@ -286,23 +302,31 @@ export const zCreateBankDetail = z.object({
   accountHolder: z.string(),
   accountNumber: z.string(),
   bankName: z.string(),
-  branchName: z.string(),
+  branchCode: z.optional(z.string()),
 });
 
 export const zCreateCollection = z.object({
   buyerId: z.uuid(),
+  materials: z.optional(
+    z.array(
+      z.object({
+        materialId: z.uuid(),
+        value: z.number(),
+        weight: z.number(),
+      })
+    )
+  ),
   sellerId: z.uuid(),
 });
 
 export const zCreateCollectionMaterial = z.object({
-  collectionId: z.uuid(),
   materialId: z.uuid(),
   value: z.number(),
   weight: z.number(),
 });
 
 export const zCreateMaterial = z.object({
-  carbonFactor: z.number(),
+  carbonFactor: z.string(),
   gwCode: z.string(),
   name: z.string(),
 });
@@ -345,7 +369,7 @@ export const zCreateOrganization = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -385,17 +409,27 @@ export const zCreateRole = z.object({
 
 export const zCreateTransaction = z.object({
   buyerId: z.uuid(),
+  materials: z.optional(
+    z.array(
+      z.object({
+        materialId: z.uuid(),
+        value: z.number(),
+        weight: z.number(),
+      })
+    )
+  ),
   sellerId: z.uuid(),
 });
 
 export const zCreateTransactionMaterial = z.object({
   materialId: z.uuid(),
-  transactionId: z.uuid(),
   value: z.number(),
   weight: z.number(),
 });
 
 export const zCreateUser = z.object({
+  addressId: z.optional(z.union([z.uuid(), z.null()])),
+  bankDetailsId: z.optional(z.union([z.uuid(), z.null()])),
   email: z.string(),
   name: z.string(),
   password: z.string(),
@@ -434,7 +468,6 @@ export const zMaterial = z.object({
   id: z.uuid(),
   name: z.string(),
   updatedAt: z.iso.datetime(),
-  value: z.number(),
 });
 
 export const zMaterials = z.array(
@@ -445,7 +478,6 @@ export const zMaterials = z.array(
     id: z.uuid(),
     name: z.string(),
     updatedAt: z.iso.datetime(),
-    value: z.number(),
   })
 );
 
@@ -473,7 +505,7 @@ export const zOrganization = z.object({
       accountHolder: z.string(),
       accountNumber: z.string(),
       bankName: z.string(),
-      branchName: z.string(),
+      branchCode: z.optional(z.string()),
       createdAt: z.iso.datetime(),
       id: z.uuid(),
       updatedAt: z.iso.datetime(),
@@ -507,7 +539,7 @@ export const zOrganizations = z.array(
         accountHolder: z.string(),
         accountNumber: z.string(),
         bankName: z.string(),
-        branchName: z.string(),
+        branchCode: z.optional(z.string()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         updatedAt: z.iso.datetime(),
@@ -574,7 +606,7 @@ export const zSuccessResponse = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -630,7 +662,7 @@ export const zSuccessResponse = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -661,7 +693,7 @@ export const zSuccessResponse = z.object({
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
@@ -675,7 +707,6 @@ export const zSuccessResponse = z.object({
         id: z.uuid(),
         name: z.string(),
         updatedAt: z.iso.datetime(),
-        value: z.number(),
       }),
       z.object({
         buyer: z.object({
@@ -698,7 +729,7 @@ export const zSuccessResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -710,6 +741,7 @@ export const zSuccessResponse = z.object({
           name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         materials: z.array(
@@ -723,9 +755,9 @@ export const zSuccessResponse = z.object({
               id: z.uuid(),
               name: z.string(),
               updatedAt: z.iso.datetime(),
-              value: z.number(),
             }),
             updatedAt: z.iso.datetime(),
+            value: z.number(),
             weight: z.number(),
           })
         ),
@@ -751,7 +783,7 @@ export const zSuccessResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -779,6 +811,7 @@ export const zSuccessResponse = z.object({
           type: z.enum(['standard', 'collector', 'business', 'system']),
           updatedAt: z.iso.datetime(),
         }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
       }),
       z.object({
@@ -802,7 +835,7 @@ export const zSuccessResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -814,6 +847,7 @@ export const zSuccessResponse = z.object({
           name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         materials: z.array(
@@ -827,10 +861,9 @@ export const zSuccessResponse = z.object({
               id: z.uuid(),
               name: z.string(),
               updatedAt: z.iso.datetime(),
-              value: z.number(),
             }),
             updatedAt: z.iso.datetime(),
-            value: z.optional(z.number()),
+            value: z.number(),
             weight: z.number(),
           })
         ),
@@ -854,7 +887,7 @@ export const zSuccessResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -866,6 +899,7 @@ export const zSuccessResponse = z.object({
           name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
       }),
     ])
@@ -895,7 +929,7 @@ export const zSuccessResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -955,7 +989,7 @@ export const zSuccessResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -990,7 +1024,7 @@ export const zSuccessResponse = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -1006,7 +1040,6 @@ export const zSuccessResponse = z.object({
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
         })
       ),
       z.array(
@@ -1031,7 +1064,7 @@ export const zSuccessResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -1043,6 +1076,7 @@ export const zSuccessResponse = z.object({
             name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           materials: z.array(
@@ -1056,9 +1090,9 @@ export const zSuccessResponse = z.object({
                 id: z.uuid(),
                 name: z.string(),
                 updatedAt: z.iso.datetime(),
-                value: z.number(),
               }),
               updatedAt: z.iso.datetime(),
+              value: z.number(),
               weight: z.number(),
             })
           ),
@@ -1084,7 +1118,7 @@ export const zSuccessResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -1112,6 +1146,7 @@ export const zSuccessResponse = z.object({
             type: z.enum(['standard', 'collector', 'business', 'system']),
             updatedAt: z.iso.datetime(),
           }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
         })
       ),
@@ -1137,7 +1172,7 @@ export const zSuccessResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -1149,6 +1184,7 @@ export const zSuccessResponse = z.object({
             name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           materials: z.array(
@@ -1162,10 +1198,9 @@ export const zSuccessResponse = z.object({
                 id: z.uuid(),
                 name: z.string(),
                 updatedAt: z.iso.datetime(),
-                value: z.number(),
               }),
               updatedAt: z.iso.datetime(),
-              value: z.optional(z.number()),
+              value: z.number(),
               weight: z.number(),
             })
           ),
@@ -1189,7 +1224,7 @@ export const zSuccessResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -1201,7 +1236,19 @@ export const zSuccessResponse = z.object({
             name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
         })
       ),
     ])
@@ -1241,7 +1288,7 @@ export const zTransaction = z.object({
         accountHolder: z.string(),
         accountNumber: z.string(),
         bankName: z.string(),
-        branchName: z.string(),
+        branchCode: z.optional(z.string()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         updatedAt: z.iso.datetime(),
@@ -1253,6 +1300,7 @@ export const zTransaction = z.object({
     name: z.string(),
     updatedAt: z.iso.datetime(),
   }),
+  buyerId: z.optional(z.uuid()),
   createdAt: z.iso.datetime(),
   id: z.uuid(),
   materials: z.array(
@@ -1266,10 +1314,9 @@ export const zTransaction = z.object({
         id: z.uuid(),
         name: z.string(),
         updatedAt: z.iso.datetime(),
-        value: z.number(),
       }),
       updatedAt: z.iso.datetime(),
-      value: z.optional(z.number()),
+      value: z.number(),
       weight: z.number(),
     })
   ),
@@ -1293,7 +1340,7 @@ export const zTransaction = z.object({
         accountHolder: z.string(),
         accountNumber: z.string(),
         bankName: z.string(),
-        branchName: z.string(),
+        branchCode: z.optional(z.string()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         updatedAt: z.iso.datetime(),
@@ -1305,6 +1352,7 @@ export const zTransaction = z.object({
     name: z.string(),
     updatedAt: z.iso.datetime(),
   }),
+  sellerId: z.optional(z.uuid()),
   updatedAt: z.iso.datetime(),
 });
 
@@ -1330,7 +1378,7 @@ export const zTransactions = z.array(
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
@@ -1342,6 +1390,7 @@ export const zTransactions = z.array(
       name: z.string(),
       updatedAt: z.iso.datetime(),
     }),
+    buyerId: z.optional(z.uuid()),
     createdAt: z.iso.datetime(),
     id: z.uuid(),
     materials: z.array(
@@ -1355,10 +1404,9 @@ export const zTransactions = z.array(
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
         }),
         updatedAt: z.iso.datetime(),
-        value: z.optional(z.number()),
+        value: z.number(),
         weight: z.number(),
       })
     ),
@@ -1382,7 +1430,7 @@ export const zTransactions = z.array(
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
@@ -1394,6 +1442,7 @@ export const zTransactions = z.array(
       name: z.string(),
       updatedAt: z.iso.datetime(),
     }),
+    sellerId: z.optional(z.uuid()),
     updatedAt: z.iso.datetime(),
   })
 );
@@ -1411,23 +1460,31 @@ export const zUpdateBankDetail = z.object({
   accountHolder: z.optional(z.union([z.string(), z.null()])),
   accountNumber: z.optional(z.union([z.string(), z.null()])),
   bankName: z.optional(z.union([z.string(), z.null()])),
-  branchName: z.optional(z.union([z.string(), z.null()])),
+  branchCode: z.optional(z.union([z.string(), z.null()])),
 });
 
 export const zUpdateCollection = z.object({
   buyerId: z.optional(z.union([z.uuid(), z.null()])),
+  materials: z.optional(
+    z.array(
+      z.object({
+        materialId: z.optional(z.union([z.uuid(), z.null()])),
+        value: z.optional(z.union([z.number(), z.null()])),
+        weight: z.optional(z.union([z.number(), z.null()])),
+      })
+    )
+  ),
   sellerId: z.optional(z.union([z.uuid(), z.null()])),
 });
 
 export const zUpdateCollectionMaterial = z.object({
-  collectionId: z.optional(z.union([z.uuid(), z.null()])),
   materialId: z.optional(z.union([z.uuid(), z.null()])),
   value: z.optional(z.union([z.number(), z.null()])),
   weight: z.optional(z.union([z.number(), z.null()])),
 });
 
 export const zUpdateMaterial = z.object({
-  carbonFactor: z.optional(z.number()),
+  carbonFactor: z.optional(z.string()),
   gwCode: z.optional(z.string()),
   name: z.optional(z.string()),
 });
@@ -1470,7 +1527,7 @@ export const zUpdateOrganization = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -1510,17 +1567,30 @@ export const zUpdateRole = z.object({
 
 export const zUpdateTransaction = z.object({
   buyerId: z.optional(z.union([z.uuid(), z.null()])),
+  materials: z.optional(
+    z.array(
+      z.object({
+        materialId: z.optional(z.union([z.uuid(), z.null()])),
+        value: z.optional(z.union([z.number(), z.null()])),
+        weight: z.optional(z.union([z.number(), z.null()])),
+      })
+    )
+  ),
   sellerId: z.optional(z.union([z.uuid(), z.null()])),
 });
 
 export const zUpdateTransactionMaterial = z.object({
   materialId: z.optional(z.union([z.uuid(), z.null()])),
-  transactionId: z.optional(z.union([z.uuid(), z.null()])),
   value: z.optional(z.union([z.number(), z.null()])),
   weight: z.optional(z.union([z.number(), z.null()])),
 });
 
 export const zUpdateUser = z.object({
+  activeOrganization: z.optional(z.union([z.uuid(), z.null()])),
+  addressId: z.optional(z.union([z.uuid(), z.null()])),
+  banReason: z.optional(z.union([z.string(), z.null()])),
+  bankDetailsId: z.optional(z.union([z.uuid(), z.null()])),
+  banned: z.optional(z.union([z.boolean(), z.null()])),
   email: z.optional(z.union([z.string(), z.null()])),
   name: z.optional(z.union([z.string(), z.null()])),
   password: z.optional(z.union([z.string(), z.null()])),
@@ -1562,7 +1632,7 @@ export const zUser = z.object({
       accountHolder: z.string(),
       accountNumber: z.string(),
       bankName: z.string(),
-      branchName: z.string(),
+      branchCode: z.optional(z.string()),
       createdAt: z.iso.datetime(),
       id: z.uuid(),
       updatedAt: z.iso.datetime(),
@@ -1614,7 +1684,7 @@ export const zUsers = z.array(
         accountHolder: z.string(),
         accountNumber: z.string(),
         bankName: z.string(),
-        branchName: z.string(),
+        branchCode: z.optional(z.string()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         updatedAt: z.iso.datetime(),
@@ -1657,22 +1727,691 @@ export const zGetApiAddressesData = z.object({
 /**
  * Successful addresses retrieval.
  */
-export const zGetApiAddressesResponse = z.array(
-  z.union([
-    z.object({
-      city: z.string(),
-      country: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      lineOne: z.string(),
-      lineTwo: z.union([z.string(), z.null()]),
-      province: z.string(),
-      updatedAt: z.iso.datetime(),
-      zipCode: z.string(),
-    }),
-    z.null(),
-  ])
-);
+export const zGetApiAddressesResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiAddressesData = z.object({
   body: z.object({
@@ -1690,7 +2429,7 @@ export const zPostApiAddressesData = z.object({
 /**
  * Successful address creation.
  */
-export const zPostApiAddressesResponse = z.string();
+export const zPostApiAddressesResponse = z.uuid();
 
 export const zDeleteApiAddressesIdData = z.object({
   body: z.optional(z.never()),
@@ -1716,20 +2455,691 @@ export const zGetApiAddressesIdData = z.object({
 /**
  * Successful address retrieval.
  */
-export const zGetApiAddressesIdResponse = z.union([
-  z.object({
-    city: z.string(),
-    country: z.string(),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    lineOne: z.string(),
-    lineTwo: z.union([z.string(), z.null()]),
-    province: z.string(),
-    updatedAt: z.iso.datetime(),
-    zipCode: z.string(),
-  }),
-  z.null(),
-]);
+export const zGetApiAddressesIdResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPatchApiAddressesIdData = z.object({
   body: z.object({
@@ -1785,7 +3195,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -1841,7 +3251,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -1872,7 +3282,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
@@ -1886,7 +3296,6 @@ export const zGetApiAuthenticationCheckResponse = z.object({
         id: z.uuid(),
         name: z.string(),
         updatedAt: z.iso.datetime(),
-        value: z.number(),
       }),
       z.object({
         buyer: z.object({
@@ -1909,7 +3318,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -1921,6 +3330,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
           name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         materials: z.array(
@@ -1934,9 +3344,9 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               id: z.uuid(),
               name: z.string(),
               updatedAt: z.iso.datetime(),
-              value: z.number(),
             }),
             updatedAt: z.iso.datetime(),
+            value: z.number(),
             weight: z.number(),
           })
         ),
@@ -1962,7 +3372,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -1990,6 +3400,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
           type: z.enum(['standard', 'collector', 'business', 'system']),
           updatedAt: z.iso.datetime(),
         }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
       }),
       z.object({
@@ -2013,7 +3424,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -2025,6 +3436,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
           name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
         materials: z.array(
@@ -2038,10 +3450,9 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               id: z.uuid(),
               name: z.string(),
               updatedAt: z.iso.datetime(),
-              value: z.number(),
             }),
             updatedAt: z.iso.datetime(),
-            value: z.optional(z.number()),
+            value: z.number(),
             weight: z.number(),
           })
         ),
@@ -2065,7 +3476,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -2077,6 +3488,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
           name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
       }),
     ])
@@ -2106,7 +3518,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -2166,7 +3578,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -2201,7 +3613,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             accountHolder: z.string(),
             accountNumber: z.string(),
             bankName: z.string(),
-            branchName: z.string(),
+            branchCode: z.optional(z.string()),
             createdAt: z.iso.datetime(),
             id: z.uuid(),
             updatedAt: z.iso.datetime(),
@@ -2217,7 +3629,6 @@ export const zGetApiAuthenticationCheckResponse = z.object({
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
         })
       ),
       z.array(
@@ -2242,7 +3653,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -2254,6 +3665,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           materials: z.array(
@@ -2267,9 +3679,9 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 id: z.uuid(),
                 name: z.string(),
                 updatedAt: z.iso.datetime(),
-                value: z.number(),
               }),
               updatedAt: z.iso.datetime(),
+              value: z.number(),
               weight: z.number(),
             })
           ),
@@ -2295,7 +3707,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -2323,6 +3735,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             type: z.enum(['standard', 'collector', 'business', 'system']),
             updatedAt: z.iso.datetime(),
           }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
         })
       ),
@@ -2348,7 +3761,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -2360,6 +3773,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           materials: z.array(
@@ -2373,10 +3787,9 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 id: z.uuid(),
                 name: z.string(),
                 updatedAt: z.iso.datetime(),
-                value: z.number(),
               }),
               updatedAt: z.iso.datetime(),
-              value: z.optional(z.number()),
+              value: z.number(),
               weight: z.number(),
             })
           ),
@@ -2400,7 +3813,7 @@ export const zGetApiAuthenticationCheckResponse = z.object({
                 accountHolder: z.string(),
                 accountNumber: z.string(),
                 bankName: z.string(),
-                branchName: z.string(),
+                branchCode: z.optional(z.string()),
                 createdAt: z.iso.datetime(),
                 id: z.uuid(),
                 updatedAt: z.iso.datetime(),
@@ -2412,7 +3825,19 @@ export const zGetApiAuthenticationCheckResponse = z.object({
             name: z.string(),
             updatedAt: z.iso.datetime(),
           }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
         })
       ),
     ])
@@ -2485,27 +3910,698 @@ export const zGetApiBankDetailsData = z.object({
 /**
  * Successful bank details retrieval.
  */
-export const zGetApiBankDetailsResponse = z.array(
-  z.union([
-    z.object({
-      accountHolder: z.string(),
-      accountNumber: z.string(),
-      bankName: z.string(),
-      branchName: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      updatedAt: z.iso.datetime(),
-    }),
-    z.null(),
-  ])
-);
+export const zGetApiBankDetailsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiBankDetailsData = z.object({
   body: z.object({
     accountHolder: z.string(),
     accountNumber: z.string(),
     bankName: z.string(),
-    branchName: z.string(),
+    branchCode: z.optional(z.string()),
   }),
   path: z.optional(z.never()),
   query: z.optional(z.never()),
@@ -2514,7 +4610,7 @@ export const zPostApiBankDetailsData = z.object({
 /**
  * Successful bank details creation.
  */
-export const zPostApiBankDetailsResponse = z.string();
+export const zPostApiBankDetailsResponse = z.uuid();
 
 export const zDeleteApiBankDetailsIdData = z.object({
   body: z.optional(z.never()),
@@ -2540,25 +4636,698 @@ export const zGetApiBankDetailsIdData = z.object({
 /**
  * Successful bank details retrieval.
  */
-export const zGetApiBankDetailsIdResponse = z.union([
-  z.object({
-    accountHolder: z.string(),
-    accountNumber: z.string(),
-    bankName: z.string(),
-    branchName: z.string(),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    updatedAt: z.iso.datetime(),
-  }),
-  z.null(),
-]);
+export const zGetApiBankDetailsIdResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPatchApiBankDetailsIdData = z.object({
   body: z.object({
     accountHolder: z.optional(z.union([z.string(), z.null()])),
     accountNumber: z.optional(z.union([z.string(), z.null()])),
     bankName: z.optional(z.union([z.string(), z.null()])),
-    branchName: z.optional(z.union([z.string(), z.null()])),
+    branchCode: z.optional(z.union([z.string(), z.null()])),
   }),
   path: z.object({
     id: z.uuid(),
@@ -2584,10 +5353,100 @@ export const zGetApiCollectionsData = z.object({
 /**
  * Successful collections retrieval.
  */
-export const zGetApiCollectionsResponse = z.array(
-  z.object({
-    buyer: z.object({
-      address: z.union([
+export const zGetApiCollectionsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
         z.object({
           city: z.string(),
           country: z.string(),
@@ -2601,80 +5460,277 @@ export const zGetApiCollectionsResponse = z.array(
         }),
         z.null(),
       ]),
-      bankDetails: z.union([
+      z.union([
         z.object({
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
         }),
         z.null(),
       ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    materials: z.array(
       z.object({
+        carbonFactor: z.string(),
         createdAt: z.iso.datetime(),
+        gwCode: z.string(),
         id: z.uuid(),
-        material: z.object({
-          carbonFactor: z.string(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
           createdAt: z.iso.datetime(),
-          gwCode: z.string(),
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
         }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
-        weight: z.number(),
-      })
-    ),
-    seller: z.object({
-      activeOrganization: z.uuid(),
-      address: z.union([
-        z.object({
-          city: z.string(),
-          country: z.string(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
-          lineOne: z.string(),
-          lineTwo: z.union([z.string(), z.null()]),
-          province: z.string(),
+          name: z.string(),
           updatedAt: z.iso.datetime(),
-          zipCode: z.string(),
         }),
-        z.null(),
-      ]),
-      banReason: z.union([z.string(), z.null()]),
-      bankDetails: z.union([
-        z.object({
-          accountHolder: z.string(),
-          accountNumber: z.string(),
-          bankName: z.string(),
-          branchName: z.string(),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
+          name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
-        z.null(),
-      ]),
-      banned: z.boolean(),
-      createdAt: z.iso.datetime(),
-      email: z.string(),
-      id: z.uuid(),
-      mfaEnabled: z.boolean(),
-      mfaVerified: z.boolean(),
-      name: z.string(),
-      phone: z.string(),
-      roles: z.array(
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
         z.object({
           createdAt: z.iso.datetime(),
           description: z.union([z.string(), z.null()]),
@@ -2684,16 +5740,317 @@ export const zGetApiCollectionsResponse = z.array(
           updatedAt: z.iso.datetime(),
         })
       ),
-      type: z.enum(['standard', 'collector', 'business', 'system']),
-      updatedAt: z.iso.datetime(),
-    }),
-    updatedAt: z.iso.datetime(),
-  })
-);
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiCollectionsData = z.object({
   body: z.object({
     buyerId: z.uuid(),
+    materials: z.optional(
+      z.array(
+        z.object({
+          materialId: z.uuid(),
+          value: z.number(),
+          weight: z.number(),
+        })
+      )
+    ),
     sellerId: z.uuid(),
   }),
   path: z.optional(z.never()),
@@ -2703,7 +6060,7 @@ export const zPostApiCollectionsData = z.object({
 /**
  * Successful collection creation.
  */
-export const zPostApiCollectionsResponse = z.string();
+export const zPostApiCollectionsResponse = z.uuid();
 
 export const zGetApiCollectionsCollectionIdMaterialsData = z.object({
   body: z.optional(z.never()),
@@ -2720,10 +6077,100 @@ export const zGetApiCollectionsCollectionIdMaterialsData = z.object({
 /**
  * Successful collection materials retrieval.
  */
-export const zGetApiCollectionsCollectionIdMaterialsResponse = z.array(
-  z.object({
-    buyer: z.object({
-      address: z.union([
+export const zGetApiCollectionsCollectionIdMaterialsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
         z.object({
           city: z.string(),
           country: z.string(),
@@ -2737,80 +6184,277 @@ export const zGetApiCollectionsCollectionIdMaterialsResponse = z.array(
         }),
         z.null(),
       ]),
-      bankDetails: z.union([
+      z.union([
         z.object({
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
         }),
         z.null(),
       ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    materials: z.array(
       z.object({
+        carbonFactor: z.string(),
         createdAt: z.iso.datetime(),
+        gwCode: z.string(),
         id: z.uuid(),
-        material: z.object({
-          carbonFactor: z.string(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
           createdAt: z.iso.datetime(),
-          gwCode: z.string(),
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
         }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
-        weight: z.number(),
-      })
-    ),
-    seller: z.object({
-      activeOrganization: z.uuid(),
-      address: z.union([
-        z.object({
-          city: z.string(),
-          country: z.string(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
-          lineOne: z.string(),
-          lineTwo: z.union([z.string(), z.null()]),
-          province: z.string(),
+          name: z.string(),
           updatedAt: z.iso.datetime(),
-          zipCode: z.string(),
         }),
-        z.null(),
-      ]),
-      banReason: z.union([z.string(), z.null()]),
-      bankDetails: z.union([
-        z.object({
-          accountHolder: z.string(),
-          accountNumber: z.string(),
-          bankName: z.string(),
-          branchName: z.string(),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
+          name: z.string(),
           updatedAt: z.iso.datetime(),
         }),
-        z.null(),
-      ]),
-      banned: z.boolean(),
-      createdAt: z.iso.datetime(),
-      email: z.string(),
-      id: z.uuid(),
-      mfaEnabled: z.boolean(),
-      mfaVerified: z.boolean(),
-      name: z.string(),
-      phone: z.string(),
-      roles: z.array(
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
         z.object({
           createdAt: z.iso.datetime(),
           description: z.union([z.string(), z.null()]),
@@ -2820,16 +6464,307 @@ export const zGetApiCollectionsCollectionIdMaterialsResponse = z.array(
           updatedAt: z.iso.datetime(),
         })
       ),
-      type: z.enum(['standard', 'collector', 'business', 'system']),
-      updatedAt: z.iso.datetime(),
-    }),
-    updatedAt: z.iso.datetime(),
-  })
-);
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiCollectionsCollectionIdMaterialsData = z.object({
   body: z.object({
-    collectionId: z.uuid(),
     materialId: z.uuid(),
     value: z.number(),
     weight: z.number(),
@@ -2843,7 +6778,7 @@ export const zPostApiCollectionsCollectionIdMaterialsData = z.object({
 /**
  * Successful collection material creation.
  */
-export const zPostApiCollectionsCollectionIdMaterialsResponse = z.string();
+export const zPostApiCollectionsCollectionIdMaterialsResponse = z.uuid();
 
 export const zDeleteApiCollectionsCollectionIdMaterialsIdData = z.object({
   body: z.optional(z.never()),
@@ -2872,95 +6807,58 @@ export const zGetApiCollectionsCollectionIdMaterialsIdData = z.object({
  * Successful collection material retrieval.
  */
 export const zGetApiCollectionsCollectionIdMaterialsIdResponse = z.object({
-  buyer: z.object({
-    address: z.union([
+  item: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
         createdAt: z.iso.datetime(),
+        email: z.string(),
         id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
-      }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  materials: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      material: z.object({
-        carbonFactor: z.string(),
-        createdAt: z.iso.datetime(),
-        gwCode: z.string(),
-        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
         name: z.string(),
-        updatedAt: z.iso.datetime(),
-        value: z.number(),
-      }),
-      updatedAt: z.iso.datetime(),
-      weight: z.number(),
-    })
-  ),
-  seller: z.object({
-    activeOrganization: z.uuid(),
-    address: z.union([
-      z.object({
-        city: z.string(),
-        country: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
-      }),
-      z.null(),
-    ]),
-    banReason: z.union([z.string(), z.null()]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
         updatedAt: z.iso.datetime(),
       }),
-      z.null(),
-    ]),
-    banned: z.boolean(),
-    createdAt: z.iso.datetime(),
-    email: z.string(),
-    id: z.uuid(),
-    mfaEnabled: z.boolean(),
-    mfaVerified: z.boolean(),
-    name: z.string(),
-    phone: z.string(),
-    roles: z.array(
       z.object({
         createdAt: z.iso.datetime(),
         description: z.union([z.string(), z.null()]),
@@ -2968,17 +6866,634 @@ export const zGetApiCollectionsCollectionIdMaterialsIdResponse = z.object({
         name: z.string(),
         permissions: z.array(z.string()),
         updatedAt: z.iso.datetime(),
-      })
-    ),
-    type: z.enum(['standard', 'collector', 'business', 'system']),
-    updatedAt: z.iso.datetime(),
-  }),
-  updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPatchApiCollectionsCollectionIdMaterialsIdData = z.object({
   body: z.object({
-    collectionId: z.optional(z.union([z.uuid(), z.null()])),
     materialId: z.optional(z.union([z.uuid(), z.null()])),
     value: z.optional(z.union([z.number(), z.null()])),
     weight: z.optional(z.union([z.number(), z.null()])),
@@ -3020,95 +7535,58 @@ export const zGetApiCollectionsIdData = z.object({
  * Successful collection retrieval.
  */
 export const zGetApiCollectionsIdResponse = z.object({
-  buyer: z.object({
-    address: z.union([
+  item: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
         createdAt: z.iso.datetime(),
+        email: z.string(),
         id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
-      }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  materials: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      material: z.object({
-        carbonFactor: z.string(),
-        createdAt: z.iso.datetime(),
-        gwCode: z.string(),
-        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
         name: z.string(),
-        updatedAt: z.iso.datetime(),
-        value: z.number(),
-      }),
-      updatedAt: z.iso.datetime(),
-      weight: z.number(),
-    })
-  ),
-  seller: z.object({
-    activeOrganization: z.uuid(),
-    address: z.union([
-      z.object({
-        city: z.string(),
-        country: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
-      }),
-      z.null(),
-    ]),
-    banReason: z.union([z.string(), z.null()]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
         updatedAt: z.iso.datetime(),
       }),
-      z.null(),
-    ]),
-    banned: z.boolean(),
-    createdAt: z.iso.datetime(),
-    email: z.string(),
-    id: z.uuid(),
-    mfaEnabled: z.boolean(),
-    mfaVerified: z.boolean(),
-    name: z.string(),
-    phone: z.string(),
-    roles: z.array(
       z.object({
         createdAt: z.iso.datetime(),
         description: z.union([z.string(), z.null()]),
@@ -3116,17 +7594,644 @@ export const zGetApiCollectionsIdResponse = z.object({
         name: z.string(),
         permissions: z.array(z.string()),
         updatedAt: z.iso.datetime(),
-      })
-    ),
-    type: z.enum(['standard', 'collector', 'business', 'system']),
-    updatedAt: z.iso.datetime(),
-  }),
-  updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPatchApiCollectionsIdData = z.object({
   body: z.object({
     buyerId: z.optional(z.union([z.uuid(), z.null()])),
+    materials: z.optional(
+      z.array(
+        z.object({
+          materialId: z.optional(z.union([z.uuid(), z.null()])),
+          value: z.optional(z.union([z.number(), z.null()])),
+          weight: z.optional(z.union([z.number(), z.null()])),
+        })
+      )
+    ),
     sellerId: z.optional(z.union([z.uuid(), z.null()])),
   }),
   path: z.object({
@@ -3153,21 +8258,695 @@ export const zGetApiMaterialsData = z.object({
 /**
  * Successful materials retrieval.
  */
-export const zGetApiMaterialsResponse = z.array(
-  z.object({
-    carbonFactor: z.string(),
-    createdAt: z.iso.datetime(),
-    gwCode: z.string(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-    value: z.number(),
-  })
-);
+export const zGetApiMaterialsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiMaterialsData = z.object({
   body: z.object({
-    carbonFactor: z.number(),
+    carbonFactor: z.string(),
     gwCode: z.string(),
     name: z.string(),
   }),
@@ -3178,7 +8957,7 @@ export const zPostApiMaterialsData = z.object({
 /**
  * Successful material creation.
  */
-export const zPostApiMaterialsResponse = z.string();
+export const zPostApiMaterialsResponse = z.uuid();
 
 export const zDeleteApiMaterialsIdData = z.object({
   body: z.optional(z.never()),
@@ -3205,18 +8984,694 @@ export const zGetApiMaterialsIdData = z.object({
  * Successful material retrieval.
  */
 export const zGetApiMaterialsIdResponse = z.object({
-  carbonFactor: z.string(),
-  createdAt: z.iso.datetime(),
-  gwCode: z.string(),
-  id: z.uuid(),
-  name: z.string(),
-  updatedAt: z.iso.datetime(),
-  value: z.number(),
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPatchApiMaterialsIdData = z.object({
   body: z.object({
-    carbonFactor: z.optional(z.number()),
+    carbonFactor: z.optional(z.string()),
     gwCode: z.optional(z.string()),
     name: z.optional(z.string()),
   }),
@@ -3244,40 +9699,691 @@ export const zGetApiOrganizationsData = z.object({
 /**
  * Successful organizations retrieval.
  */
-export const zGetApiOrganizationsResponse = z.array(
-  z.object({
-    address: z.union([
+export const zGetApiOrganizationsResponse = z.object({
+  item: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
+        name: z.string(),
         updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
       }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
       z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
         updatedAt: z.iso.datetime(),
       }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
       z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  })
-);
+    ])
+  ),
+});
 
 export const zPostApiOrganizationsData = z.object({
   body: z.object({
@@ -3318,7 +10424,7 @@ export const zPostApiOrganizationsData = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -3356,7 +10462,7 @@ export const zPostApiOrganizationsData = z.object({
 /**
  * Successful organization creation.
  */
-export const zPostApiOrganizationsResponse = z.string();
+export const zPostApiOrganizationsResponse = z.uuid();
 
 export const zDeleteApiOrganizationsIdData = z.object({
   body: z.optional(z.never()),
@@ -3383,36 +10489,689 @@ export const zGetApiOrganizationsIdData = z.object({
  * Successful organization retrieval.
  */
 export const zGetApiOrganizationsIdResponse = z.object({
-  address: z.union([
-    z.object({
-      city: z.string(),
-      country: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      lineOne: z.string(),
-      lineTwo: z.union([z.string(), z.null()]),
-      province: z.string(),
-      updatedAt: z.iso.datetime(),
-      zipCode: z.string(),
-    }),
-    z.null(),
-  ]),
-  bankDetails: z.union([
-    z.object({
-      accountHolder: z.string(),
-      accountNumber: z.string(),
-      bankName: z.string(),
-      branchName: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      updatedAt: z.iso.datetime(),
-    }),
-    z.null(),
-  ]),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  name: z.string(),
-  updatedAt: z.iso.datetime(),
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPatchApiOrganizationsIdData = z.object({
@@ -3454,7 +11213,7 @@ export const zPatchApiOrganizationsIdData = z.object({
               accountHolder: z.string(),
               accountNumber: z.string(),
               bankName: z.string(),
-              branchName: z.string(),
+              branchCode: z.optional(z.string()),
               createdAt: z.iso.datetime(),
               id: z.uuid(),
               updatedAt: z.iso.datetime(),
@@ -3496,6 +11255,701 @@ export const zPatchApiOrganizationsIdData = z.object({
  */
 export const zPatchApiOrganizationsIdResponse = z.string();
 
+export const zGetApiPermissionsData = z.object({
+  body: z.optional(z.never()),
+  path: z.optional(z.never()),
+  query: z.optional(z.never()),
+});
+
+/**
+ * Successful permissions retrieval.
+ */
+export const zGetApiPermissionsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
+
 export const zGetApiRolesData = z.object({
   body: z.optional(z.never()),
   path: z.optional(z.never()),
@@ -3509,16 +11963,691 @@ export const zGetApiRolesData = z.object({
 /**
  * Successful roles retrieval.
  */
-export const zGetApiRolesResponse = z.array(
-  z.object({
-    createdAt: z.iso.datetime(),
-    description: z.union([z.string(), z.null()]),
-    id: z.uuid(),
-    name: z.string(),
-    permissions: z.array(z.string()),
-    updatedAt: z.iso.datetime(),
-  })
-);
+export const zGetApiRolesResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiRolesData = z.object({
   body: z.object({
@@ -3533,7 +12662,7 @@ export const zPostApiRolesData = z.object({
 /**
  * Successful role creation.
  */
-export const zPostApiRolesResponse = z.string();
+export const zPostApiRolesResponse = z.uuid();
 
 export const zDeleteApiRolesIdData = z.object({
   body: z.optional(z.never()),
@@ -3560,12 +12689,689 @@ export const zGetApiRolesIdData = z.object({
  * Successful role retrieval.
  */
 export const zGetApiRolesIdResponse = z.object({
-  createdAt: z.iso.datetime(),
-  description: z.union([z.string(), z.null()]),
-  id: z.uuid(),
-  name: z.string(),
-  permissions: z.array(z.string()),
-  updatedAt: z.iso.datetime(),
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPatchApiRolesIdData = z.object({
@@ -3598,10 +13404,100 @@ export const zGetApiTransactionsData = z.object({
 /**
  * Successful transactions retrieval.
  */
-export const zGetApiTransactionsResponse = z.array(
-  z.object({
-    buyer: z.object({
-      address: z.union([
+export const zGetApiTransactionsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
         z.object({
           city: z.string(),
           country: z.string(),
@@ -3615,82 +13511,597 @@ export const zGetApiTransactionsResponse = z.array(
         }),
         z.null(),
       ]),
-      bankDetails: z.union([
+      z.union([
         z.object({
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
         }),
         z.null(),
       ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    materials: z.array(
       z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
-        material: z.object({
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
           carbonFactor: z.string(),
           createdAt: z.iso.datetime(),
           gwCode: z.string(),
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
-        }),
-        updatedAt: z.iso.datetime(),
-        value: z.optional(z.number()),
-        weight: z.number(),
-      })
-    ),
-    seller: z.object({
-      address: z.union([
+        })
+      ),
+      z.array(
         z.object({
-          city: z.string(),
-          country: z.string(),
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
-          lineOne: z.string(),
-          lineTwo: z.union([z.string(), z.null()]),
-          province: z.string(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
-          zipCode: z.string(),
-        }),
-        z.null(),
-      ]),
-      bankDetails: z.union([
+        })
+      ),
+      z.array(
         z.object({
-          accountHolder: z.string(),
-          accountNumber: z.string(),
-          bankName: z.string(),
-          branchName: z.string(),
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
-        }),
-        z.null(),
-      ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
-    updatedAt: z.iso.datetime(),
-  })
-);
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiTransactionsData = z.object({
   body: z.object({
     buyerId: z.uuid(),
+    materials: z.optional(
+      z.array(
+        z.object({
+          materialId: z.uuid(),
+          value: z.number(),
+          weight: z.number(),
+        })
+      )
+    ),
     sellerId: z.uuid(),
   }),
   path: z.optional(z.never()),
@@ -3700,7 +14111,7 @@ export const zPostApiTransactionsData = z.object({
 /**
  * Successful transaction creation.
  */
-export const zPostApiTransactionsResponse = z.string();
+export const zPostApiTransactionsResponse = z.uuid();
 
 export const zDeleteApiTransactionsIdData = z.object({
   body: z.optional(z.never()),
@@ -3727,96 +14138,703 @@ export const zGetApiTransactionsIdData = z.object({
  * Successful transaction retrieval.
  */
 export const zGetApiTransactionsIdResponse = z.object({
-  buyer: z.object({
-    address: z.union([
+  item: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
+        name: z.string(),
         updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
       }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
       z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  materials: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      material: z.object({
         carbonFactor: z.string(),
         createdAt: z.iso.datetime(),
         gwCode: z.string(),
         id: z.uuid(),
         name: z.string(),
         updatedAt: z.iso.datetime(),
-        value: z.number(),
       }),
-      updatedAt: z.iso.datetime(),
-      value: z.optional(z.number()),
-      weight: z.number(),
-    })
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
   ),
-  seller: z.object({
-    address: z.union([
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
       }),
       z.null(),
-    ]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
-  updatedAt: z.iso.datetime(),
+    ])
+  ),
 });
 
 export const zPatchApiTransactionsIdData = z.object({
   body: z.object({
     buyerId: z.optional(z.union([z.uuid(), z.null()])),
+    materials: z.optional(
+      z.array(
+        z.object({
+          materialId: z.optional(z.union([z.uuid(), z.null()])),
+          value: z.optional(z.union([z.number(), z.null()])),
+          weight: z.optional(z.union([z.number(), z.null()])),
+        })
+      )
+    ),
     sellerId: z.optional(z.union([z.uuid(), z.null()])),
   }),
   path: z.object({
@@ -3845,10 +14863,100 @@ export const zGetApiTransactionsTransactionIdMaterialsData = z.object({
 /**
  * Successful transaction materials retrieval.
  */
-export const zGetApiTransactionsTransactionIdMaterialsResponse = z.array(
-  z.object({
-    buyer: z.object({
-      address: z.union([
+export const zGetApiTransactionsTransactionIdMaterialsResponse = z.object({
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
         z.object({
           city: z.string(),
           country: z.string(),
@@ -3862,83 +14970,588 @@ export const zGetApiTransactionsTransactionIdMaterialsResponse = z.array(
         }),
         z.null(),
       ]),
-      bankDetails: z.union([
+      z.union([
         z.object({
           accountHolder: z.string(),
           accountNumber: z.string(),
           bankName: z.string(),
-          branchName: z.string(),
+          branchCode: z.optional(z.string()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
           updatedAt: z.iso.datetime(),
         }),
         z.null(),
       ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    materials: z.array(
       z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
-        material: z.object({
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
+  ),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
           carbonFactor: z.string(),
           createdAt: z.iso.datetime(),
           gwCode: z.string(),
           id: z.uuid(),
           name: z.string(),
           updatedAt: z.iso.datetime(),
-          value: z.number(),
-        }),
-        updatedAt: z.iso.datetime(),
-        value: z.optional(z.number()),
-        weight: z.number(),
-      })
-    ),
-    seller: z.object({
-      address: z.union([
+        })
+      ),
+      z.array(
         z.object({
-          city: z.string(),
-          country: z.string(),
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
-          lineOne: z.string(),
-          lineTwo: z.union([z.string(), z.null()]),
-          province: z.string(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
-          zipCode: z.string(),
-        }),
-        z.null(),
-      ]),
-      bankDetails: z.union([
+        })
+      ),
+      z.array(
         z.object({
-          accountHolder: z.string(),
-          accountNumber: z.string(),
-          bankName: z.string(),
-          branchName: z.string(),
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
           createdAt: z.iso.datetime(),
           id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
           updatedAt: z.iso.datetime(),
-        }),
-        z.null(),
-      ]),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      name: z.string(),
-      updatedAt: z.iso.datetime(),
-    }),
-    updatedAt: z.iso.datetime(),
-  })
-);
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
+});
 
 export const zPostApiTransactionsTransactionIdMaterialsData = z.object({
   body: z.object({
     materialId: z.uuid(),
-    transactionId: z.uuid(),
     value: z.number(),
     weight: z.number(),
   }),
@@ -3951,7 +15564,7 @@ export const zPostApiTransactionsTransactionIdMaterialsData = z.object({
 /**
  * Successful transaction material creation.
  */
-export const zPostApiTransactionsTransactionIdMaterialsResponse = z.string();
+export const zPostApiTransactionsTransactionIdMaterialsResponse = z.uuid();
 
 export const zDeleteApiTransactionsTransactionIdMaterialsIdData = z.object({
   body: z.optional(z.never()),
@@ -3981,97 +15594,694 @@ export const zGetApiTransactionsTransactionIdMaterialsIdData = z.object({
  * Successful transaction material retrieval.
  */
 export const zGetApiTransactionsTransactionIdMaterialsIdResponse = z.object({
-  buyer: z.object({
-    address: z.union([
+  item: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
         createdAt: z.iso.datetime(),
         id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
+        name: z.string(),
         updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
       }),
-      z.null(),
-    ]),
-    bankDetails: z.union([
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
       z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
-  createdAt: z.iso.datetime(),
-  id: z.uuid(),
-  materials: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      material: z.object({
         carbonFactor: z.string(),
         createdAt: z.iso.datetime(),
         gwCode: z.string(),
         id: z.uuid(),
         name: z.string(),
         updatedAt: z.iso.datetime(),
-        value: z.number(),
       }),
-      updatedAt: z.iso.datetime(),
-      value: z.optional(z.number()),
-      weight: z.number(),
-    })
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
   ),
-  seller: z.object({
-    address: z.union([
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
       z.object({
-        city: z.string(),
-        country: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        lineOne: z.string(),
-        lineTwo: z.union([z.string(), z.null()]),
-        province: z.string(),
-        updatedAt: z.iso.datetime(),
-        zipCode: z.string(),
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
       }),
       z.null(),
-    ]),
-    bankDetails: z.union([
-      z.object({
-        accountHolder: z.string(),
-        accountNumber: z.string(),
-        bankName: z.string(),
-        branchName: z.string(),
-        createdAt: z.iso.datetime(),
-        id: z.uuid(),
-        updatedAt: z.iso.datetime(),
-      }),
-      z.null(),
-    ]),
-    createdAt: z.iso.datetime(),
-    id: z.uuid(),
-    name: z.string(),
-    updatedAt: z.iso.datetime(),
-  }),
-  updatedAt: z.iso.datetime(),
+    ])
+  ),
 });
 
 export const zPatchApiTransactionsTransactionIdMaterialsIdData = z.object({
   body: z.object({
     materialId: z.optional(z.union([z.uuid(), z.null()])),
-    transactionId: z.optional(z.union([z.uuid(), z.null()])),
     value: z.optional(z.union([z.number(), z.null()])),
     weight: z.optional(z.union([z.number(), z.null()])),
   }),
@@ -4102,58 +16312,695 @@ export const zGetApiUsersData = z.object({
  * Successful users retrieval.
  */
 export const zGetApiUsersResponse = z.object({
-  activeOrganization: z.uuid(),
-  address: z.union([
-    z.object({
-      city: z.string(),
-      country: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      lineOne: z.string(),
-      lineTwo: z.union([z.string(), z.null()]),
-      province: z.string(),
-      updatedAt: z.iso.datetime(),
-      zipCode: z.string(),
-    }),
-    z.null(),
-  ]),
-  banReason: z.union([z.string(), z.null()]),
-  bankDetails: z.union([
-    z.object({
-      accountHolder: z.string(),
-      accountNumber: z.string(),
-      bankName: z.string(),
-      branchName: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      updatedAt: z.iso.datetime(),
-    }),
-    z.null(),
-  ]),
-  banned: z.boolean(),
-  createdAt: z.iso.datetime(),
-  email: z.string(),
-  id: z.uuid(),
-  mfaEnabled: z.boolean(),
-  mfaVerified: z.boolean(),
-  name: z.string(),
-  phone: z.string(),
-  roles: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      description: z.union([z.string(), z.null()]),
-      id: z.uuid(),
-      name: z.string(),
-      permissions: z.array(z.string()),
-      updatedAt: z.iso.datetime(),
-    })
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
   ),
-  type: z.enum(['standard', 'collector', 'business', 'system']),
-  updatedAt: z.iso.datetime(),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPostApiUsersData = z.object({
   body: z.object({
+    addressId: z.optional(z.union([z.uuid(), z.null()])),
+    bankDetailsId: z.optional(z.union([z.uuid(), z.null()])),
     email: z.string(),
     name: z.string(),
     password: z.string(),
@@ -4177,7 +17024,7 @@ export const zPostApiUsersData = z.object({
 /**
  * Successful user creation.
  */
-export const zPostApiUsersResponse = z.string();
+export const zPostApiUsersResponse = z.uuid();
 
 export const zDeleteApiUsersIdData = z.object({
   body: z.optional(z.never()),
@@ -4204,58 +17051,698 @@ export const zGetApiUsersIdData = z.object({
  * Successful user retrieval.
  */
 export const zGetApiUsersIdResponse = z.object({
-  activeOrganization: z.uuid(),
-  address: z.union([
-    z.object({
-      city: z.string(),
-      country: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      lineOne: z.string(),
-      lineTwo: z.union([z.string(), z.null()]),
-      province: z.string(),
-      updatedAt: z.iso.datetime(),
-      zipCode: z.string(),
-    }),
-    z.null(),
-  ]),
-  banReason: z.union([z.string(), z.null()]),
-  bankDetails: z.union([
-    z.object({
-      accountHolder: z.string(),
-      accountNumber: z.string(),
-      bankName: z.string(),
-      branchName: z.string(),
-      createdAt: z.iso.datetime(),
-      id: z.uuid(),
-      updatedAt: z.iso.datetime(),
-    }),
-    z.null(),
-  ]),
-  banned: z.boolean(),
-  createdAt: z.iso.datetime(),
-  email: z.string(),
-  id: z.uuid(),
-  mfaEnabled: z.boolean(),
-  mfaVerified: z.boolean(),
-  name: z.string(),
-  phone: z.string(),
-  roles: z.array(
-    z.object({
-      createdAt: z.iso.datetime(),
-      description: z.union([z.string(), z.null()]),
-      id: z.uuid(),
-      name: z.string(),
-      permissions: z.array(z.string()),
-      updatedAt: z.iso.datetime(),
-    })
+  item: z.optional(
+    z.union([
+      z.object({
+        activeOrganization: z.uuid(),
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        banReason: z.union([z.string(), z.null()]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        banned: z.boolean(),
+        createdAt: z.iso.datetime(),
+        email: z.string(),
+        id: z.uuid(),
+        mfaEnabled: z.boolean(),
+        mfaVerified: z.boolean(),
+        name: z.string(),
+        phone: z.string(),
+        roles: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            description: z.union([z.string(), z.null()]),
+            id: z.uuid(),
+            name: z.string(),
+            permissions: z.array(z.string()),
+            updatedAt: z.iso.datetime(),
+          })
+        ),
+        type: z.enum(['standard', 'collector', 'business', 'system']),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        createdAt: z.iso.datetime(),
+        description: z.union([z.string(), z.null()]),
+        id: z.uuid(),
+        name: z.string(),
+        permissions: z.array(z.string()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        address: z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ]),
+        bankDetails: z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ]),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.union([
+        z.object({
+          city: z.string(),
+          country: z.string(),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          lineOne: z.string(),
+          lineTwo: z.union([z.string(), z.null()]),
+          province: z.string(),
+          updatedAt: z.iso.datetime(),
+          zipCode: z.string(),
+        }),
+        z.null(),
+      ]),
+      z.union([
+        z.object({
+          accountHolder: z.string(),
+          accountNumber: z.string(),
+          bankName: z.string(),
+          branchCode: z.optional(z.string()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          updatedAt: z.iso.datetime(),
+        }),
+        z.null(),
+      ]),
+      z.object({
+        carbonFactor: z.string(),
+        createdAt: z.iso.datetime(),
+        gwCode: z.string(),
+        id: z.uuid(),
+        name: z.string(),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+      z.object({
+        buyer: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        buyerId: z.optional(z.uuid()),
+        createdAt: z.iso.datetime(),
+        id: z.uuid(),
+        materials: z.array(
+          z.object({
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            material: z.object({
+              carbonFactor: z.string(),
+              createdAt: z.iso.datetime(),
+              gwCode: z.string(),
+              id: z.uuid(),
+              name: z.string(),
+              updatedAt: z.iso.datetime(),
+            }),
+            updatedAt: z.iso.datetime(),
+            value: z.number(),
+            weight: z.number(),
+          })
+        ),
+        seller: z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        }),
+        sellerId: z.optional(z.uuid()),
+        updatedAt: z.iso.datetime(),
+      }),
+    ])
   ),
-  type: z.enum(['standard', 'collector', 'business', 'system']),
-  updatedAt: z.iso.datetime(),
+  items: z.optional(
+    z.union([
+      z.array(
+        z.object({
+          activeOrganization: z.uuid(),
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          banReason: z.union([z.string(), z.null()]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          banned: z.boolean(),
+          createdAt: z.iso.datetime(),
+          email: z.string(),
+          id: z.uuid(),
+          mfaEnabled: z.boolean(),
+          mfaVerified: z.boolean(),
+          name: z.string(),
+          phone: z.string(),
+          roles: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              description: z.union([z.string(), z.null()]),
+              id: z.uuid(),
+              name: z.string(),
+              permissions: z.array(z.string()),
+              updatedAt: z.iso.datetime(),
+            })
+          ),
+          type: z.enum(['standard', 'collector', 'business', 'system']),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          createdAt: z.iso.datetime(),
+          description: z.union([z.string(), z.null()]),
+          id: z.uuid(),
+          name: z.string(),
+          permissions: z.array(z.string()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          address: z.union([
+            z.object({
+              city: z.string(),
+              country: z.string(),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              lineOne: z.string(),
+              lineTwo: z.union([z.string(), z.null()]),
+              province: z.string(),
+              updatedAt: z.iso.datetime(),
+              zipCode: z.string(),
+            }),
+            z.null(),
+          ]),
+          bankDetails: z.union([
+            z.object({
+              accountHolder: z.string(),
+              accountNumber: z.string(),
+              bankName: z.string(),
+              branchCode: z.optional(z.string()),
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              updatedAt: z.iso.datetime(),
+            }),
+            z.null(),
+          ]),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.union([
+          z.object({
+            city: z.string(),
+            country: z.string(),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            lineOne: z.string(),
+            lineTwo: z.union([z.string(), z.null()]),
+            province: z.string(),
+            updatedAt: z.iso.datetime(),
+            zipCode: z.string(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.union([
+          z.object({
+            accountHolder: z.string(),
+            accountNumber: z.string(),
+            bankName: z.string(),
+            branchCode: z.optional(z.string()),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            updatedAt: z.iso.datetime(),
+          }),
+          z.null(),
+        ])
+      ),
+      z.array(
+        z.object({
+          carbonFactor: z.string(),
+          createdAt: z.iso.datetime(),
+          gwCode: z.string(),
+          id: z.uuid(),
+          name: z.string(),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            activeOrganization: z.uuid(),
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            banReason: z.union([z.string(), z.null()]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            banned: z.boolean(),
+            createdAt: z.iso.datetime(),
+            email: z.string(),
+            id: z.uuid(),
+            mfaEnabled: z.boolean(),
+            mfaVerified: z.boolean(),
+            name: z.string(),
+            phone: z.string(),
+            roles: z.array(
+              z.object({
+                createdAt: z.iso.datetime(),
+                description: z.union([z.string(), z.null()]),
+                id: z.uuid(),
+                name: z.string(),
+                permissions: z.array(z.string()),
+                updatedAt: z.iso.datetime(),
+              })
+            ),
+            type: z.enum(['standard', 'collector', 'business', 'system']),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          buyer: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          buyerId: z.optional(z.uuid()),
+          createdAt: z.iso.datetime(),
+          id: z.uuid(),
+          materials: z.array(
+            z.object({
+              createdAt: z.iso.datetime(),
+              id: z.uuid(),
+              material: z.object({
+                carbonFactor: z.string(),
+                createdAt: z.iso.datetime(),
+                gwCode: z.string(),
+                id: z.uuid(),
+                name: z.string(),
+                updatedAt: z.iso.datetime(),
+              }),
+              updatedAt: z.iso.datetime(),
+              value: z.number(),
+              weight: z.number(),
+            })
+          ),
+          seller: z.object({
+            address: z.union([
+              z.object({
+                city: z.string(),
+                country: z.string(),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                lineOne: z.string(),
+                lineTwo: z.union([z.string(), z.null()]),
+                province: z.string(),
+                updatedAt: z.iso.datetime(),
+                zipCode: z.string(),
+              }),
+              z.null(),
+            ]),
+            bankDetails: z.union([
+              z.object({
+                accountHolder: z.string(),
+                accountNumber: z.string(),
+                bankName: z.string(),
+                branchCode: z.optional(z.string()),
+                createdAt: z.iso.datetime(),
+                id: z.uuid(),
+                updatedAt: z.iso.datetime(),
+              }),
+              z.null(),
+            ]),
+            createdAt: z.iso.datetime(),
+            id: z.uuid(),
+            name: z.string(),
+            updatedAt: z.iso.datetime(),
+          }),
+          sellerId: z.optional(z.uuid()),
+          updatedAt: z.iso.datetime(),
+        })
+      ),
+      z.array(
+        z.object({
+          name: z.string(),
+          permissions: z.array(
+            z.object({
+              description: z.string(),
+              value: z.string(),
+            })
+          ),
+        })
+      ),
+    ])
+  ),
+  pageDetails: z.optional(
+    z.union([
+      z.object({
+        count: z.optional(z.int().gte(0)),
+        currentPage: z.optional(z.int().gte(1)),
+        nextPage: z.optional(z.int().gte(2)),
+        pages: z.optional(z.int().gte(0)),
+        previousPage: z.optional(z.int().gte(1)),
+      }),
+      z.null(),
+    ])
+  ),
 });
 
 export const zPatchApiUsersIdData = z.object({
   body: z.object({
+    activeOrganization: z.optional(z.union([z.uuid(), z.null()])),
+    addressId: z.optional(z.union([z.uuid(), z.null()])),
+    banReason: z.optional(z.union([z.string(), z.null()])),
+    bankDetailsId: z.optional(z.union([z.uuid(), z.null()])),
+    banned: z.optional(z.union([z.boolean(), z.null()])),
     email: z.optional(z.union([z.string(), z.null()])),
     name: z.optional(z.union([z.string(), z.null()])),
     password: z.optional(z.union([z.string(), z.null()])),

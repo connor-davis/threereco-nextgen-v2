@@ -1,4 +1,4 @@
-import { deleteApiRolesByIdMutation } from '@/api-client/@tanstack/react-query.gen';
+import { deleteApiRolesIdMutation } from '@/api-client/@tanstack/react-query.gen';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { TrashIcon } from 'lucide-react';
@@ -37,7 +37,7 @@ export default function DeleteRoleByIdDialog({
   const [confirmationValue, setConfirmationValue] = useState<string>('');
 
   const deleteRole = useMutation({
-    ...deleteApiRolesByIdMutation({
+    ...deleteApiRolesIdMutation({
       client: apiClient,
     }),
     onError: (error: ErrorResponse) =>

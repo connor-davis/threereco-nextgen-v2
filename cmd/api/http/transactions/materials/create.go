@@ -23,8 +23,8 @@ func (r *TransactionMaterialsRouter) CreateRoute() routing.Route {
 			WithJSONSchema(schemas.SuccessResponseSchema.Value).
 			WithContent(openapi3.Content{
 				"text/plain": openapi3.NewMediaType().
-					WithSchema(openapi3.NewStringSchema()).
-					WithExample("example", "OK"),
+					WithSchema(openapi3.NewUUIDSchema()).
+					WithExample("example", "3fa85f64-5717-4562-b3fc-2c963f66afa6"),
 			}),
 	})
 
@@ -123,14 +123,16 @@ func (r *TransactionMaterialsRouter) CreateRoute() routing.Route {
 				})
 			}
 
-			if err := r.Services.Transactions().Materials().Create(payload); err != nil {
+			id, err := r.Services.Transactions().Materials().Create(payload)
+
+			if err != nil {
 				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 					"error":   constants.InternalServerError,
 					"message": constants.InternalServerErrorDetails,
 				})
 			}
 
-			return c.SendStatus(fiber.StatusOK)
+			return c.Status(fiber.StatusOK).SendString(id.String())
 		},
 	}
 }

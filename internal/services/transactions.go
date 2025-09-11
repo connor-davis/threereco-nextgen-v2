@@ -9,7 +9,7 @@ import (
 
 type transactionsService interface {
 	Materials() transactionMaterialsService
-	Create(transaction models.CreateTransactionPayload) error
+	Create(transaction models.CreateTransactionPayload) (uuid.UUID, error)
 	Update(transactionId uuid.UUID, transaction models.UpdateTransactionPayload) error
 	Delete(transactionId uuid.UUID) error
 	Find(transactionId uuid.UUID) (*models.Transaction, error)
@@ -35,14 +35,18 @@ func (s *transactions) Materials() transactionMaterialsService {
 	return s.materials
 }
 
-func (s *transactions) Create(payload models.CreateTransactionPayload) error {
+func (s *transactions) Create(payload models.CreateTransactionPayload) (uuid.UUID, error) {
+	var transaction models.Transaction
+
+	transaction.SellerId = payload.SellerId
+	transaction.BuyerId = payload.BuyerId
+
 	if err := s.storage.Postgres.
-		Model(&models.Transaction{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&transaction).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return transaction.Id, nil
 }
 
 func (s *transactions) Update(transactionId uuid.UUID, payload models.UpdateTransactionPayload) error {

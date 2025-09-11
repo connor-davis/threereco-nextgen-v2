@@ -6,10 +6,9 @@ import { useForm } from 'react-hook-form';
 
 import { zodResolver } from '@hookform/resolvers/zod/dist/zod.js';
 import { toast } from 'sonner';
-import z from 'zod';
 
-import type { ErrorResponse } from '@/api-client';
-import { zCreateMaterialPayload } from '@/api-client/zod.gen';
+import type { CreateMaterial, ErrorResponse } from '@/api-client';
+import { zCreateMaterial } from '@/api-client/zod.gen';
 import { apiClient } from '@/lib/utils';
 
 import { Button } from '../ui/button';
@@ -40,8 +39,8 @@ export default function CreateMaterialDialog({
 }) {
   const router = useRouter();
 
-  const createForm = useForm<z.infer<typeof zCreateMaterialPayload>>({
-    resolver: zodResolver(zCreateMaterialPayload),
+  const createForm = useForm<CreateMaterial>({
+    resolver: zodResolver(zCreateMaterial),
   });
 
   const createMaterial = useMutation({

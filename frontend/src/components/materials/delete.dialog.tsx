@@ -1,4 +1,4 @@
-import { deleteApiMaterialsByIdMutation } from '@/api-client/@tanstack/react-query.gen';
+import { deleteApiMaterialsIdMutation } from '@/api-client/@tanstack/react-query.gen';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { TrashIcon } from 'lucide-react';
@@ -37,7 +37,7 @@ export default function DeleteMaterialByIdDialog({
   const [confirmationValue, setConfirmationValue] = useState<string>('');
 
   const deleteMaterial = useMutation({
-    ...deleteApiMaterialsByIdMutation({
+    ...deleteApiMaterialsIdMutation({
       client: apiClient,
     }),
     onError: (error: ErrorResponse) =>

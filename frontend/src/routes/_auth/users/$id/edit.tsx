@@ -1,4 +1,8 @@
-import { putApiUsersByIdMutation } from '@/api-client/@tanstack/react-query.gen';
+import {
+  patchApiAddressesIdMutation,
+  patchApiBankDetailsIdMutation,
+  patchApiUsersIdMutation,
+} from '@/api-client/@tanstack/react-query.gen';
 import { SiMastercard } from '@icons-pack/react-simple-icons';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -27,11 +31,17 @@ import z from 'zod';
 import {
   type ErrorResponse,
   type Role,
+  type UpdateAddress,
+  type UpdateBankDetail,
   type User,
   getApiRoles,
-  getApiUsersById,
+  getApiUsersId,
 } from '@/api-client';
-import { zUpdateUserPayload } from '@/api-client/zod.gen';
+import {
+  zUpdateAddress,
+  zUpdateBankDetail,
+  zUpdateUser,
+} from '@/api-client/zod.gen';
 import PermissionGuard from '@/components/guards/permission';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -55,9 +65,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { InputTags } from '@/components/ui/input-tags';
 import { Label } from '@/components/ui/label';
-import { NumberInput } from '@/components/ui/number-input';
 import { PhoneInput } from '@/components/ui/phone-input';
 import {
   Stepper,
@@ -111,7 +119,7 @@ export const Route = createFileRoute('/_auth/users/$id/edit')({
     rolesSearch,
   }),
   loader: async ({ params: { id }, deps: { rolesPage, rolesSearch } }) => {
-    const { data: user } = await getApiUsersById({
+    const { data: user } = await getApiUsersId({
       client: apiClient,
       path: {
         id,
@@ -124,6 +132,7 @@ export const Route = createFileRoute('/_auth/users/$id/edit')({
       query: {
         page: rolesPage,
         search: rolesSearch,
+        limit: 10,
       },
       throwOnError: true,
     });
@@ -144,22 +153,30 @@ function RouteComponent() {
 
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const updateForm = useForm<z.infer<typeof zUpdateUserPayload>>({
-    resolver: zodResolver(zUpdateUserPayload),
+  const updateUserForm = useForm<z.infer<typeof zUpdateUser>>({
+    resolver: zodResolver(zUpdateUser),
     values: {
       name: user.name,
       email: user.email,
-      jobTitle: user.jobTitle,
       phone: user.phone,
-      address: user.address,
-      bankDetails: user.bankDetails,
-      roles: user.roles?.map((role) => role.id),
-      tags: user.tags,
+      roles: user.roles,
+      addressId: user.address?.id,
+      bankDetailsId: user.bankDetails?.id,
     },
   });
 
+  const updateAddressForm = useForm<UpdateAddress>({
+    resolver: zodResolver(zUpdateAddress),
+    values: user.address ?? {},
+  });
+
+  const updateBankDetailsForm = useForm<UpdateBankDetail>({
+    resolver: zodResolver(zUpdateBankDetail),
+    values: user.bankDetails ?? {},
+  });
+
   const updateUser = useMutation({
-    ...putApiUsersByIdMutation({
+    ...patchApiUsersIdMutation({
       client: apiClient,
     }),
     onError: (error: ErrorResponse) =>
@@ -174,6 +191,48 @@ function RouteComponent() {
       });
 
       setCurrentStep(6);
+
+      return router.invalidate();
+    },
+  });
+
+  const updateAddress = useMutation({
+    ...patchApiAddressesIdMutation({
+      client: apiClient,
+    }),
+    onError: (error: ErrorResponse) =>
+      toast.error(error.error, {
+        description: error.message,
+        duration: 2000,
+      }),
+    onSuccess: () => {
+      toast.success('Success', {
+        description: 'The address has been updated successfully.',
+        duration: 2000,
+      });
+
+      setCurrentStep(2);
+
+      return router.invalidate();
+    },
+  });
+
+  const updateBankDetails = useMutation({
+    ...patchApiBankDetailsIdMutation({
+      client: apiClient,
+    }),
+    onError: (error: ErrorResponse) =>
+      toast.error(error.error, {
+        description: error.message,
+        duration: 2000,
+      }),
+    onSuccess: () => {
+      toast.success('Success', {
+        description: 'The bank details have been updated successfully.',
+        duration: 2000,
+      });
+
+      setCurrentStep(3);
 
       return router.invalidate();
     },
@@ -194,404 +253,259 @@ function RouteComponent() {
         <div className="flex items-center gap-3"></div>
       </div>
 
-      <Form {...updateForm}>
-        <form
-          onSubmit={updateForm.handleSubmit((values) =>
-            updateUser.mutate({
-              path: {
-                id,
-              },
-              body: values,
-            })
-          )}
-          className="flex flex-col w-full h-auto gap-5 overflow-hidden"
-        >
-          <Stepper
-            value={currentStep}
-            onValueChange={setCurrentStep}
-            indicators={{
-              completed: <CheckIcon className="size-4" />,
-              loading: <LoaderCircleIcon className="size-4 animate-spin" />,
-            }}
-            className="flex flex-col w-full h-full gap-5 overflow-hidden"
+      <Stepper
+        value={currentStep}
+        onValueChange={setCurrentStep}
+        indicators={{
+          completed: <CheckIcon className="size-4" />,
+          loading: <LoaderCircleIcon className="size-4 animate-spin" />,
+        }}
+        className="flex flex-col w-full h-full gap-5 overflow-hidden"
+      >
+        <StepperNav className="flex gap-3 h-32">
+          <StepperItem step={1} className="relative flex-1 items-start">
+            <StepperTrigger
+              className="flex flex-col items-start justify-center gap-2.5 grow"
+              asChild
+            >
+              <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                <IdCardIcon className="size-4" />
+              </StepperIndicator>
+              <div className="flex flex-col items-start gap-1">
+                <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                  Step 1
+                </div>
+                <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                  User Details
+                </StepperTitle>
+                <div>
+                  <Badge
+                    variant="secondary"
+                    className="hidden group-data-[state=active]/step:inline-flex"
+                  >
+                    In Progress
+                  </Badge>
+                  <Badge
+                    variant="default"
+                    className="hidden group-data-[state=completed]/step:inline-flex"
+                  >
+                    Completed
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </StepperTrigger>
+            <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+          </StepperItem>
+
+          <StepperItem step={2} className="relative flex-1 items-start">
+            <StepperTrigger
+              className="flex flex-col items-start justify-center gap-2.5 grow"
+              asChild
+            >
+              <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                <MapPinIcon className="size-4" />
+              </StepperIndicator>
+              <div className="flex flex-col items-start gap-1">
+                <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                  Step 2
+                </div>
+                <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                  User Address
+                </StepperTitle>
+                <div>
+                  <Badge
+                    variant="secondary"
+                    className="hidden group-data-[state=active]/step:inline-flex"
+                  >
+                    In Progress
+                  </Badge>
+                  <Badge
+                    variant="default"
+                    className="hidden group-data-[state=completed]/step:inline-flex"
+                  >
+                    Completed
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </StepperTrigger>
+            <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+          </StepperItem>
+
+          <StepperItem step={3} className="relative flex-1 items-start">
+            <StepperTrigger
+              className="flex flex-col items-start justify-center gap-2.5 grow"
+              asChild
+            >
+              <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                <WalletIcon className="size-4" />
+              </StepperIndicator>
+              <div className="flex flex-col items-start gap-1">
+                <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                  Step 3
+                </div>
+                <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                  User Bank Details
+                </StepperTitle>
+                <div>
+                  <Badge
+                    variant="secondary"
+                    className="hidden group-data-[state=active]/step:inline-flex"
+                  >
+                    In Progress
+                  </Badge>
+                  <Badge
+                    variant="default"
+                    className="hidden group-data-[state=completed]/step:inline-flex"
+                  >
+                    Completed
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </StepperTrigger>
+            <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+          </StepperItem>
+
+          <StepperItem step={5} className="relative flex-1 items-start">
+            <StepperTrigger
+              className="flex flex-col items-start justify-center gap-2.5 grow"
+              asChild
+            >
+              <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                <KeyIcon className="size-4" />
+              </StepperIndicator>
+              <div className="flex flex-col items-start gap-1">
+                <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                  Step 4
+                </div>
+                <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                  User Roles
+                </StepperTitle>
+                <div>
+                  <Badge
+                    variant="secondary"
+                    className="hidden group-data-[state=active]/step:inline-flex"
+                  >
+                    In Progress
+                  </Badge>
+                  <Badge
+                    variant="default"
+                    className="hidden group-data-[state=completed]/step:inline-flex"
+                  >
+                    Completed
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </StepperTrigger>
+            <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+          </StepperItem>
+
+          <StepperItem step={5} className="relative flex-1 items-start">
+            <StepperTrigger
+              className="flex flex-col items-start justify-center gap-2.5 grow"
+              asChild
+            >
+              <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                <CircleAlertIcon className="size-4" />
+              </StepperIndicator>
+              <div className="flex flex-col items-start gap-1">
+                <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                  Step 5
+                </div>
+                <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                  User Overview
+                </StepperTitle>
+                <div>
+                  <Badge
+                    variant="secondary"
+                    className="hidden group-data-[state=active]/step:inline-flex"
+                  >
+                    In Progress
+                  </Badge>
+                  <Badge
+                    variant="default"
+                    className="hidden group-data-[state=completed]/step:inline-flex"
+                  >
+                    Completed
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </StepperTrigger>
+            <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+          </StepperItem>
+
+          <StepperItem
+            step={6}
+            className="relative items-start"
+            loading={updateUser.isPending}
           >
-            <StepperNav className="flex gap-3 h-32">
-              <StepperItem step={1} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <IdCardIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 1
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Details
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
+            <StepperTrigger
+              className="flex flex-col items-start justify-center gap-2.5"
+              asChild
+            >
+              <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                <CheckIcon className="size-4" />
+              </StepperIndicator>
+              <div className="flex flex-col items-start gap-1">
+                <div className="text-[10px] font-semibold uppercase text-muted-foreground"></div>
+                <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                  User Updated
+                </StepperTitle>
+              </div>
+            </StepperTrigger>
+          </StepperItem>
+        </StepperNav>
 
-              <StepperItem step={2} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <MapPinIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 2
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Address
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={3} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <WalletIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 3
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Bank Details
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={5} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <KeyIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 4
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Roles
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={5} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <CircleAlertIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 5
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Overview
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem
-                step={6}
-                className="relative items-start"
-                loading={updateUser.isPending}
-              >
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <CheckIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground"></div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Updated
-                    </StepperTitle>
-                  </div>
-                </StepperTrigger>
-              </StepperItem>
-            </StepperNav>
-
-            <StepperPanel className="flex flex-col w-full h-full overflow-hidden">
+        <StepperPanel className="flex flex-col w-full h-full overflow-hidden">
+          <Form {...updateAddressForm}>
+            <form
+              onSubmit={updateAddressForm.handleSubmit((values) =>
+                updateAddress.mutate({
+                  path: {
+                    id: user.address!.id,
+                  },
+                  body: values,
+                })
+              )}
+              className="flex flex-col w-full h-auto gap-5 overflow-hidden"
+            >
               <StepperContent
                 value={1}
-                className="flex flex-col w-full h-full gap-10 overflow-hidden"
-              >
-                <div className="flex flex-col w-full h-full overflow-y-auto gap-10">
-                  <div className="flex flex-col w-full h-auto gap-5">
-                    <Label className="text-muted-foreground">
-                      Authentication Details
-                    </Label>
-
-                    <FormField
-                      control={updateForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="Email"
-                              {...field}
-                              value={field.value ?? undefined}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's email address.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <div className="flex flex-col w-full h-auto gap-5">
-                    <Label className="text-muted-foreground">
-                      Profile Details
-                    </Label>
-
-                    <FormField
-                      control={updateForm.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Name</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="text"
-                              placeholder="Name"
-                              {...field}
-                              value={field.value ?? undefined}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's name.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={updateForm.control}
-                      name="jobTitle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Title</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="text"
-                              placeholder="Job Title"
-                              {...field}
-                              value={field.value ?? undefined}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's job title.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={updateForm.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <PhoneInput
-                              defaultCountry="ZA"
-                              type="tel"
-                              placeholder="Phone Number"
-                              {...field}
-                              value={field.value ?? undefined}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's phone number.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={updateForm.control}
-                      name="tags"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Tags</FormLabel>
-                          <FormControl>
-                            <InputTags
-                              type="text"
-                              placeholder="Tags"
-                              {...field}
-                              value={field.value ?? []}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's tags.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
-                  <Link to="/users">
-                    <Button type="button" variant="outline" className="w-full">
-                      Cancel
-                    </Button>
-                  </Link>
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    onClick={() => setCurrentStep(2)}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </StepperContent>
-
-              <StepperContent
-                value={2}
                 className="flex flex-col w-full h-full overflow-hidden gap-10"
               >
                 <div className="flex flex-col w-full h-full overflow-y-auto gap-5">
                   <FormField
-                    control={updateForm.control}
-                    name="address.lineOne"
+                    control={updateAddressForm.control}
+                    name="lineOne"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Address Line One</FormLabel>
@@ -612,8 +526,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="address.lineTwo"
+                    control={updateAddressForm.control}
+                    name="lineTwo"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Address Line Two</FormLabel>
@@ -635,8 +549,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="address.city"
+                    control={updateAddressForm.control}
+                    name="city"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>City</FormLabel>
@@ -657,18 +571,18 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="address.postalCode"
+                    control={updateAddressForm.control}
+                    name="zipCode"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Zip Code</FormLabel>
                         <FormControl>
-                          <NumberInput
+                          <Input
+                            type="text"
                             placeholder="Zip Code"
                             className="w-full"
                             {...field}
                             value={field.value ?? undefined}
-                            onValueChange={field.onChange}
                           />
                         </FormControl>
                         <FormDescription>
@@ -680,8 +594,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="address.state"
+                    control={updateAddressForm.control}
+                    name="province"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Province</FormLabel>
@@ -702,8 +616,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="address.country"
+                    control={updateAddressForm.control}
+                    name="country"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Country</FormLabel>
@@ -725,32 +639,39 @@ function RouteComponent() {
                 </div>
 
                 <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setCurrentStep(1)}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    onClick={() => setCurrentStep(3)}
-                  >
+                  <Link to="/users">
+                    <Button type="button" variant="outline" className="w-full">
+                      Cancel
+                    </Button>
+                  </Link>
+                  <Button type="submit" className="w-full">
                     Continue
                   </Button>
                 </div>
               </StepperContent>
+            </form>
+          </Form>
 
+          <Form {...updateBankDetailsForm}>
+            <form
+              onSubmit={updateBankDetailsForm.handleSubmit((values) =>
+                updateBankDetails.mutate({
+                  path: {
+                    id: user.bankDetails!.id,
+                  },
+                  body: values,
+                })
+              )}
+              className="flex flex-col w-full h-auto gap-5 overflow-hidden"
+            >
               <StepperContent
-                value={3}
+                value={2}
                 className="flex flex-col w-full h-full overflow-hidden gap-10"
               >
                 <div className="flex flex-col w-full h-full overflow-y-auto gap-5">
                   <FormField
-                    control={updateForm.control}
-                    name="bankDetails.accountHolder"
+                    control={updateBankDetailsForm.control}
+                    name="accountHolder"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Account Holder</FormLabel>
@@ -771,8 +692,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="bankDetails.accountNumber"
+                    control={updateBankDetailsForm.control}
+                    name="accountNumber"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Account Number</FormLabel>
@@ -793,8 +714,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="bankDetails.bankName"
+                    control={updateBankDetailsForm.control}
+                    name="bankName"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Bank Name</FormLabel>
@@ -815,8 +736,8 @@ function RouteComponent() {
                   />
 
                   <FormField
-                    control={updateForm.control}
-                    name="bankDetails.branchCode"
+                    control={updateBankDetailsForm.control}
+                    name="branchCode"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Branch Code</FormLabel>
@@ -842,12 +763,126 @@ function RouteComponent() {
                     type="button"
                     variant="outline"
                     className="w-full"
+                    onClick={() => setCurrentStep(1)}
+                  >
+                    Back
+                  </Button>
+                  <Button type="submit" className="w-full">
+                    Continue
+                  </Button>
+                </div>
+              </StepperContent>
+            </form>
+          </Form>
+
+          <Form {...updateUserForm}>
+            <form
+              onSubmit={updateUserForm.handleSubmit((values) =>
+                updateUser.mutate({
+                  path: {
+                    id: user.id,
+                  },
+                  body: values,
+                })
+              )}
+              className="flex flex-col w-full h-auto gap-5 overflow-hidden"
+            >
+              <StepperContent
+                value={3}
+                className="flex flex-col w-full h-full gap-10 overflow-hidden"
+              >
+                <div className="flex flex-col w-full h-full overflow-y-auto gap-10">
+                  <div className="flex flex-col w-full h-auto gap-5">
+                    <Label className="text-muted-foreground">
+                      Authentication Details
+                    </Label>
+
+                    <FormField
+                      control={updateUserForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="Email"
+                              {...field}
+                              value={field.value ?? undefined}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Enter the user's email
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={updateUserForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <PhoneInput
+                              defaultCountry="ZA"
+                              type="tel"
+                              placeholder="Phone Number"
+                              {...field}
+                              value={field.value ?? undefined}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Enter the user's phone number.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="flex flex-col w-full h-auto gap-5">
+                    <Label className="text-muted-foreground">
+                      Profile Details
+                    </Label>
+
+                    <FormField
+                      control={updateUserForm.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="text"
+                              placeholder="Name"
+                              {...field}
+                              value={field.value ?? undefined}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Enter the user's name.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
                     onClick={() => setCurrentStep(2)}
                   >
                     Back
                   </Button>
                   <Button
-                    type="submit"
+                    type="button"
                     className="w-full"
                     onClick={() => setCurrentStep(4)}
                   >
@@ -893,20 +928,26 @@ function RouteComponent() {
                       <Label className="hover:bg-accent flex items-center justify-between gap-3 rounded-lg border p-3">
                         <Checkbox
                           id="toggle-2"
-                          checked={(updateForm.watch().roles ?? []).includes(
-                            role.id
-                          )}
+                          checked={(updateUserForm.watch().roles ?? [])
+                            .map((role) => role.id)
+                            .includes(role.id)}
                           onCheckedChange={(checked) => {
+                            const foundRole = roles.find(
+                              (_role) => _role.id === role.id
+                            );
+
+                            if (!foundRole) return;
+
                             if (checked) {
-                              updateForm.setValue('roles', [
-                                ...(updateForm.getValues().roles ?? []),
-                                role.id,
+                              updateUserForm.setValue('roles', [
+                                ...(updateUserForm.getValues().roles ?? []),
+                                foundRole,
                               ]);
                             } else {
-                              updateForm.setValue('roles', [
-                                ...(updateForm.getValues().roles ?? []).filter(
-                                  (id) => id !== role.id
-                                ),
+                              updateUserForm.setValue('roles', [
+                                ...(
+                                  updateUserForm.getValues().roles ?? []
+                                ).filter((_role) => _role.id !== role.id),
                               ]);
                             }
                           }}
@@ -1009,7 +1050,8 @@ function RouteComponent() {
                               Email
                             </Label>
                             <Label className="font-medium">
-                              {updateForm.getValues().email ?? 'Not provided'}
+                              {updateUserForm.getValues().email ??
+                                'Not provided'}
                             </Label>
                           </div>
 
@@ -1018,16 +1060,7 @@ function RouteComponent() {
                               Name
                             </Label>
                             <Label className="font-medium">
-                              {updateForm.getValues().name ?? 'Not provided'}
-                            </Label>
-                          </div>
-
-                          <div className="flex flex-col w-full h-auto gap-1">
-                            <Label className="text-sm text-muted-foreground">
-                              Job Title
-                            </Label>
-                            <Label className="font-medium">
-                              {updateForm.getValues().jobTitle ??
+                              {updateUserForm.getValues().name ??
                                 'Not provided'}
                             </Label>
                           </div>
@@ -1037,18 +1070,8 @@ function RouteComponent() {
                               Phone Number
                             </Label>
                             <Label className="font-medium">
-                              {updateForm.getValues().phone ?? 'Not provided'}
-                            </Label>
-                          </div>
-
-                          <div className="flex flex-col w-full h-auto gap-1">
-                            <Label className="text-sm text-muted-foreground">
-                              Tags
-                            </Label>
-                            <Label className="font-medium">
-                              {updateForm.getValues().tags?.length
-                                ? updateForm.getValues().tags?.join(', ')
-                                : 'Not provided'}
+                              {updateUserForm.getValues().phone ??
+                                'Not provided'}
                             </Label>
                           </div>
                         </div>
@@ -1067,7 +1090,7 @@ function RouteComponent() {
                       <CardContent className="flex flex-col w-full h-full gap-5">
                         <iframe
                           src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyB2NIWI3Tv9iDPrlnowr_0ZqZWoAQydKJU&q=${Object.values(
-                            updateForm.getValues().address ?? {}
+                            updateAddressForm.getValues()
                           )
                             .filter((value) => value)
                             .join(', ')}`}
@@ -1090,8 +1113,8 @@ function RouteComponent() {
                           <div className="relative grid grid-cols-2 grid-rows-2 w-120 aspect-video rounded-2xl bg-gray-950 border border-primary/60 dark:border-primary/20 p-5">
                             <div className="flex flex-col items-start justify-start w-full h-auto gap-2">
                               <Label className="text-2xl font-bold">
-                                {updateForm.getValues().bankDetails
-                                  ?.accountHolder ?? 'Not provided'}
+                                {updateBankDetailsForm.getValues()
+                                  .accountHolder ?? 'Not provided'}
                               </Label>
                             </div>
 
@@ -1101,19 +1124,19 @@ function RouteComponent() {
 
                             <div className="flex flex-col items-start justify-end w-full h-auto gap-2">
                               <Label className="font-mono text-muted-foreground">
-                                {updateForm.getValues().bankDetails
-                                  ?.accountNumber ?? 'Not provided'}
+                                {updateBankDetailsForm.getValues()
+                                  .accountNumber ?? 'Not provided'}
                               </Label>
                             </div>
 
                             <div className="flex flex-col items-end justify-end w-full h-auto gap-2">
                               <Label className="font-semibold text-lg">
-                                {updateForm.getValues().bankDetails?.bankName ??
+                                {updateBankDetailsForm.getValues().bankName ??
                                   'Not provided'}
                               </Label>
                               <Label className="font-mono text-muted-foreground">
-                                {updateForm.getValues().bankDetails
-                                  ?.branchCode ?? 'Not provided'}
+                                {updateBankDetailsForm.getValues().branchCode ??
+                                  'Not provided'}
                               </Label>
                             </div>
                           </div>
@@ -1157,10 +1180,10 @@ function RouteComponent() {
                   </Button>
                 </div>
               </StepperContent>
-            </StepperPanel>
-          </Stepper>
-        </form>
-      </Form>
+            </form>
+          </Form>
+        </StepperPanel>
+      </Stepper>
     </div>
   );
 }

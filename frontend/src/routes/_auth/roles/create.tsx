@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
-import type { CreateRolePayload, ErrorResponse } from '@/api-client';
-import { zCreateRolePayload } from '@/api-client/zod.gen';
+import type { CreateRole, ErrorResponse } from '@/api-client';
+import { zCreateRole } from '@/api-client/zod.gen';
 import PermissionGuard from '@/components/guards/permission';
 import { Button } from '@/components/ui/button';
 import {
@@ -36,8 +36,8 @@ export const Route = createFileRoute('/_auth/roles/create')({
 function RouteComponent() {
   const router = useRouter();
 
-  const createForm = useForm<CreateRolePayload>({
-    resolver: zodResolver(zCreateRolePayload),
+  const createForm = useForm<CreateRole>({
+    resolver: zodResolver(zCreateRole),
   });
 
   const createRole = useMutation({

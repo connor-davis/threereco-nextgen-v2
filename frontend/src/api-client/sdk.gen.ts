@@ -74,6 +74,9 @@ import type {
   GetApiOrganizationsIdErrors,
   GetApiOrganizationsIdResponses,
   GetApiOrganizationsResponses,
+  GetApiPermissionsData,
+  GetApiPermissionsErrors,
+  GetApiPermissionsResponses,
   GetApiRolesData,
   GetApiRolesErrors,
   GetApiRolesIdData,
@@ -881,6 +884,23 @@ export const patchApiOrganizationsId = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options.headers,
     },
+  });
+};
+
+/**
+ * List Permissions
+ * List all permissions in the system.
+ */
+export const getApiPermissions = <ThrowOnError extends boolean = false>(
+  options?: Options<GetApiPermissionsData, ThrowOnError>
+) => {
+  return (options?.client ?? _heyApiClient).get<
+    GetApiPermissionsResponses,
+    GetApiPermissionsErrors,
+    ThrowOnError
+  >({
+    url: '/api/permissions',
+    ...options,
   });
 };
 

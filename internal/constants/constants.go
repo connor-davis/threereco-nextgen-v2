@@ -47,7 +47,7 @@ var AvailablePermissionsGroups = []models.AvailablePermissionsGroup{
 				Description: "Permission to create users.",
 			},
 			{
-				Value:       "users.view",
+				Value:       "users.view.*",
 				Description: "Permission to view users.",
 			},
 			{
@@ -59,7 +59,7 @@ var AvailablePermissionsGroups = []models.AvailablePermissionsGroup{
 				Description: "Permission to view other user.",
 			},
 			{
-				Value:       "users.update",
+				Value:       "users.update.*",
 				Description: "Permission to update users.",
 			},
 			{
@@ -67,11 +67,11 @@ var AvailablePermissionsGroups = []models.AvailablePermissionsGroup{
 				Description: "Permission to update own user.",
 			},
 			{
-				Value:       "users.view.other",
-				Description: "Permission to view other user.",
+				Value:       "users.update.other",
+				Description: "Permission to update other user.",
 			},
 			{
-				Value:       "users.delete",
+				Value:       "users.delete.*",
 				Description: "Permission to delete users.",
 			},
 			{
@@ -150,6 +150,10 @@ var AvailablePermissionsGroups = []models.AvailablePermissionsGroup{
 				Description: "All permissions related to audit logs.",
 			},
 			{
+				Value:       "audit_logs.access",
+				Description: "Permission to access audit logs management.",
+			},
+			{
 				Value:       "audit_logs.create",
 				Description: "Permission to create audit logs.",
 			},
@@ -197,35 +201,6 @@ var AvailablePermissionsGroups = []models.AvailablePermissionsGroup{
 		},
 	},
 	{
-		Name: "Products",
-		Permissions: []models.AvailablePermission{
-			{
-				Value:       "products.*",
-				Description: "All permissions related to products.",
-			},
-			{
-				Value:       "products.access",
-				Description: "Permission to access products management.",
-			},
-			{
-				Value:       "products.create",
-				Description: "Permission to create products.",
-			},
-			{
-				Value:       "products.view",
-				Description: "Permission to view products.",
-			},
-			{
-				Value:       "products.update",
-				Description: "Permission to update products.",
-			},
-			{
-				Value:       "products.delete",
-				Description: "Permission to delete products.",
-			},
-		},
-	},
-	{
 		Name: "Transactions",
 		Permissions: []models.AvailablePermission{
 			{
@@ -255,31 +230,31 @@ var AvailablePermissionsGroups = []models.AvailablePermissionsGroup{
 		},
 	},
 	{
-		Name: "Notifications",
+		Name: "Collections",
 		Permissions: []models.AvailablePermission{
 			{
-				Value:       "notifications.*",
-				Description: "All permissions related to notifications.",
+				Value:       "collections.*",
+				Description: "All permissions related to collections.",
 			},
 			{
-				Value:       "notifications.access",
-				Description: "Permission to access notifications management.",
+				Value:       "collections.access",
+				Description: "Permission to access collections management.",
 			},
 			{
-				Value:       "notifications.create",
-				Description: "Permission to create notifications.",
+				Value:       "collections.create",
+				Description: "Permission to create collections.",
 			},
 			{
-				Value:       "notifications.view",
-				Description: "Permission to view notifications.",
+				Value:       "collections.view",
+				Description: "Permission to view collections.",
 			},
 			{
-				Value:       "notifications.update",
-				Description: "Permission to update notifications.",
+				Value:       "collections.update",
+				Description: "Permission to update collections.",
 			},
 			{
-				Value:       "notifications.delete",
-				Description: "Permission to delete notifications.",
+				Value:       "collections.delete",
+				Description: "Permission to delete collections.",
 			},
 		},
 	},

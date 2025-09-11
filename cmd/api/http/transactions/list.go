@@ -6,7 +6,6 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -23,50 +22,7 @@ func (r *TransactionsRouter) ListRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful transactions retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.TransactionsSchema.Value).
-					WithExample("example", []map[string]any{
-						{
-							"id": uuid.New(),
-							"collector": map[string]any{
-								"id":        uuid.New(),
-								"name":      "Collector Name",
-								"email":     "collector@example.com",
-								"phone":     "+1234567890",
-								"type":      "collector",
-								"createdAt": "2023-10-01T12:00:00Z",
-								"updatedAt": "2023-10-01T12:00:00Z",
-							},
-							"organization": map[string]any{
-								"id":        uuid.New(),
-								"name":      "Organization Name",
-								"createdAt": "2023-10-01T12:00:00Z",
-								"updatedAt": "2023-10-01T12:00:00Z",
-							},
-							"materials": []map[string]any{
-								{
-									"id": uuid.New(),
-									"material": map[string]any{
-										"id":           uuid.New(),
-										"name":         "Material Name",
-										"gwCode":       "MAT-123",
-										"carbonFactor": "0.5",
-										"createdAt":    "2023-10-01T12:00:00Z",
-										"updatedAt":    "2023-10-01T12:00:00Z",
-									},
-									"weight":    12.34,
-									"value":     56.78,
-									"createdAt": "2023-10-01T12:00:00Z",
-									"updatedAt": "2023-10-01T12:00:00Z",
-								},
-							},
-							"createdAt": "2023-10-01T12:00:00Z",
-							"updatedAt": "2023-10-01T12:00:00Z",
-						},
-					}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

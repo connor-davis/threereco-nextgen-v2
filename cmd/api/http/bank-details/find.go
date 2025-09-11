@@ -20,20 +20,7 @@ func (r *BankDetailsRouter) FindRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful bank details retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.BankDetailSchema.Value).
-					WithExample("example", map[string]any{
-						"id":            uuid.New(),
-						"accountHolder": "John Doe",
-						"accountNumber": "12345678",
-						"bankName":      "Bank of Examples",
-						"branchCode":    "823494",
-						"createdAt":     "2023-10-01T12:00:00Z",
-						"updatedAt":     "2023-10-01T12:00:00Z",
-					}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

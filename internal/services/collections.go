@@ -9,7 +9,7 @@ import (
 
 type collectionsService interface {
 	Materials() collectionMaterialsService
-	Create(payload models.CreateCollectionPayload) error
+	Create(payload models.CreateCollectionPayload) (uuid.UUID, error)
 	Update(collectionId uuid.UUID, payload models.UpdateCollectionPayload) error
 	Delete(collectionId uuid.UUID) error
 	Find(collectionId uuid.UUID) (*models.Collection, error)
@@ -35,14 +35,18 @@ func (s *collections) Materials() collectionMaterialsService {
 	return s.materials
 }
 
-func (s *collections) Create(payload models.CreateCollectionPayload) error {
+func (s *collections) Create(payload models.CreateCollectionPayload) (uuid.UUID, error) {
+	var collection models.Collection
+
+	collection.SellerId = payload.SellerId
+	collection.BuyerId = payload.BuyerId
+
 	if err := s.storage.Postgres.
-		Model(&models.Collection{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&collection).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return collection.Id, nil
 }
 
 func (s *collections) Update(collectionId uuid.UUID, payload models.UpdateCollectionPayload) error {

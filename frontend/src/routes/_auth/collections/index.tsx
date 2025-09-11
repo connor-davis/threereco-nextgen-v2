@@ -5,7 +5,6 @@ import {
   useRouter,
 } from '@tanstack/react-router';
 
-import { capitalCase } from 'change-case';
 import { format, parseISO } from 'date-fns';
 import z from 'zod';
 
@@ -61,6 +60,7 @@ export const Route = createFileRoute('/_auth/collections/')({
       query: {
         page,
         search,
+        limit: 10,
       },
       throwOnError: true,
     });
@@ -121,25 +121,12 @@ function RouteComponent() {
               )}
             >
               <div className="flex w-full h-auto items-center justify-between gap-3">
-                <div className="flex flex-col">
-                  <Label>{capitalCase(collection.type)}</Label>
-                  <Label className="text-xs text-muted-foreground">
-                    {`${new Intl.NumberFormat('en-ZA', {
-                      style: 'currency',
-                      currency: 'ZAR',
-                    }).format(
-                      collection.amount ?? 0
-                    )} @ ${new Intl.NumberFormat('en-ZA', {
-                      style: 'unit',
-                      unit: 'kilogram',
-                    }).format(collection.weight ?? 0)}`}
-                  </Label>
-                </div>
                 <div className="flex items-center gap-1">
                   <Label className="text-muted-foreground">
                     {format(parseISO(collection.createdAt), 'PPP')}
                   </Label>
                 </div>
+                <div className="flex flex-col"></div>
               </div>
               <div className="flex items-center gap-3">
                 <PermissionGuard value="transactions.update">
@@ -167,40 +154,38 @@ function RouteComponent() {
         )}
       </div>
 
-      {pageDetails.pages && (
-        <div className="flex items-center justify-end w-full p-3">
-          <Label className="text-xs text-muted-foreground">
-            Page {page} of {pageDetails.pages}
-          </Label>
+      <div className="flex items-center justify-end w-full p-3">
+        <Label className="text-xs text-muted-foreground">
+          Page {page} of {pageDetails.pages}
+        </Label>
 
-          <Link
-            to="/collections"
-            search={{ page: pageDetails.previousPage }}
+        <Link
+          to="/collections"
+          search={{ page: pageDetails.previousPage }}
+          disabled={page === pageDetails.previousPage}
+        >
+          <Button
+            variant="outline"
+            className="ml-3"
             disabled={page === pageDetails.previousPage}
           >
-            <Button
-              variant="outline"
-              className="ml-3"
-              disabled={page === pageDetails.previousPage}
-            >
-              Previous
-            </Button>
-          </Link>
-          <Link
-            to="/collections"
-            search={{ page: pageDetails.nextPage }}
+            Previous
+          </Button>
+        </Link>
+        <Link
+          to="/collections"
+          search={{ page: pageDetails.nextPage }}
+          disabled={page === pageDetails.nextPage}
+        >
+          <Button
+            variant="outline"
+            className="ml-1"
             disabled={page === pageDetails.nextPage}
           >
-            <Button
-              variant="outline"
-              className="ml-1"
-              disabled={page === pageDetails.nextPage}
-            >
-              Next
-            </Button>
-          </Link>
-        </div>
-      )}
+            Next
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { deleteApiTransactionsByIdMutation } from '@/api-client/@tanstack/react-query.gen';
+import { deleteApiTransactionsIdMutation } from '@/api-client/@tanstack/react-query.gen';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from '@tanstack/react-router';
 import { TrashIcon } from 'lucide-react';
@@ -35,7 +35,7 @@ export default function DeleteTransactionByIdDialog({
   const [confirmationValue, setConfirmationValue] = useState<string>('');
 
   const deleteTransaction = useMutation({
-    ...deleteApiTransactionsByIdMutation({
+    ...deleteApiTransactionsIdMutation({
       client: apiClient,
     }),
     onError: (error: ErrorResponse) =>

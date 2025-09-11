@@ -33,6 +33,7 @@ import {
   getApiMaterialsId,
   getApiOrganizations,
   getApiOrganizationsId,
+  getApiPermissions,
   getApiRoles,
   getApiRolesId,
   getApiTransactions,
@@ -123,6 +124,7 @@ import type {
   GetApiOrganizationsError,
   GetApiOrganizationsIdData,
   GetApiOrganizationsResponse,
+  GetApiPermissionsData,
   GetApiRolesData,
   GetApiRolesError,
   GetApiRolesIdData,
@@ -1807,6 +1809,31 @@ export const patchApiOrganizationsIdMutation = (
     },
   };
   return mutationOptions;
+};
+
+export const getApiPermissionsQueryKey = (
+  options?: Options<GetApiPermissionsData>
+) => createQueryKey('getApiPermissions', options);
+
+/**
+ * List Permissions
+ * List all permissions in the system.
+ */
+export const getApiPermissionsOptions = (
+  options?: Options<GetApiPermissionsData>
+) => {
+  return queryOptions({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await getApiPermissions({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: getApiPermissionsQueryKey(options),
+  });
 };
 
 export const getApiRolesQueryKey = (options: Options<GetApiRolesData>) =>

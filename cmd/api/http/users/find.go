@@ -20,20 +20,7 @@ func (r *UsersRouter) FindRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful user retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.UserSchema.Value).
-					WithExample("example", map[string]any{
-						"id":        uuid.New(),
-						"name":      "User Name",
-						"email":     "user@example.com",
-						"phone":     "+1234567890",
-						"type":      "admin",
-						"createdAt": "2023-10-01T12:00:00Z",
-						"updatedAt": "2023-10-01T12:00:00Z",
-					}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

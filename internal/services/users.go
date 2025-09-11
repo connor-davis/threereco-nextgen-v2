@@ -9,7 +9,7 @@ import (
 )
 
 type usersService interface {
-	Create(payload models.CreateUserPayload) error
+	Create(payload models.CreateUserPayload) (uuid.UUID, error)
 	Update(userId uuid.UUID, payload models.UpdateUserPayload) error
 	Delete(userId uuid.UUID) error
 	Find(userId uuid.UUID) (*models.User, error)
@@ -29,7 +29,7 @@ func newUsersService(storage storage.Storage) usersService {
 	}
 }
 
-func (s *users) Create(payload models.CreateUserPayload) error {
+func (s *users) Create(payload models.CreateUserPayload) (uuid.UUID, error) {
 	var user models.User
 
 	user.Name = payload.Name
@@ -39,7 +39,7 @@ func (s *users) Create(payload models.CreateUserPayload) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(payload.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-		return err
+		return uuid.Nil, err
 	}
 
 	user.Password = hashedPassword
@@ -48,17 +48,17 @@ func (s *users) Create(payload models.CreateUserPayload) error {
 	if err := s.storage.Postgres.
 		Model(&models.User{}).
 		Create(&user).Error; err != nil {
-		return err
+		return uuid.Nil, err
 	}
 
 	if payload.Roles != nil {
 		if err := s.storage.Postgres.
 			Model(&user).Association("Roles").Append(payload.Roles); err != nil {
-			return err
+			return uuid.Nil, err
 		}
 	}
 
-	return nil
+	return user.Id, nil
 }
 
 func (s *users) Update(userId uuid.UUID, payload models.UpdateUserPayload) error {
@@ -116,6 +116,9 @@ func (s *users) Find(userId uuid.UUID) (*models.User, error) {
 
 	if err := s.storage.Postgres.
 		Where("id = ?", userId).
+		Preload("Roles").
+		Preload("Address").
+		Preload("BankDetails").
 		First(&user).Error; err != nil {
 		return nil, err
 	}
@@ -128,6 +131,9 @@ func (s *users) FindByEmail(email string) (*models.User, error) {
 
 	if err := s.storage.Postgres.
 		Where("email = ?", email).
+		Preload("Roles").
+		Preload("Address").
+		Preload("BankDetails").
 		First(&user).Error; err != nil {
 		return nil, err
 	}
@@ -140,6 +146,9 @@ func (s *users) FindByPhone(phone string) (*models.User, error) {
 
 	if err := s.storage.Postgres.
 		Where("phone = ?", phone).
+		Preload("Roles").
+		Preload("Address").
+		Preload("BankDetails").
 		First(&user).Error; err != nil {
 		return nil, err
 	}

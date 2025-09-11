@@ -14,3 +14,17 @@ var SignUpPayloadProperties = map[string]*openapi3.Schema{
 	"password": openapi3.NewStringSchema().WithMinLength(6).WithMaxLength(100),
 	"type":     openapi3.NewStringSchema().WithEnum("standard", "collector", "business", "system").WithDefault("standard"),
 }
+
+var AvailablePermissionsProperties = map[string]*openapi3.Schema{
+	"name": openapi3.NewStringSchema(),
+	"permissions": openapi3.NewArraySchema().
+		WithItems(openapi3.NewObjectSchema().
+			WithProperties(map[string]*openapi3.Schema{
+				"value":       openapi3.NewStringSchema(),
+				"description": openapi3.NewStringSchema(),
+			}).
+			WithRequired([]string{
+				"value",
+				"description",
+			})),
+}

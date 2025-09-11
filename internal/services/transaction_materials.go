@@ -8,7 +8,7 @@ import (
 )
 
 type transactionMaterialsService interface {
-	Create(transactionMaterial models.CreateTransactionMaterialPayload) error
+	Create(transactionMaterial models.CreateTransactionMaterialPayload) (uuid.UUID, error)
 	Update(transactionMaterialId uuid.UUID, transactionMaterial models.UpdateTransactionMaterialPayload) error
 	Delete(transactionMaterialId uuid.UUID) error
 	Find(transactionMaterialId uuid.UUID) (*models.TransactionMaterial, error)
@@ -26,14 +26,19 @@ func newTransactionMaterialsService(storage storage.Storage) transactionMaterial
 	}
 }
 
-func (s *transactionMaterials) Create(payload models.CreateTransactionMaterialPayload) error {
+func (s *transactionMaterials) Create(payload models.CreateTransactionMaterialPayload) (uuid.UUID, error) {
+	var transactionMaterial models.TransactionMaterial
+
+	transactionMaterial.MaterialId = payload.MaterialId
+	transactionMaterial.Weight = payload.Weight
+	transactionMaterial.Value = payload.Value
+
 	if err := s.storage.Postgres.
-		Model(&models.TransactionMaterial{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&transactionMaterial).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return transactionMaterial.Id, nil
 }
 
 func (s *transactionMaterials) Update(transactionMaterialId uuid.UUID, payload models.UpdateTransactionMaterialPayload) error {
@@ -43,10 +48,6 @@ func (s *transactionMaterials) Update(transactionMaterialId uuid.UUID, payload m
 		Where("id = ?", transactionMaterialId).
 		First(&transactionMaterial).Error; err != nil {
 		return err
-	}
-
-	if payload.TransactionId != nil {
-		transactionMaterial.TransactionId = *payload.TransactionId
 	}
 
 	if payload.MaterialId != nil {
@@ -65,10 +66,9 @@ func (s *transactionMaterials) Update(transactionMaterialId uuid.UUID, payload m
 		Model(&models.TransactionMaterial{}).
 		Where("id = ?", transactionMaterialId).
 		Updates(&map[string]any{
-			"transaction_id": transactionMaterial.TransactionId,
-			"material_id":    transactionMaterial.MaterialId,
-			"weight":         transactionMaterial.Weight,
-			"value":          transactionMaterial.Value,
+			"material_id": transactionMaterial.MaterialId,
+			"weight":      transactionMaterial.Weight,
+			"value":       transactionMaterial.Value,
 		}).Error; err != nil {
 		return err
 	}

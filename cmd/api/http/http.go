@@ -12,6 +12,7 @@ import (
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/materials"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/middleware"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/organizations"
+	"github.com/connor-davis/threereco-nextgen/cmd/api/http/permissions"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/roles"
 	"github.com/connor-davis/threereco-nextgen/cmd/api/http/transactions"
 	transactionMaterials "github.com/connor-davis/threereco-nextgen/cmd/api/http/transactions/materials"
@@ -82,6 +83,9 @@ func NewHttpRouter(storage storage.Storage, sessions session.Store, services ser
 	bankDetailsRouter := bankDetails.NewBankDetailsRouter(storage, sessions, services, middleware)
 	bankDetailsRoutes := bankDetailsRouter.InitializeRoutes()
 
+	permissionsRouter := permissions.NewPermissionsRouter(storage, sessions, services, middleware)
+	permissionsRoutes := permissionsRouter.InitializeRoutes()
+
 	routes := []routing.Route{}
 
 	routes = append(routes, authenticationRoutes...)
@@ -95,6 +99,7 @@ func NewHttpRouter(storage storage.Storage, sessions session.Store, services ser
 	routes = append(routes, transactionMaterialsRoutes...)
 	routes = append(routes, addressesRoutes...)
 	routes = append(routes, bankDetailsRoutes...)
+	routes = append(routes, permissionsRoutes...)
 
 	return HttpRouter{
 		Storage:    storage,
@@ -244,6 +249,7 @@ func (h *HttpRouter) InitializeOpenAPI() *openapi3.T {
 			Schemas: openapi3.Schemas{
 				"SuccessResponse":           schemas.SuccessResponseSchema,
 				"ErrorResponse":             schemas.ErrorResponseSchema,
+				"AvailablePermissions":      schemas.AvailablePermissionsSchema,
 				"MfaVerifyPayload":          schemas.MfaVerifyPayloadSchema,
 				"LoginPayload":              schemas.LoginPayloadSchema,
 				"SignUpPayload":             schemas.SignUpPayloadSchema,

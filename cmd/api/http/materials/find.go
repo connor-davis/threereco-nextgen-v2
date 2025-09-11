@@ -20,19 +20,7 @@ func (r *MaterialsRouter) FindRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful material retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.MaterialSchema.Value).
-					WithExample("example", map[string]any{
-						"id":           uuid.New(),
-						"name":         "Material Name",
-						"gwCode":       "GW-123",
-						"carbonFactor": 0.5,
-						"createdAt":    "2023-10-01T12:00:00Z",
-						"updatedAt":    "2023-10-01T12:00:00Z",
-					}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

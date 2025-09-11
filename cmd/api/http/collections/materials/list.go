@@ -27,26 +27,7 @@ func (r *CollectionMaterialsRouter) ListRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful collection materials retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.CollectionsSchema.Value).
-					WithExample("example", []map[string]any{
-						{
-							"id": uuid.New(),
-							"material": map[string]any{
-								"id":        uuid.New(),
-								"name":      "Material Name",
-								"createdAt": "2023-10-01T12:00:00Z",
-								"updatedAt": "2023-10-01T12:00:00Z",
-							},
-							"weight":    12.34,
-							"value":     56.78,
-							"createdAt": "2023-10-01T12:00:00Z",
-							"updatedAt": "2023-10-01T12:00:00Z",
-						},
-					}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

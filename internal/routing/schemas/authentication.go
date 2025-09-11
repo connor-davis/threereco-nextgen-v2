@@ -18,3 +18,11 @@ var SignUpPayloadSchema = openapi3.NewSchema().
 		"name",
 		"password",
 	}).NewRef()
+
+var AvailablePermissionsSchema = openapi3.NewArraySchema().
+	WithItems(openapi3.NewSchema().
+		WithProperties(properties.AvailablePermissionsProperties).
+		WithRequired([]string{
+			"name",
+			"permissions",
+		})).NewRef()

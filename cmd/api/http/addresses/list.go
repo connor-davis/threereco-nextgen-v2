@@ -6,7 +6,6 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -23,24 +22,7 @@ func (r *AddressesRouter) ListRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful addresses retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.AddressesSchema.Value).
-					WithExample("example", []map[string]any{
-						{
-							"id":        uuid.New(),
-							"lineOne":   "123 Main St",
-							"lineTwo":   "Apt 4B",
-							"city":      "Metropolis",
-							"zipCode":   "12345",
-							"province":  "State",
-							"country":   "Country",
-							"createdAt": "2023-10-01T12:00:00Z",
-							"updatedAt": "2023-10-01T12:00:00Z",
-						},
-					}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

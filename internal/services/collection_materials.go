@@ -8,7 +8,7 @@ import (
 )
 
 type collectionMaterialsService interface {
-	Create(payload models.CreateCollectionMaterialPayload) error
+	Create(payload models.CreateCollectionMaterialPayload) (uuid.UUID, error)
 	Update(collectionMaterialId uuid.UUID, payload models.UpdateCollectionMaterialPayload) error
 	Delete(collectionMaterialId uuid.UUID) error
 	Find(collectionMaterialId uuid.UUID) (*models.CollectionMaterial, error)
@@ -26,14 +26,19 @@ func newCollectionMaterialsService(storage storage.Storage) collectionMaterialsS
 	}
 }
 
-func (s *collectionMaterials) Create(payload models.CreateCollectionMaterialPayload) error {
+func (s *collectionMaterials) Create(payload models.CreateCollectionMaterialPayload) (uuid.UUID, error) {
+	var collectionMaterial models.CollectionMaterial
+
+	collectionMaterial.MaterialId = payload.MaterialId
+	collectionMaterial.Weight = payload.Weight
+	collectionMaterial.Value = payload.Value
+
 	if err := s.storage.Postgres.
-		Model(&models.CollectionMaterial{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&collectionMaterial).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return collectionMaterial.Id, nil
 }
 
 func (s *collectionMaterials) Update(collectionMaterialId uuid.UUID, payload models.UpdateCollectionMaterialPayload) error {
@@ -43,10 +48,6 @@ func (s *collectionMaterials) Update(collectionMaterialId uuid.UUID, payload mod
 		Where("id = ?", collectionMaterialId).
 		First(&collectionMaterial).Error; err != nil {
 		return err
-	}
-
-	if payload.CollectionId != nil {
-		collectionMaterial.CollectionId = *payload.CollectionId
 	}
 
 	if payload.MaterialId != nil {
@@ -65,10 +66,9 @@ func (s *collectionMaterials) Update(collectionMaterialId uuid.UUID, payload mod
 		Model(&models.CollectionMaterial{}).
 		Where("id = ?", collectionMaterialId).
 		Updates(&map[string]any{
-			"collection_id": collectionMaterial.CollectionId,
-			"material_id":   collectionMaterial.MaterialId,
-			"weight":        collectionMaterial.Weight,
-			"value":         collectionMaterial.Value,
+			"material_id": collectionMaterial.MaterialId,
+			"weight":      collectionMaterial.Weight,
+			"value":       collectionMaterial.Value,
 		}).Error; err != nil {
 		return err
 	}

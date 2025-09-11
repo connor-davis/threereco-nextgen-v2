@@ -8,7 +8,7 @@ import (
 )
 
 type organizationsService interface {
-	Create(payload models.CreateOrganizationPayload) error
+	Create(payload models.CreateOrganizationPayload) (uuid.UUID, error)
 	Update(organizationId uuid.UUID, payload models.UpdateOrganizationPayload) error
 	Delete(organizationId uuid.UUID) error
 	Find(organizationId uuid.UUID) (*models.Organization, error)
@@ -26,30 +26,30 @@ func newOrganizationsService(storage storage.Storage) organizationsService {
 	}
 }
 
-func (s *organizations) Create(payload models.CreateOrganizationPayload) error {
+func (s *organizations) Create(payload models.CreateOrganizationPayload) (uuid.UUID, error) {
 	var organization models.Organization
 
 	organization.Name = payload.Name
 
 	if err := s.storage.Postgres.Create(&organization).Error; err != nil {
-		return err
+		return uuid.Nil, err
 	}
 
 	if payload.Users != nil {
 		if err := s.storage.Postgres.
 			Model(&organization).Association("Users").Append(payload.Users); err != nil {
-			return err
+			return uuid.Nil, err
 		}
 	}
 
 	if payload.Roles != nil {
 		if err := s.storage.Postgres.
 			Model(&organization).Association("Roles").Append(payload.Roles); err != nil {
-			return err
+			return uuid.Nil, err
 		}
 	}
 
-	return nil
+	return organization.Id, nil
 }
 
 func (s *organizations) Update(organizationId uuid.UUID, payload models.UpdateOrganizationPayload) error {

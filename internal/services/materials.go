@@ -8,7 +8,7 @@ import (
 )
 
 type materialsService interface {
-	Create(payload models.CreateMaterialPayload) error
+	Create(payload models.CreateMaterialPayload) (uuid.UUID, error)
 	Update(materialId uuid.UUID, payload models.UpdateMaterialPayload) error
 	Delete(materialId uuid.UUID) error
 	Find(materialId uuid.UUID) (*models.Material, error)
@@ -26,14 +26,19 @@ func newMaterialsService(storage storage.Storage) materialsService {
 	}
 }
 
-func (s *materials) Create(payload models.CreateMaterialPayload) error {
+func (s *materials) Create(payload models.CreateMaterialPayload) (uuid.UUID, error) {
+	var material models.Material
+
+	material.Name = payload.Name
+	material.GWCode = payload.GWCode
+	material.CarbonFactor = payload.CarbonFactor
+
 	if err := s.storage.Postgres.
-		Model(&models.Material{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&material).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return material.Id, nil
 }
 
 func (s *materials) Update(materialId uuid.UUID, payload models.UpdateMaterialPayload) error {

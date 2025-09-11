@@ -1,4 +1,4 @@
-import { putApiRolesByIdMutation } from '@/api-client/@tanstack/react-query.gen';
+import { patchApiRolesIdMutation } from '@/api-client/@tanstack/react-query.gen';
 import { useMutation } from '@tanstack/react-query';
 import {
   ErrorComponent,
@@ -15,10 +15,10 @@ import { toast } from 'sonner';
 import {
   type ErrorResponse,
   type Role,
-  type UpdateRolePayload,
-  getApiRolesById,
+  type UpdateRole,
+  getApiRolesId,
 } from '@/api-client';
-import { zUpdateRolePayload } from '@/api-client/zod.gen';
+import { zUpdateRole } from '@/api-client/zod.gen';
 import PermissionGuard from '@/components/guards/permission';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -67,7 +67,7 @@ export const Route = createFileRoute('/_auth/roles/$id/edit')({
   },
   wrapInSuspense: true,
   loader: async ({ params: { id } }) => {
-    const { data } = await getApiRolesById({
+    const { data } = await getApiRolesId({
       client: apiClient,
       path: {
         id,
@@ -84,13 +84,13 @@ function RouteComponent() {
   const { id } = Route.useParams();
   const role = Route.useLoaderData();
 
-  const updateForm = useForm<UpdateRolePayload>({
-    resolver: zodResolver(zUpdateRolePayload),
+  const updateForm = useForm<UpdateRole>({
+    resolver: zodResolver(zUpdateRole),
     values: { ...role },
   });
 
   const updateRole = useMutation({
-    ...putApiRolesByIdMutation({
+    ...patchApiRolesIdMutation({
       client: apiClient,
     }),
     onError: (error: ErrorResponse) =>

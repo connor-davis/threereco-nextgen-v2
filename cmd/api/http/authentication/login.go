@@ -10,13 +10,13 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/log"
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 type LoginPayload struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	EmailOrPhone string `json:"emailOrPhone"`
+	Password     string `json:"password"`
 }
 
 func (r *AuthenticationRouter) LoginRoute() routing.Route {
@@ -96,9 +96,9 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			user, err := r.Services.Users().FindByEmail(payload.Email)
+			user, err := r.Services.Users().FindByEmail(payload.EmailOrPhone)
 
-			if err != nil {
+			if err != nil && err != gorm.ErrRecordNotFound {
 				log.Errorf("🔥 Error retrieving user: %s", err.Error())
 
 				return c.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
@@ -107,8 +107,21 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			if user.Id == uuid.Nil {
-				log.Warnf("⚠️ User with email or phone %s not found", payload.Email)
+			if err == gorm.ErrRecordNotFound {
+				user, err = r.Services.Users().FindByPhone(payload.EmailOrPhone)
+
+				if err != nil && err != gorm.ErrRecordNotFound {
+					log.Errorf("🔥 Error retrieving user: %s", err.Error())
+
+					return c.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+						"error":   constants.InternalServerError,
+						"message": constants.InternalServerErrorDetails,
+					})
+				}
+			}
+
+			if err == gorm.ErrRecordNotFound {
+				log.Warnf("⚠️ User not found: %s", payload.EmailOrPhone)
 
 				return c.Status(fiber.StatusUnauthorized).JSON(&fiber.Map{
 					"error":   constants.UnauthorizedError,
@@ -119,7 +132,7 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 			err = bcrypt.CompareHashAndPassword(user.Password, []byte(payload.Password))
 
 			if err != nil {
-				log.Warnf("⚠️ Invalid password for user %s: %s", payload.Email, err.Error())
+				log.Warnf("⚠️ Invalid password for user %s: %s", payload.EmailOrPhone, err.Error())
 
 				return c.Status(fiber.StatusUnauthorized).JSON(&fiber.Map{
 					"error":   constants.UnauthorizedError,
@@ -138,7 +151,7 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			// currentSession.Set("user_id", user.Id.String())
+			currentSession.Set("user_id", user.Id.String())
 			currentSession.SetExpiry(1 * time.Hour)
 
 			if err := currentSession.Save(); err != nil {
@@ -150,19 +163,19 @@ func (r *AuthenticationRouter) LoginRoute() routing.Route {
 				})
 			}
 
-			// if err := r.Storage.Postgres.
-			// 	Set("one:ignore_audit_log", true).
-			// 	Model(&user).
-			// 	Updates(map[string]any{
-			// 		"mfa_verified": false,
-			// 	}).Error; err != nil {
-			// 	log.Errorf("🔥 Error updating MFA status for user: %s", err.Error())
+			if err := r.Storage.Postgres.
+				Set("one:ignore_audit_log", true).
+				Model(&user).
+				Updates(map[string]any{
+					"mfa_verified": false,
+				}).Error; err != nil {
+				log.Errorf("🔥 Error updating MFA status for user: %s", err.Error())
 
-			// 	return c.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
-			// 		"error":   constants.InternalServerError,
-			// 		"message": constants.InternalServerErrorDetails,
-			// 	})
-			// }
+				return c.Status(fiber.StatusInternalServerError).JSON(&fiber.Map{
+					"error":   constants.InternalServerError,
+					"message": constants.InternalServerErrorDetails,
+				})
+			}
 
 			return c.SendStatus(fiber.StatusOK)
 		},

@@ -8,7 +8,7 @@ import (
 )
 
 type addressesService interface {
-	Create(payload models.CreateAddressPayload) error
+	Create(payload models.CreateAddressPayload) (uuid.UUID, error)
 	Update(addressId uuid.UUID, payload models.UpdateAddressPayload) error
 	Delete(addressId uuid.UUID) error
 	Find(addressId uuid.UUID) (*models.Address, error)
@@ -26,14 +26,22 @@ func newAddressesService(storage storage.Storage) addressesService {
 	}
 }
 
-func (s *addresses) Create(payload models.CreateAddressPayload) error {
+func (s *addresses) Create(payload models.CreateAddressPayload) (uuid.UUID, error) {
+	var address models.Address
+
+	address.LineOne = payload.LineOne
+	address.LineTwo = payload.LineTwo
+	address.City = payload.City
+	address.ZipCode = payload.ZipCode
+	address.Province = payload.Province
+	address.Country = payload.Country
+
 	if err := s.storage.Postgres.
-		Model(&models.Address{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&address).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return address.Id, nil
 }
 
 func (s *addresses) Update(addressId uuid.UUID, payload models.UpdateAddressPayload) error {

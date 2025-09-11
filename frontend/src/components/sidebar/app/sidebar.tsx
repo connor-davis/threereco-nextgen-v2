@@ -1,11 +1,8 @@
 import { Link } from '@tanstack/react-router';
 import {
-  BoxIcon,
   BrickWallIcon,
-  HandCoinsIcon,
   LayoutDashboardIcon,
   NotebookIcon,
-  ScrollTextIcon,
   TruckIcon,
   UsersIcon,
 } from 'lucide-react';
@@ -83,22 +80,7 @@ export default function AppSidebar() {
                   Materials
                 </TooltipContent>
               </Tooltip>
-              <Tooltip>
-                <TooltipTrigger>
-                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link to="/products">
-                        <BoxIcon />
-                        <span>Products</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                </TooltipTrigger>
-                <TooltipContent side="right" hidden={state === 'expanded'}>
-                  Products
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip>
+              {/* <Tooltip>
                 <TooltipTrigger>
                   <SidebarMenuItem>
                     <SidebarMenuButton asChild>
@@ -112,7 +94,7 @@ export default function AppSidebar() {
                 <TooltipContent side="right" hidden={state === 'expanded'}>
                   Transactions
                 </TooltipContent>
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip>
                 <TooltipTrigger>
                   <SidebarMenuItem>
@@ -177,7 +159,7 @@ export default function AppSidebar() {
                     </TooltipContent>
                   </Tooltip>
                 </PermissionGuard>
-                <PermissionGuard value={['audit_logs.view']}>
+                {/* <PermissionGuard value={['audit_logs.view']}>
                   <Tooltip>
                     <TooltipTrigger>
                       <SidebarMenuItem>
@@ -193,7 +175,7 @@ export default function AppSidebar() {
                       Audit Logs
                     </TooltipContent>
                   </Tooltip>
-                </PermissionGuard>
+                </PermissionGuard> */}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>

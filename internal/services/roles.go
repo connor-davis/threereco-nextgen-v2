@@ -8,7 +8,7 @@ import (
 )
 
 type rolesService interface {
-	Create(payload models.CreateRolePayload) error
+	Create(payload models.CreateRolePayload) (uuid.UUID, error)
 	Update(roleId uuid.UUID, payload models.UpdateRolePayload) error
 	Delete(roleId uuid.UUID) error
 	Find(roleId uuid.UUID) (*models.Role, error)
@@ -26,14 +26,19 @@ func newRolesService(storage storage.Storage) rolesService {
 	}
 }
 
-func (s *roles) Create(payload models.CreateRolePayload) error {
+func (s *roles) Create(payload models.CreateRolePayload) (uuid.UUID, error) {
+	var role models.Role
+
+	role.Name = payload.Name
+	role.Description = payload.Description
+	role.Permissions = payload.Permissions
+
 	if err := s.storage.Postgres.
-		Model(&models.Role{}).
-		Create(&payload).Error; err != nil {
-		return err
+		Create(&role).Error; err != nil {
+		return uuid.Nil, err
 	}
 
-	return nil
+	return role.Id, nil
 }
 
 func (s *roles) Update(roleId uuid.UUID, payload models.UpdateRolePayload) error {

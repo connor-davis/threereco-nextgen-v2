@@ -10,12 +10,10 @@ import z from 'zod';
 import { type ErrorResponse, type User, getApiUsers } from '@/api-client';
 import PermissionGuard from '@/components/guards/permission';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DebounceInput } from '@/components/ui/debounce-input';
 import { Label } from '@/components/ui/label';
 import DeleteUserByIdDialog from '@/components/users/delete.dialog';
-import InviteUserByEmailDialog from '@/components/users/invite.dialog';
 import { apiClient, cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/_auth/users/')({
@@ -57,6 +55,8 @@ export const Route = createFileRoute('/_auth/users/')({
       query: {
         page,
         search,
+        limit: 10,
+        type: 'standard',
       },
       throwOnError: true,
     });
@@ -99,10 +99,6 @@ function RouteComponent() {
           />
 
           <PermissionGuard value="users.create">
-            <InviteUserByEmailDialog>
-              <Button>Invite</Button>
-            </InviteUserByEmailDialog>
-
             <Link to="/users/create">
               <Button>Create</Button>
             </Link>
@@ -130,16 +126,17 @@ function RouteComponent() {
                   </div>
                 )}
 
-                {!user.name && (
+                {user.email && (
                   <div className="flex flex-col">
                     <Label className="text-sm">{user.email}</Label>
                   </div>
                 )}
 
-                <div className="flex items-center gap-1">
-                  {user.tags.length > 0 &&
-                    user.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)}
-                </div>
+                {!user.email && user.phone && (
+                  <div className="flex flex-col">
+                    <Label className="text-sm">{user.phone}</Label>
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-3">
                 <PermissionGuard value="users.update">

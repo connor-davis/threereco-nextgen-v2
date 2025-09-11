@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 
-import type { CreateMaterialPayload, ErrorResponse } from '@/api-client';
-import { zCreateMaterialPayload } from '@/api-client/zod.gen';
+import type { CreateMaterial, ErrorResponse } from '@/api-client';
+import { zCreateMaterial } from '@/api-client/zod.gen';
 import PermissionGuard from '@/components/guards/permission';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,8 +35,8 @@ export const Route = createFileRoute('/_auth/materials/create')({
 function RouteComponent() {
   const router = useRouter();
 
-  const createForm = useForm<CreateMaterialPayload>({
-    resolver: zodResolver(zCreateMaterialPayload),
+  const createForm = useForm<CreateMaterial>({
+    resolver: zodResolver(zCreateMaterial),
   });
 
   const createMaterial = useMutation({

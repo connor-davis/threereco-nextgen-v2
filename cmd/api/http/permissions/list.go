@@ -1,4 +1,4 @@
-package roles
+package permissions
 
 import (
 	"github.com/connor-davis/threereco-nextgen/internal/constants"
@@ -6,20 +6,20 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
-type FindParams struct {
-	Id uuid.UUID `json:"id"`
+type ListQueryParams struct {
+	Page   int    `query:"page"`
+	Limit  int    `query:"limit"`
+	Search string `query:"search"`
 }
 
-func (r *RolesRouter) FindRoute() routing.Route {
+func (r *PermissionsRouter) ListRoute() routing.Route {
 	responses := openapi3.NewResponses()
 
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
-			WithDescription("Successful role retrieval.").
+			WithDescription("Successful permissions retrieval.").
 			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
@@ -65,57 +65,24 @@ func (r *RolesRouter) FindRoute() routing.Route {
 			}),
 	})
 
-	parameters := []*openapi3.ParameterRef{
-		{
-			Value: openapi3.NewPathParameter("id").
-				WithRequired(true).
-				WithSchema(openapi3.NewUUIDSchema()),
-		},
-	}
-
 	return routing.Route{
 		OpenAPIMetadata: routing.OpenAPIMetadata{
-			Summary:     "Find Role",
-			Description: "Find an existing role in the system.",
-			Tags:        []string{"Roles"},
+			Summary:     "List Permissions",
+			Description: "List all permissions in the system.",
+			Tags:        []string{"Permissions"},
 			Responses:   responses,
-			Parameters:  parameters,
+			Parameters:  nil,
 			RequestBody: nil,
 		},
 		Method: routing.GetMethod,
-		Path:   "/roles/:id",
+		Path:   "/permissions",
 		Middlewares: []fiber.Handler{
 			r.Middleware.Authenticated(),
-			r.Middleware.Authorized([]string{"roles.view"}),
+			r.Middleware.Authorized([]string{"permissions.view"}),
 		},
 		Handler: func(c *fiber.Ctx) error {
-			var params FindParams
-
-			if err := c.ParamsParser(&params); err != nil {
-				return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-					"error":   constants.BadRequestError,
-					"message": constants.BadRequestErrorDetails,
-				})
-			}
-
-			role, err := r.Services.Roles().Find(params.Id)
-
-			if err != nil {
-				if err == gorm.ErrRecordNotFound {
-					return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-						"error":   constants.NotFoundError,
-						"message": constants.NotFoundErrorDetails,
-					})
-				}
-
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-					"error":   constants.InternalServerError,
-					"message": constants.InternalServerErrorDetails,
-				})
-			}
-
 			return c.Status(fiber.StatusOK).JSON(fiber.Map{
-				"item": role,
+				"items": constants.AvailablePermissionsGroups,
 			})
 		},
 	}

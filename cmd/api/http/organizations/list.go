@@ -6,7 +6,6 @@ import (
 	"github.com/connor-davis/threereco-nextgen/internal/routing/schemas"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -23,17 +22,7 @@ func (r *OrganizationsRouter) ListRoute() routing.Route {
 	responses.Set("200", &openapi3.ResponseRef{
 		Value: openapi3.NewResponse().
 			WithDescription("Successful organizations retrieval.").
-			WithJSONSchema(schemas.SuccessResponseSchema.Value).
-			WithContent(openapi3.Content{
-				"application/json": openapi3.NewMediaType().
-					WithSchema(schemas.OrganizationsSchema.Value).
-					WithExample("example", []map[string]any{{
-						"id":        uuid.New(),
-						"name":      "Organization Name",
-						"createdAt": "2023-10-01T12:00:00Z",
-						"updatedAt": "2023-10-01T12:00:00Z",
-					}}),
-			}),
+			WithJSONSchema(schemas.SuccessResponseSchema.Value),
 	})
 
 	responses.Set("400", &openapi3.ResponseRef{

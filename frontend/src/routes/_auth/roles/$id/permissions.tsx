@@ -1,8 +1,5 @@
-import {
-  getApiAuthenticationPermissionsQueryKey,
-  putApiRolesByIdMutation,
-} from '@/api-client/@tanstack/react-query.gen';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { patchApiRolesIdMutation } from '@/api-client/@tanstack/react-query.gen';
+import { useMutation } from '@tanstack/react-query';
 import {
   ErrorComponent,
   Link,
@@ -14,11 +11,11 @@ import { ArrowLeftIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
-  type AvailablePermissionGroup,
+  type AvailablePermissions,
   type ErrorResponse,
   type Role,
-  getApiRolesAvailablePermissions,
-  getApiRolesById,
+  getApiPermissions,
+  getApiRolesId,
 } from '@/api-client';
 import PermissionGuard from '@/components/guards/permission';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -59,7 +56,7 @@ export const Route = createFileRoute('/_auth/roles/$id/permissions')({
   },
   wrapInSuspense: true,
   loader: async ({ params: { id } }) => {
-    const { data: roleData } = await getApiRolesById({
+    const { data: roleData } = await getApiRolesId({
       client: apiClient,
       path: {
         id,
@@ -67,16 +64,15 @@ export const Route = createFileRoute('/_auth/roles/$id/permissions')({
       throwOnError: true,
     });
 
-    const { data: availablePermissionsData } =
-      await getApiRolesAvailablePermissions({
-        client: apiClient,
-        throwOnError: true,
-      });
+    const { data: availablePermissionsData } = await getApiPermissions({
+      client: apiClient,
+      throwOnError: true,
+    });
 
     return {
       role: (roleData.item ?? {}) as Role,
       availablePermissions: (availablePermissionsData.items ??
-        []) as Array<AvailablePermissionGroup>,
+        []) as AvailablePermissions,
     };
   },
 });
@@ -86,10 +82,8 @@ function RouteComponent() {
   const { id } = Route.useParams();
   const { role, availablePermissions } = Route.useLoaderData();
 
-  const queryClient = useQueryClient();
-
   const updateRole = useMutation({
-    ...putApiRolesByIdMutation({
+    ...patchApiRolesIdMutation({
       client: apiClient,
     }),
     onError: (error: ErrorResponse) =>
@@ -101,10 +95,6 @@ function RouteComponent() {
       toast.success('Success', {
         description: 'The role has been updated successfully.',
         duration: 2000,
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: getApiAuthenticationPermissionsQueryKey(),
       });
 
       return router.invalidate();

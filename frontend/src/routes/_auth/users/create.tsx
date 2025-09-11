@@ -1,4 +1,8 @@
-import { postApiUsersMutation } from '@/api-client/@tanstack/react-query.gen';
+import {
+  postApiAddressesMutation,
+  postApiBankDetailsMutation,
+  postApiUsersMutation,
+} from '@/api-client/@tanstack/react-query.gen';
 import { SiMastercard } from '@icons-pack/react-simple-icons';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -25,12 +29,18 @@ import { toast } from 'sonner';
 import z from 'zod';
 
 import {
-  type CreateUserPayload,
+  type CreateAddress,
+  type CreateBankDetail,
+  type CreateUser,
   type ErrorResponse,
   type Role,
   getApiRoles,
 } from '@/api-client';
-import { zCreateUserPayload } from '@/api-client/zod.gen';
+import {
+  zCreateAddress,
+  zCreateBankDetail,
+  zCreateUser,
+} from '@/api-client/zod.gen';
 import PermissionGuard from '@/components/guards/permission';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -54,9 +64,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { InputTags } from '@/components/ui/input-tags';
 import { Label } from '@/components/ui/label';
-import { NumberInput } from '@/components/ui/number-input';
 import { PhoneInput } from '@/components/ui/phone-input';
 import {
   Stepper,
@@ -64,7 +72,6 @@ import {
   StepperIndicator,
   StepperItem,
   StepperNav,
-  StepperPanel,
   StepperSeparator,
   StepperTitle,
   StepperTrigger,
@@ -113,6 +120,7 @@ export const Route = createFileRoute('/_auth/users/create')({
       query: {
         page: rolesPage,
         search: rolesSearch,
+        limit: 10,
       },
       throwOnError: true,
     });
@@ -131,14 +139,36 @@ function RouteComponent() {
 
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  const createForm = useForm<CreateUserPayload>({
-    resolver: zodResolver(zCreateUserPayload),
+  const createUserForm = useForm<CreateUser>({
+    resolver: zodResolver(zCreateUser),
     defaultValues: {
-      address: undefined,
-      bankDetails: undefined,
       email: undefined,
-      jobTitle: undefined,
       name: undefined,
+      phone: undefined,
+      roles: [],
+      type: 'standard',
+    },
+  });
+
+  const createAddressForm = useForm<CreateAddress>({
+    resolver: zodResolver(zCreateAddress),
+    defaultValues: {
+      lineOne: undefined,
+      lineTwo: undefined,
+      city: undefined,
+      country: undefined,
+      province: undefined,
+      zipCode: undefined,
+    },
+  });
+
+  const createBankDetailsForm = useForm<CreateBankDetail>({
+    resolver: zodResolver(zCreateBankDetail),
+    defaultValues: {
+      accountHolder: undefined,
+      accountNumber: undefined,
+      bankName: undefined,
+      branchCode: undefined,
     },
   });
 
@@ -157,9 +187,55 @@ function RouteComponent() {
         duration: 2000,
       });
 
-      createForm.reset();
+      createUserForm.reset();
 
       setCurrentStep(6);
+
+      return router.invalidate();
+    },
+  });
+
+  const createAddress = useMutation({
+    ...postApiAddressesMutation({
+      client: apiClient,
+    }),
+    onError: (error: ErrorResponse) =>
+      toast.error(error.error, {
+        description: error.message,
+        duration: 2000,
+      }),
+    onSuccess: (addressId) => {
+      toast.success('Success', {
+        description: 'The address has been created successfully.',
+        duration: 2000,
+      });
+
+      createUserForm.setValue('addressId', addressId);
+
+      setCurrentStep(2);
+
+      return router.invalidate();
+    },
+  });
+
+  const createBankDetails = useMutation({
+    ...postApiBankDetailsMutation({
+      client: apiClient,
+    }),
+    onError: (error: ErrorResponse) =>
+      toast.error(error.error, {
+        description: error.message,
+        duration: 2000,
+      }),
+    onSuccess: (bankDetailsId) => {
+      toast.success('Success', {
+        description: 'The bank details have been created successfully.',
+        duration: 2000,
+      });
+
+      createUserForm.setValue('bankDetailsId', bankDetailsId);
+
+      setCurrentStep(3);
 
       return router.invalidate();
     },
@@ -180,250 +256,541 @@ function RouteComponent() {
         <div className="flex items-center gap-3"></div>
       </div>
 
-      <Form {...createForm}>
-        <form
-          onSubmit={createForm.handleSubmit((values) =>
-            createUser.mutate({
-              body: { ...values },
-            })
-          )}
-          className="flex flex-col w-full h-full overflow-hidden"
+      <div className="flex flex-col w-full h-full overflow-hidden">
+        <Stepper
+          value={currentStep}
+          onValueChange={setCurrentStep}
+          indicators={{
+            completed: <CheckIcon className="size-4" />,
+            loading: <LoaderCircleIcon className="size-4 animate-spin" />,
+          }}
+          className="flex flex-col w-full h-full gap-5 overflow-hidden"
         >
-          <Stepper
-            value={currentStep}
-            onValueChange={setCurrentStep}
-            indicators={{
-              completed: <CheckIcon className="size-4" />,
-              loading: <LoaderCircleIcon className="size-4 animate-spin" />,
-            }}
-            className="flex flex-col w-full h-full gap-5 overflow-hidden"
-          >
-            <StepperNav className="flex gap-3 h-32">
-              <StepperItem step={1} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <IdCardIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 1
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Details
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={2} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <MapPinIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 2
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Address
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={3} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <WalletIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 3
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Bank Details
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={4} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <KeyIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 4
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Roles
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem step={5} className="relative flex-1 items-start">
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5 grow"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <CircleAlertIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground">
-                      Step 5
-                    </div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Overview
-                    </StepperTitle>
-                    <div>
-                      <Badge
-                        variant="secondary"
-                        className="hidden group-data-[state=active]/step:inline-flex"
-                      >
-                        In Progress
-                      </Badge>
-                      <Badge
-                        variant="default"
-                        className="hidden group-data-[state=completed]/step:inline-flex"
-                      >
-                        Completed
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
-                      >
-                        Pending
-                      </Badge>
-                    </div>
-                  </div>
-                </StepperTrigger>
-                <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
-              </StepperItem>
-
-              <StepperItem
-                step={6}
-                className="relative items-start"
-                loading={createUser.isPending}
+          <StepperNav className="flex gap-3 h-32">
+            <StepperItem step={1} className="relative flex-1 items-start">
+              <StepperTrigger
+                className="flex flex-col items-start justify-center gap-2.5 grow"
+                asChild
               >
-                <StepperTrigger
-                  className="flex flex-col items-start justify-center gap-2.5"
-                  asChild
-                >
-                  <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
-                    <CheckIcon className="size-4" />
-                  </StepperIndicator>
-                  <div className="flex flex-col items-start gap-1">
-                    <div className="text-[10px] font-semibold uppercase text-muted-foreground"></div>
-                    <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
-                      User Created
-                    </StepperTitle>
+                <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                  <MapPinIcon className="size-4" />
+                </StepperIndicator>
+                <div className="flex flex-col items-start gap-1">
+                  <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                    Step 1
                   </div>
-                </StepperTrigger>
-              </StepperItem>
-            </StepperNav>
+                  <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                    User Address
+                  </StepperTitle>
+                  <div>
+                    <Badge
+                      variant="secondary"
+                      className="hidden group-data-[state=active]/step:inline-flex"
+                    >
+                      In Progress
+                    </Badge>
+                    <Badge
+                      variant="default"
+                      className="hidden group-data-[state=completed]/step:inline-flex"
+                    >
+                      Completed
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                    >
+                      Pending
+                    </Badge>
+                  </div>
+                </div>
+              </StepperTrigger>
+              <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+            </StepperItem>
 
-            <StepperPanel className="flex flex-col w-full h-full overflow-hidden">
+            <StepperItem step={2} className="relative flex-1 items-start">
+              <StepperTrigger
+                className="flex flex-col items-start justify-center gap-2.5 grow"
+                asChild
+              >
+                <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                  <WalletIcon className="size-4" />
+                </StepperIndicator>
+                <div className="flex flex-col items-start gap-1">
+                  <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                    Step 2
+                  </div>
+                  <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                    User Bank Details
+                  </StepperTitle>
+                  <div>
+                    <Badge
+                      variant="secondary"
+                      className="hidden group-data-[state=active]/step:inline-flex"
+                    >
+                      In Progress
+                    </Badge>
+                    <Badge
+                      variant="default"
+                      className="hidden group-data-[state=completed]/step:inline-flex"
+                    >
+                      Completed
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                    >
+                      Pending
+                    </Badge>
+                  </div>
+                </div>
+              </StepperTrigger>
+              <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+            </StepperItem>
+
+            <StepperItem step={3} className="relative flex-1 items-start">
+              <StepperTrigger
+                className="flex flex-col items-start justify-center gap-2.5 grow"
+                asChild
+              >
+                <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                  <IdCardIcon className="size-4" />
+                </StepperIndicator>
+                <div className="flex flex-col items-start gap-1">
+                  <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                    Step 3
+                  </div>
+                  <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                    User Details
+                  </StepperTitle>
+                  <div>
+                    <Badge
+                      variant="secondary"
+                      className="hidden group-data-[state=active]/step:inline-flex"
+                    >
+                      In Progress
+                    </Badge>
+                    <Badge
+                      variant="default"
+                      className="hidden group-data-[state=completed]/step:inline-flex"
+                    >
+                      Completed
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                    >
+                      Pending
+                    </Badge>
+                  </div>
+                </div>
+              </StepperTrigger>
+              <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+            </StepperItem>
+
+            <StepperItem step={4} className="relative flex-1 items-start">
+              <StepperTrigger
+                className="flex flex-col items-start justify-center gap-2.5 grow"
+                asChild
+              >
+                <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                  <KeyIcon className="size-4" />
+                </StepperIndicator>
+                <div className="flex flex-col items-start gap-1">
+                  <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                    Step 4
+                  </div>
+                  <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                    User Roles
+                  </StepperTitle>
+                  <div>
+                    <Badge
+                      variant="secondary"
+                      className="hidden group-data-[state=active]/step:inline-flex"
+                    >
+                      In Progress
+                    </Badge>
+                    <Badge
+                      variant="default"
+                      className="hidden group-data-[state=completed]/step:inline-flex"
+                    >
+                      Completed
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                    >
+                      Pending
+                    </Badge>
+                  </div>
+                </div>
+              </StepperTrigger>
+              <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+            </StepperItem>
+
+            <StepperItem step={5} className="relative flex-1 items-start">
+              <StepperTrigger
+                className="flex flex-col items-start justify-center gap-2.5 grow"
+                asChild
+              >
+                <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                  <CircleAlertIcon className="size-4" />
+                </StepperIndicator>
+                <div className="flex flex-col items-start gap-1">
+                  <div className="text-[10px] font-semibold uppercase text-muted-foreground">
+                    Step 5
+                  </div>
+                  <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                    User Overview
+                  </StepperTitle>
+                  <div>
+                    <Badge
+                      variant="secondary"
+                      className="hidden group-data-[state=active]/step:inline-flex"
+                    >
+                      In Progress
+                    </Badge>
+                    <Badge
+                      variant="default"
+                      className="hidden group-data-[state=completed]/step:inline-flex"
+                    >
+                      Completed
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="hidden group-data-[state=inactive]/step:inline-flex text-muted-foreground"
+                    >
+                      Pending
+                    </Badge>
+                  </div>
+                </div>
+              </StepperTrigger>
+              <StepperSeparator className="absolute top-4 inset-x-0 start-9 m-0 group-data-[orientation=horizontal]/stepper-nav:w-[calc(100%-2rem)] group-data-[orientation=horizontal]/stepper-nav:flex-none  group-data-[state=completed]/step:bg-primary" />
+            </StepperItem>
+
+            <StepperItem
+              step={6}
+              className="relative items-start"
+              loading={createUser.isPending}
+            >
+              <StepperTrigger
+                className="flex flex-col items-start justify-center gap-2.5"
+                asChild
+              >
+                <StepperIndicator className="size-8 border-2 data-[state=completed]:text-white data-[state=completed]:bg-primary data-[state=inactive]:bg-transparent data-[state=inactive]:border-border data-[state=inactive]:text-muted-foreground">
+                  <CheckIcon className="size-4" />
+                </StepperIndicator>
+                <div className="flex flex-col items-start gap-1">
+                  <div className="text-[10px] font-semibold uppercase text-muted-foreground"></div>
+                  <StepperTitle className="text-start text-base font-semibold group-data-[state=inactive]/step:text-muted-foreground">
+                    User Created
+                  </StepperTitle>
+                </div>
+              </StepperTrigger>
+            </StepperItem>
+          </StepperNav>
+
+          <StepperContent
+            value={1}
+            className="flex flex-col w-full h-full overflow-hidden bg-pink-950 p-10"
+          >
+            <Form {...createAddressForm}>
+              <form
+                onSubmit={createAddressForm.handleSubmit((values) => {
+                  if (createUserForm.getValues().addressId) {
+                    return setCurrentStep(2);
+                  }
+
+                  return createAddress.mutate({
+                    body: { ...values },
+                  });
+                })}
+                className="flex flex-col w-full h-full overflow-hidden gap-10"
+              >
+                <div className="flex flex-col w-full h-full overflow-y-auto gap-5">
+                  <FormField
+                    control={createAddressForm.control}
+                    name="lineOne"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address Line One</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Address Line One"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's address line one (street address).
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createAddressForm.control}
+                    name="lineTwo"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address Line Two</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Address Line Two"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's address line two (apartment, suite,
+                          etc.).
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createAddressForm.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="City"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's city.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createAddressForm.control}
+                    name="zipCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Zip Code</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Zip Code"
+                            className="w-full"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's zip code.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createAddressForm.control}
+                    name="province"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Province</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Province"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's province.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createAddressForm.control}
+                    name="country"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Country</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Country"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's country.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
+                  <Link to="/users">
+                    <Button type="button" variant="outline" className="w-full">
+                      Cancel
+                    </Button>
+                  </Link>
+                  <Button type="submit" className="w-full">
+                    Continue
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </StepperContent>
+
+          <StepperContent
+            value={2}
+            className="flex flex-col w-full h-full overflow-hidden gap-10"
+          >
+            <Form {...createBankDetailsForm}>
+              <form
+                onSubmit={createBankDetailsForm.handleSubmit((values) => {
+                  if (createUserForm.getValues().bankDetailsId) {
+                    return setCurrentStep(3);
+                  }
+
+                  return createBankDetails.mutate({
+                    body: { ...values },
+                  });
+                })}
+                className="flex flex-col w-full h-full overflow-hidden"
+              >
+                <div className="flex flex-col w-full h-full overflow-y-auto gap-5">
+                  <FormField
+                    control={createBankDetailsForm.control}
+                    name="accountHolder"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Account Holder</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Account Holder"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's account holder name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createBankDetailsForm.control}
+                    name="accountNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Account Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Account Number"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's account number.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createBankDetailsForm.control}
+                    name="bankName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Bank Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Bank Name"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's bank name.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={createBankDetailsForm.control}
+                    name="branchCode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Branch Code</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Branch Code"
+                            {...field}
+                            value={field.value ?? undefined}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter the user's branch code.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setCurrentStep(1)}
+                  >
+                    Back
+                  </Button>
+                  <Button type="submit" className="w-full">
+                    Continue
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </StepperContent>
+
+          <Form {...createUserForm}>
+            <form
+              onSubmit={createUserForm.handleSubmit((values) =>
+                createUser.mutate({
+                  body: { ...values },
+                })
+              )}
+              className="flex flex-col w-full h-full overflow-hidden"
+            >
               <StepperContent
-                value={1}
+                value={3}
                 className="flex flex-col w-full h-full gap-10 overflow-hidden"
               >
                 <div className="flex flex-col w-full h-full overflow-y-auto gap-10">
@@ -433,7 +800,7 @@ function RouteComponent() {
                     </Label>
 
                     <FormField
-                      control={createForm.control}
+                      control={createUserForm.control}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
@@ -454,7 +821,30 @@ function RouteComponent() {
                     />
 
                     <FormField
-                      control={createForm.control}
+                      control={createUserForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <PhoneInput
+                              defaultCountry="ZA"
+                              type="tel"
+                              placeholder="Phone Number"
+                              {...field}
+                              value={field.value ?? undefined}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Enter the user's phone number.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={createUserForm.control}
                       name="password"
                       render={({ field }) => (
                         <FormItem>
@@ -481,7 +871,7 @@ function RouteComponent() {
                     </Label>
 
                     <FormField
-                      control={createForm.control}
+                      control={createUserForm.control}
                       name="name"
                       render={({ field }) => (
                         <FormItem>
@@ -501,343 +891,7 @@ function RouteComponent() {
                         </FormItem>
                       )}
                     />
-
-                    <FormField
-                      control={createForm.control}
-                      name="jobTitle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Title</FormLabel>
-                          <FormControl>
-                            <Input
-                              type="text"
-                              placeholder="Job Title"
-                              {...field}
-                              value={field.value ?? undefined}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's job title.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={createForm.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <PhoneInput
-                              defaultCountry="ZA"
-                              type="tel"
-                              placeholder="Phone Number"
-                              {...field}
-                              value={field.value ?? undefined}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's phone number.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={createForm.control}
-                      name="tags"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Tags</FormLabel>
-                          <FormControl>
-                            <InputTags
-                              type="text"
-                              placeholder="Tags"
-                              {...field}
-                              value={field.value ?? []}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Enter the user's tags.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
-                </div>
-
-                <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
-                  <Link to="/users">
-                    <Button type="button" variant="outline" className="w-full">
-                      Cancel
-                    </Button>
-                  </Link>
-                  <Button
-                    type="button"
-                    className="w-full"
-                    onClick={() => setCurrentStep(2)}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </StepperContent>
-
-              <StepperContent
-                value={2}
-                className="flex flex-col w-full h-full overflow-hidden gap-10"
-              >
-                <div className="flex flex-col w-full h-full overflow-y-auto gap-5">
-                  <FormField
-                    control={createForm.control}
-                    name="address.lineOne"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Address Line One</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Address Line One"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's address line one (street address).
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="address.lineTwo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Address Line Two</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Address Line Two"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's address line two (apartment, suite,
-                          etc.).
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="address.city"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>City</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="City"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's city.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="address.postalCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Zip Code</FormLabel>
-                        <FormControl>
-                          <NumberInput
-                            placeholder="Zip Code"
-                            className="w-full"
-                            {...field}
-                            value={field.value ?? undefined}
-                            onValueChange={field.onChange}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's zip code.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="address.state"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Province</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Province"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's province.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="address.country"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Country</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Country"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's country.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setCurrentStep(1)}
-                  >
-                    Back
-                  </Button>
-                  <Button
-                    type="button"
-                    className="w-full"
-                    onClick={() => setCurrentStep(3)}
-                  >
-                    Continue
-                  </Button>
-                </div>
-              </StepperContent>
-
-              <StepperContent
-                value={3}
-                className="flex flex-col w-full h-full overflow-hidden gap-10"
-              >
-                <div className="flex flex-col w-full h-full overflow-y-auto gap-5">
-                  <FormField
-                    control={createForm.control}
-                    name="bankDetails.accountHolder"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Account Holder</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Account Holder"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's account holder name.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="bankDetails.accountNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Account Number</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Account Number"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's account number.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="bankDetails.bankName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Bank Name</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Bank Name"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's bank name.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={createForm.control}
-                    name="bankDetails.branchCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Branch Code</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Branch Code"
-                            {...field}
-                            value={field.value ?? undefined}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter the user's branch code.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
 
                 <div className="grid grid-cols-2 w-full h-auto gap-5 items-center">
@@ -895,20 +949,26 @@ function RouteComponent() {
                       <Label className="hover:bg-accent flex items-center justify-between gap-3 rounded-lg border p-3">
                         <Checkbox
                           id="toggle-2"
-                          checked={(createForm.watch().roles ?? []).includes(
-                            role.id
-                          )}
+                          checked={(createUserForm.watch().roles ?? [])
+                            .map((role) => role.id)
+                            .includes(role.id)}
                           onCheckedChange={(checked) => {
+                            const foundRole = roles.find(
+                              (_role) => _role.id === role.id
+                            );
+
+                            if (!foundRole) return;
+
                             if (checked) {
-                              createForm.setValue('roles', [
-                                ...(createForm.getValues().roles ?? []),
-                                role.id,
+                              createUserForm.setValue('roles', [
+                                ...(createUserForm.getValues().roles ?? []),
+                                foundRole,
                               ]);
                             } else {
-                              createForm.setValue('roles', [
-                                ...(createForm.getValues().roles ?? []).filter(
-                                  (id) => id !== role.id
-                                ),
+                              createUserForm.setValue('roles', [
+                                ...(
+                                  createUserForm.getValues().roles ?? []
+                                ).filter((_role) => _role.id !== role.id),
                               ]);
                             }
                           }}
@@ -1009,7 +1069,8 @@ function RouteComponent() {
                               Email
                             </Label>
                             <Label className="font-medium">
-                              {createForm.getValues().email ?? 'Not provided'}
+                              {createUserForm.getValues().email ??
+                                'Not provided'}
                             </Label>
                           </div>
 
@@ -1018,16 +1079,7 @@ function RouteComponent() {
                               Name
                             </Label>
                             <Label className="font-medium">
-                              {createForm.getValues().name ?? 'Not provided'}
-                            </Label>
-                          </div>
-
-                          <div className="flex flex-col w-full h-auto gap-1">
-                            <Label className="text-sm text-muted-foreground">
-                              Job Title
-                            </Label>
-                            <Label className="font-medium">
-                              {createForm.getValues().jobTitle ??
+                              {createUserForm.getValues().name ??
                                 'Not provided'}
                             </Label>
                           </div>
@@ -1037,18 +1089,8 @@ function RouteComponent() {
                               Phone Number
                             </Label>
                             <Label className="font-medium">
-                              {createForm.getValues().phone ?? 'Not provided'}
-                            </Label>
-                          </div>
-
-                          <div className="flex flex-col w-full h-auto gap-1">
-                            <Label className="text-sm text-muted-foreground">
-                              Tags
-                            </Label>
-                            <Label className="font-medium">
-                              {createForm.getValues().tags?.length
-                                ? createForm.getValues().tags?.join(', ')
-                                : 'Not provided'}
+                              {createUserForm.getValues().phone ??
+                                'Not provided'}
                             </Label>
                           </div>
                         </div>
@@ -1067,7 +1109,7 @@ function RouteComponent() {
                       <CardContent className="flex flex-col w-full h-full gap-5">
                         <iframe
                           src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyB2NIWI3Tv9iDPrlnowr_0ZqZWoAQydKJU&q=${Object.values(
-                            createForm.getValues().address ?? {}
+                            createAddressForm.getValues()
                           )
                             .filter((value) => value)
                             .join(', ')}`}
@@ -1090,8 +1132,8 @@ function RouteComponent() {
                           <div className="relative grid grid-cols-2 grid-rows-2 w-120 aspect-video rounded-2xl bg-gray-950 border border-primary/60 dark:border-primary/20 p-5">
                             <div className="flex flex-col items-start justify-start w-full h-auto gap-2">
                               <Label className="text-2xl font-bold">
-                                {createForm.getValues().bankDetails
-                                  ?.accountHolder ?? 'Not provided'}
+                                {createBankDetailsForm.getValues()
+                                  .accountHolder ?? 'Not provided'}
                               </Label>
                             </div>
 
@@ -1101,19 +1143,19 @@ function RouteComponent() {
 
                             <div className="flex flex-col items-start justify-end w-full h-auto gap-2">
                               <Label className="font-mono text-muted-foreground">
-                                {createForm.getValues().bankDetails
-                                  ?.accountNumber ?? 'Not provided'}
+                                {createBankDetailsForm.getValues()
+                                  .accountNumber ?? 'Not provided'}
                               </Label>
                             </div>
 
                             <div className="flex flex-col items-end justify-end w-full h-auto gap-2">
                               <Label className="font-semibold text-lg">
-                                {createForm.getValues().bankDetails?.bankName ??
+                                {createBankDetailsForm.getValues().bankName ??
                                   'Not provided'}
                               </Label>
                               <Label className="font-mono text-muted-foreground">
-                                {createForm.getValues().bankDetails
-                                  ?.branchCode ?? 'Not provided'}
+                                {createBankDetailsForm.getValues().branchCode ??
+                                  'Not provided'}
                               </Label>
                             </div>
                           </div>
@@ -1137,30 +1179,30 @@ function RouteComponent() {
                   </Button>
                 </div>
               </StepperContent>
+            </form>
+          </Form>
 
-              <StepperContent
-                value={6}
-                className="flex flex-col w-full h-full gap-3"
-              >
-                <div className="flex flex-col w-full h-full gap-5">
-                  <div className="flex flex-col w-full h-auto items-center justify-center gap-3">
-                    <p className="text-lg font-semibold">
-                      User created successfully!
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      You can view your user in the user list.
-                    </p>
-                  </div>
+          <StepperContent
+            value={6}
+            className="flex flex-col w-full h-full gap-3"
+          >
+            <div className="flex flex-col w-full h-full gap-5">
+              <div className="flex flex-col w-full h-auto items-center justify-center gap-3">
+                <p className="text-lg font-semibold">
+                  User created successfully!
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  You can view your user in the user list.
+                </p>
+              </div>
 
-                  <Button className="w-full" onClick={() => setCurrentStep(1)}>
-                    Create New User
-                  </Button>
-                </div>
-              </StepperContent>
-            </StepperPanel>
-          </Stepper>
-        </form>
-      </Form>
+              <Button className="w-full" onClick={() => setCurrentStep(1)}>
+                Create New User
+              </Button>
+            </div>
+          </StepperContent>
+        </Stepper>
+      </div>
     </div>
   );
 }

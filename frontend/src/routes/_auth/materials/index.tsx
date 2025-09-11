@@ -60,6 +60,7 @@ export const Route = createFileRoute('/_auth/materials/')({
       query: {
         page,
         search,
+        limit: 10,
       },
       throwOnError: true,
     });

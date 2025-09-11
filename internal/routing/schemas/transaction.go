@@ -12,6 +12,7 @@ var TransactionMaterialSchema = openapi3.NewSchema().
 		"id",
 		"material",
 		"weight",
+		"value",
 		"createdAt",
 		"updatedAt",
 	}).NewRef()
@@ -21,7 +22,6 @@ var TransactionMaterialsArraySchema = openapi3.NewArraySchema().WithItems(Transa
 var CreateTransactionMaterialSchema = openapi3.NewSchema().
 	WithProperties(properties.CreateTransactionMaterialProperties).
 	WithRequired([]string{
-		"transactionId",
 		"materialId",
 		"weight",
 		"value",
@@ -48,10 +48,13 @@ var TransactionsSchema = openapi3.NewArraySchema().WithItems(TransactionSchema.V
 
 var CreateTransactionSchema = openapi3.NewSchema().
 	WithProperties(properties.CreateTransactionProperties).
+	WithProperty("materials", openapi3.NewArraySchema().WithItems(CreateTransactionMaterialSchema.Value)).
 	WithRequired([]string{
 		"sellerId",
 		"buyerId",
 	}).NewRef()
 
 var UpdateTransactionSchema = openapi3.NewSchema().
-	WithProperties(properties.UpdateTransactionProperties).NewRef()
+	WithProperties(properties.UpdateTransactionProperties).
+	WithProperty("materials", openapi3.NewArraySchema().WithItems(UpdateTransactionMaterialSchema.Value)).
+	NewRef()

@@ -55,6 +55,7 @@ export const Route = createFileRoute('/_auth/roles/')({
       query: {
         page,
         search,
+        limit: 10,
       },
       throwOnError: true,
     });
